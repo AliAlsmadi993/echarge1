@@ -1,0 +1,51 @@
+﻿@model echarge1.Models.CartItem
+
+<h2>Checkout</h2>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/checkOut.css" asp-append-version="true" />
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<div class="cart-summary">
+    <h3>Your Cart</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.CartItems)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Product.Price</td>
+                    <td>@(item.Quantity * item.Product.Price) $</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h3>Total Amount: @ViewBag.TotalAmount $</h3>
+
+    <form method="post" asp-action="Checkout" asp-controller="Shop">
+        <button type="submit" class="btn btn-success w-100">Proceed to Payment</button>
+    </form>
+</div>

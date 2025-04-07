@@ -1,0 +1,38 @@
+﻿@model IEnumerable<echarge1.Models.ContactMessage>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admintestomonialstyle.css" asp-append-version="true" />
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Messages</title>
+</head>
+<body>
+    <h1>Messages</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Message</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var message in Model)
+            {
+                <tr>
+                    <td>@message.Subject</td>
+                    <td>@message.Message</td>
+                    <td>
+                        <a href="/Admin/ReplyMessage/@message.MessageId">Reply</a> |
+                        <a href="/Admin/DeleteMessage/@message.MessageId">Delete</a> |
+                        <a href="/Admin/TransferToTestimonials/@message.MessageId">Transfer to Testimonials</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

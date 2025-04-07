@@ -1,0 +1,219 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    font-family: 'Roboto', sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background-color: #1ABC9C;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+    button:hover {
+        background-color: #148f77;
+    }
+
+/* Product Page Layout */
+.product-page {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+    .product-page h1 {
+        font-size: 3rem;
+        color: #1ABC9C;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+/* Product Gallery */
+.product-gallery {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+    .product-gallery .main-image {
+        flex: 2;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+        .product-gallery .main-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+    .product-gallery .thumbnails {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .product-gallery .thumbnails img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .product-gallery .thumbnails img:hover {
+                transform: scale(1.05);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            }
+
+/* Product Details */
+.product-details {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.product-info {
+    flex: 2;
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+    .product-info h2 {
+        font-size: 2.5rem;
+        color: #1ABC9C;
+        margin-bottom: 20px;
+    }
+
+    .product-info p {
+        color: #555;
+        margin-bottom: 20px;
+        line-height: 1.8;
+    }
+
+    .product-info .price {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #1ABC9C;
+        margin-bottom: 20px;
+    }
+
+    .product-info .quantity {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+        .product-info .quantity button {
+            background-color: #1ABC9C;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .product-info .quantity button:hover {
+                background-color: #148f77;
+            }
+
+        .product-info .quantity span {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+    .product-info .add-to-cart {
+        width: 100%;
+        padding: 15px;
+        font-size: 1.2rem;
+        background-color: #1ABC9C;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .product-info .add-to-cart:hover {
+            background-color: #148f77;
+        }
+
+/* Product Specifications */
+.product-specs {
+    flex: 1;
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+    .product-specs h3 {
+        font-size: 2rem;
+        color: #1ABC9C;
+        margin-bottom: 20px;
+    }
+
+    .product-specs ul {
+        list-style: none;
+    }
+
+        .product-specs ul li {
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+            .product-specs ul li strong {
+                color: #1ABC9C;
+            }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .product-gallery {
+        flex-direction: column;
+    }
+
+    .product-details {
+        flex-direction: column;
+    }
+
+    .product-info .price {
+        font-size: 2rem;
+    }
+
+    .product-specs {
+        margin-top: 20px;
+    }
+}

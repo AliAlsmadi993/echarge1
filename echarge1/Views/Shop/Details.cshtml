@@ -1,0 +1,116 @@
+﻿@model echarge1.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/productdetalse.css" asp-append-version="true" /> <!-- التصحيح: علامة <link> -->
+}
+
+<div class="product-page">
+    <h1>@Model.Name</h1>
+
+    <!-- Product Gallery -->
+    <div class="product-gallery">
+        <div class="main-image">
+            <img src="@Model.ImageUrl" alt="@Model.Name" id="main-image" />
+        </div>
+        <div class="thumbnails">
+            @foreach (var image in Model.ProductImages)
+            {
+                <img src="@image.ImageUrl" alt="Thumbnail" onclick="changeImage(this, '@image.ImageUrl')" />
+            }
+        </div>
+    </div>
+
+    <!-- Product Details -->
+    <div class="product-details">
+        <div class="product-info">
+            <h2>@Model.Name</h2>
+            <p>@Model.Description</p>
+
+            <div class="price">
+                @if (Model.Discount.HasValue && Model.Discount > 0)
+                {
+                    <span class="original-price">@Model.Price JOD</span>
+                    <span class="discounted-price">@((Model.Price - (Model.Price * Model.Discount.Value / 100)).ToString("0.00")) JOD</span>
+                    <span class="badge bg-danger">-@Model.Discount% OFF</span>
+                }
+                else
+                {
+                    <strong>@Model.Price JOD</strong>
+                }
+            </div>
+
+            <div class="quantity">
+                <button onclick="updateQuantity(this, -1)">-</button>
+                <span>1</span>
+                <button onclick="updateQuantity(this, 1)">+</button>
+            </div>
+
+            <form method="post" asp-action="AddToCart" asp-controller="Shop">
+                <input type="hidden" name="productId" value="@Model.ProductId" />
+                <button type="submit" class="add-to-cart">Add to Cart</button>
+            </form>
+        </div>
+
+        <!-- Product Specifications -->
+        <div class="product-specs">
+            <h3>Specifications</h3>
+            <ul>
+                <li><strong>Power:</strong> 50 kW</li>
+                <li><strong>Voltage:</strong> 400V</li>
+                <li><strong>Current:</strong> 125A</li>
+                <li><strong>Compatibility:</strong> All electric vehicles</li>
+                <li><strong>Warranty:</strong> 2 years</li>
+                <li><strong>Weight:</strong> 15 kg</li>
+                <li><strong>Dimensions:</strong> 30 x 20 x 15 cm</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="related-products">
+        <h3>Related Products</h3>
+        <div class="row">
+            @foreach (var relatedProduct in ViewBag.RelatedProducts)
+            {
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="@relatedProduct.ImageUrl" class="card-img-top" alt="@relatedProduct.Name" />
+                        <div class="card-body">
+                            <h5 class="card-title">@relatedProduct.Name</h5>
+                            <p class="card-text">
+                                @if (relatedProduct.Description.Length > 80)
+                                {
+                                    @relatedProduct.Description.Substring(0, 80)
+                                            }
+                                else
+                                {
+                                    @relatedProduct.Description
+                                }
+                            </p>
+                            <a href="@Url.Action("Details", "Shop", new { id = relatedProduct.ProductId })" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    // Change main image on thumbnail click
+    function changeImage(thumbnail, newSrc) {
+        document.getElementById('main-image').src = newSrc;
+    }
+
+    // Update quantity of the product
+    function updateQuantity(button, change) {
+        const quantityElement = button.parentElement.querySelector('span');
+        let quantity = parseInt(quantityElement.textContent);
+        quantity += change;
+        if (quantity < 1) quantity = 1; // Prevent negative quantities
+        quantityElement.textContent = quantity;
+    }
+</script>

@@ -1,0 +1,123 @@
+﻿@model List<echarge1.Models.Product>
+@{
+    ViewData["Title"] = "Shop";
+    var categories = ViewBag.Categories as List<string>;
+    var selectedCategory = ViewBag.SelectedCategory; // التصحيح: استخدام ViewBag بدلًا من Request
+    var searchValue = ViewBag.Search; // التصحيح: استخدام ViewBag بدلًا من Request
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/store.css" asp-append-version="true" /> <!-- التصحيح: علامة <link> -->
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /> <!-- التصحيح: إضافة .css وإغلاق العلامة -->
+
+<div class="container mt-5">
+    <h2 class="text-center text-success mb-4">Discover Our Products</h2>
+
+    <!-- 🔍 البحث والفلاتر -->
+    <form method="get" asp-action="Store" class="row mb-4">
+        <div class="col-md-4 mb-2">
+            <input type="text" name="search" id="searchInput" class="form-control"
+                   placeholder="Search for a product..." value="@searchValue" />
+        </div>
+        <div class="col-md-3 mb-2">
+            <select name="category" class="form-control">
+                <option value="">All Categories</option>
+                @foreach (var cat in categories)
+                {
+                    <option value="@cat" selected="@(cat == selectedCategory)">@cat</option> <!-- التصحيح: استخدام selected مع شرط -->
+                }
+            </select>
+        </div>
+        <div class="col-md-2 mb-2">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+        <div class="col-md-1 mb-2">
+            <button type="button" id="voiceSearchBtn" class="btn btn-secondary w-100">
+                <i class="fas fa-microphone"></i>
+            </button>
+        </div>
+    </form>
+
+    <!-- ⭐️ المساحة الإعلانية للمنتجات المميزة -->
+    <div class="row mb-5">
+        @foreach (var product in Model.Where(p => p.IsFeatured == true))
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card border-success">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="@(product.PromotionImageUrl ?? product.ImageUrl)" class="img-fluid" alt="@product.Name" />
+                        </div>
+                        <div class="col-md-8 p-3">
+                            <h5 class="text-success">@product.PromotionText</h5>
+                            <p>@product.Name - @product.Price JOD</p>
+                            <a href="@Url.Action("Details", "Shop", new { id = product.ProductId })"
+                               class="btn btn-outline-success btn-sm">View Product</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- 🛒 عرض المنتجات -->
+    <div class="row">
+        @foreach (var product in Model.Where(p => p.IsFeatured != true))
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">@product.Description.Substring(0, Math.Min(80, product.Description.Length))...</p>
+
+                        @if (product.Discount.HasValue && product.Discount > 0)
+                        {
+                            <p class="text-danger">
+                                <del>@product.Price JOD</del>
+                                <strong class="ms-2">@((product.Price - (product.Price * product.Discount.Value / 100)).ToString("0.00")) JOD</strong>
+                                <span class="badge bg-danger ms-2">-@product.Discount% OFF</span>
+                            </p>
+                        }
+                        else
+                        {
+                            <p><strong>@product.Price JOD</strong></p>
+                        }
+
+                        <div class="mt-auto">
+                            <form method="post" asp-action="AddToCart" asp-controller="Shop">
+                                <input type="hidden" name="productId" value="@product.ProductId" />
+                                <button type="submit" class="btn btn-success w-100">Add to Cart</button>
+                            </form>
+                            <a href="@Url.Action("Details", "Shop", new { id = product.ProductId })"
+                               class="btn btn-outline-primary w-100 mt-2">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // 🎙️ Voice Search
+        document.getElementById('voiceSearchBtn').addEventListener('click', function () {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.start();
+
+            recognition.onresult = function (event) {
+                const result = event.results[0][0].transcript;
+                document.getElementById('searchInput').value = result;
+                document.forms[0].submit();
+            };
+
+            recognition.onerror = function () {
+                alert("Could not recognize your voice. Try again.");
+            };
+        });
+    </script>
+}

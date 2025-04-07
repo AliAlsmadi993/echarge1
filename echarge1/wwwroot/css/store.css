@@ -1,0 +1,128 @@
+﻿body {
+    font-family: 'Poppins', sans-serif;
+    background: #f7f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    font-weight: 700;
+    color: #1ABC9C;
+}
+
+.container {
+    padding-top: 100px;
+    padding-bottom: 50px;
+}
+
+.card {
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(26, 188, 156, 0.2);
+    }
+
+.card-img-top {
+    height: 220px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.card-text {
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.badge {
+    font-size: 0.8rem;
+}
+
+.btn {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-success {
+    background-color: #1ABC9C;
+    border-color: #1ABC9C;
+}
+
+    .btn-success:hover {
+        background-color: #16A085;
+        border-color: #16A085;
+    }
+
+.btn-outline-primary {
+    border-color: #3498db;
+    color: #3498db;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #3498db;
+        color: white;
+    }
+
+.btn-secondary {
+    background-color: #2c3e50;
+    border-color: #2c3e50;
+}
+
+select.form-control, input.form-control {
+    border-radius: 6px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+}
+
+form .row > div {
+    margin-bottom: 10px;
+}
+
+.text-danger del {
+    font-size: 0.9rem;
+}
+
+.promotion-banner {
+    background-color: #e9f7f5;
+    border: 1px dashed #1ABC9C;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+    .promotion-banner img {
+        width: 100px;
+        height: auto;
+        border-radius: 10px;
+    }
+
+@media (max-width: 768px) {
+    .card-img-top {
+        height: 160px;
+    }
+
+    .promotion-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+}

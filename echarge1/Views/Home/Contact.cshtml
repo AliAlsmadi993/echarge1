@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<link rel="stylesheet" href="~/css/contactUs.css" />
+
+<div class="wrapper" style="margin-top: 5%; margin-bottom: 5%;">
+    <div class="contact-form">
+        <form asp-action="Contact" method="post">
+            <input type="text" name="name" placeholder="Name" required />
+            <input type="email" name="email" placeholder="Email Address" required />
+            <input type="text" name="phone" placeholder="Phone" required />
+            <textarea name="message" placeholder="Your Message" required></textarea>
+            <button class="submit-btn" type="submit">Send</button>
+        </form>
+
+        @if (TempData["Success"] != null)
+        {
+            <div style="color: lightgreen; margin-top: 10px;">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div style="color: red; margin-top: 10px;">@TempData["Error"]</div>
+        }
+    </div>
+    <div class="map-container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!..."
+                allowfullscreen=""
+                loading="lazy">
+        </iframe>
+    </div>
+</div>

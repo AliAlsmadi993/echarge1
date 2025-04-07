@@ -1,0 +1,473 @@
+﻿#hero {
+    position: relative;
+    height: 72vh;
+    overflow: hidden;
+    width: 124%;
+    margin-left: -15vh;
+    margin-top: -4vh;
+}
+
+.video-background video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 1;
+}
+
+@media (max-width: 1024px) {
+    #hero {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 0;
+    }
+
+    .video-background video {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    #hero {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 0;
+    }
+}
+
+/* تأثيرات النصوص المتحركة */
+.animated-title {
+    font-size: 3rem;
+    font-weight: bold;
+    opacity: 0;
+    animation: fadeInOut 5s ease-in-out infinite;
+}
+
+.animated-text {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    opacity: 0;
+    animation: fadeInOut 5s ease-in-out infinite 2s; /* تأخير ظهور النص الثاني */
+}
+
+/* تأثير الفيدين والانتهاء */
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    75% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.btn-custom {
+    background-color: #1ABC9C;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-custom:hover {
+        background-color: #16A085;
+    }
+/* تخصيص الـ Hero Section ليغطي عرض وارتفاع الشاشة بالكامل */
+#about-us {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+}
+
+.about-images {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+}
+
+.about-img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.image-second {
+    margin-left: -12%;
+    margin-top: -26%;
+    border: 4px solid white;
+    width: 80%;
+    height: 193%;
+}
+
+/* تخصيص النصوص */
+.about-text h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #1ABC9C;
+    opacity: 0;
+    animation: fadeInUp 4s forwards; /* تأثير الأنميشن */
+}
+
+.about-text p {
+    font-size: 1.1rem;
+    color: #555;
+    margin-top: 1rem;
+}
+
+.service-box h4 {
+    font-size: 1.4rem;
+    color: #1ABC9C;
+    margin-top: 1.5rem;
+}
+
+.service-box p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* تأثير الأنميشن للنصوص */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* تخصيص الزر */
+.btn-custom {
+    background-color: #1ABC9C;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+    .btn-custom:hover {
+        background-color: #16A085;
+    }
+/* تخصيص القسم */
+#our-services {
+    margin-top: 50px;
+    padding: 40px 0;
+}
+
+.service-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+    .service-card:hover {
+        transform: translateY(-10px); /* تأثير رفع البطاقات عند المرور عليها */
+    }
+
+.service-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.service-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-top: 20px;
+}
+
+.service-card p {
+    font-size: 1rem;
+    color: #777;
+    margin-top: 10px;
+}
+
+.btn-custom {
+    background-color: #1ABC9C;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-custom:hover {
+        background-color: #16A085;
+    }
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.hero-content {
+    color: white;
+}
+
+/* Why Choose Us Section */
+.why-choose-us {
+    padding: 80px 0;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 5%;
+}
+
+.image-large {
+    position: relative;
+    width: 350px;
+    height: 350px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.image-small {
+    position: absolute;
+    bottom: -20px;
+    right: 185px;
+    width: 172px;
+    height: 172px;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 5px solid white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1200px) {
+    .why-choose-us {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-left: 0;
+    }
+
+    .image-large {
+        width: 280px;
+        height: 280px;
+    }
+
+    .image-small {
+        right: 32%;
+        width: 32%;
+        height: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .why-choose-us {
+        padding: 60px 0;
+    }
+
+    .image-large {
+        width: 230px;
+        height: 230px;
+    }
+
+    .image-small {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    #hero {
+        margin-left: 0;
+    }
+
+
+    .why-choose-us {
+        padding: 40px 0;
+    }
+
+    .image-large {
+        width: 180px;
+        height: 180px;
+    }
+
+    .image-small {
+        display: none;
+        width: 80px;
+        height: 80px;
+    }
+}
+
+.testimonials-section {
+    padding: 50px 0;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+    .testimonials-section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: #0D6EFD;
+    }
+
+.testimonials-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px;
+}
+
+.testimonial-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .testimonial-card:nth-child(odd) {
+        flex-direction: column;
+    }
+
+    .testimonial-card:nth-child(even) {
+        flex-direction: column-reverse;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+    }
+
+.testimonial-content {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.testimonial-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #0D6EFD;
+}
+
+.testimonial-message {
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.testimonial-author {
+    color: #333;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.testimonial-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+  .statistics-section {
+        padding: 50px 0;
+        background-color: #f1f1f1;
+        text-align: center;
+    }
+
+    .statistics-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        padding: 20px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-card h3 {
+        color: #0D6EFD;
+        margin-bottom: 5px;
+        font-size: 1.5rem;
+    }
+
+    .stat-card p {
+        color: #333;
+        margin: 0;
+        font-size: 1.1rem;
+    }
+

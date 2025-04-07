@@ -1,0 +1,63 @@
+﻿@model List<echarge1.Models.CartItem>
+@{
+    ViewData["Title"] = "Shopping Cart";
+    
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/cart.css" asp-append-version="true" /> <!-- التصحيح: علامة <link> -->
+    }
+
+<div class="container mt-5">
+    <h2 class="text-center text-success mb-4">Your Shopping Cart</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Message</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="img-fluid" width="100" /></td>
+                        <td>@item.Product.Name</td>
+                        <td>@item.Product.Price</td>
+                        <td>
+                            <form method="post" asp-action="AddToCart" asp-controller="Shop">
+                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <button type="submit" class="btn btn-primary btn-sm">-</button>
+                                <input type="text" class="form-control" value="@item.Quantity" disabled style="width: 50px; text-align: center;" />
+                                <button type="submit" class="btn btn-primary btn-sm">+</button>
+                            </form>
+                        </td>
+                        <td>@(item.Quantity * item.Product.Price) $</td>
+                        <td><input type="text" class="form-control" placeholder="Add a message..." /></td>
+                        <td>
+                            <form method="post" asp-action="RemoveFromCart" asp-controller="Shop">
+                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-right">
+        <h4>Total Price: @Model.Sum(i => i.Quantity * i.Product.Price) $</h4>
+        <form method="get" asp-action="Checkout" class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-outline-primary">Save Cart</button>
+            <button type="submit" class="btn btn-success">Proceed to Checkout</button>
+        </form>
+    </div>
+</div>

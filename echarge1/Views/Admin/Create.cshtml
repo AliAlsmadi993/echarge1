@@ -1,0 +1,32 @@
+﻿@model echarge1.Models.ServiceCard
+
+<h2>Create New Service Card</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="Title">Title</label>
+        <input type="text" class="form-control" id="Title" name="Title" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <textarea class="form-control" id="Description" name="Description" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="ImageFile">Image (optional)</label>
+        <input type="file" class="form-control" id="ImageFile" name="imageFile" />
+    </div>
+
+    <div class="form-group">
+        <label for="ButtonText">Button Text</label>
+        <input type="text" class="form-control" id="ButtonText" name="ButtonText" required />
+    </div>
+
+    <div class="form-group">
+        <label for="ButtonLink">Button Link</label>
+        <input type="text" class="form-control" id="ButtonLink" name="ButtonLink" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Card</button>
+</form>

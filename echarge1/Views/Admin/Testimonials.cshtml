@@ -1,0 +1,38 @@
+﻿@model IEnumerable<echarge1.Models.Testimonial>
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admintestomonialstyle.css" asp-append-version="true" />
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Testimonials</title>
+</head>
+<body>
+    <h1>Testimonials</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Message</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var testimonial in Model)
+            {
+                <tr>
+                    <td>@testimonial.Subject</td>
+                    <td>@testimonial.Message</td>
+                    <td>
+                        <a href="/Admin/DeleteTestimonial/@testimonial.TestimonialId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

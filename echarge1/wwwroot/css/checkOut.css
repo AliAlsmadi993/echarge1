@@ -1,0 +1,132 @@
+﻿/* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+h2, h3 {
+    font-family: 'Roboto', sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background-color: #1ABC9C;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+    button:hover {
+        background-color: #148f77;
+    }
+
+/* Checkout Page Layout */
+.cart-summary {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+    .cart-summary h3 {
+        font-size: 2rem;
+        color: #1ABC9C;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .cart-summary table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+    }
+
+    .cart-summary th, .cart-summary td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    .cart-summary th {
+        background-color: #1ABC9C;
+        color: white;
+    }
+
+    .cart-summary td {
+        background-color: #f9f9f9;
+    }
+
+        .cart-summary td:hover {
+            background-color: #e0f7fa;
+        }
+
+    .cart-summary .btn {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        font-size: 1.2rem;
+        background-color: #1ABC9C;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .cart-summary .btn:hover {
+            background-color: #148f77;
+        }
+
+.alert {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+}
+
+.alert-danger {
+    background-color: #e74c3c;
+}
+
+.alert-success {
+    background-color: #2ecc71;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cart-summary {
+        padding: 15px;
+    }
+
+        .cart-summary h3 {
+            font-size: 1.5rem;
+        }
+
+        .cart-summary table {
+            font-size: 0.9rem;
+        }
+
+        .cart-summary td, .cart-summary th {
+            padding: 8px;
+        }
+
+        .cart-summary .btn {
+            font-size: 1rem;
+            padding: 12px;
+        }
+}

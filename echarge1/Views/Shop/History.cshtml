@@ -1,0 +1,48 @@
+﻿@model IEnumerable<echarge1.Models.Order>
+
+@{
+    ViewData["Title"] = "Order History";
+}
+
+<h2>Your Order History</h2>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order Date</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                foreach (var orderItem in order.OrderItems)
+                {
+                    <tr>
+                        <td>@order.OrderDate?.ToString("yyyy-MM-dd HH:mm:ss") ?? "No Date"</td>
+                        <td>@orderItem.Product.Name</td>
+                        <td>@orderItem.Quantity</td>
+                        <td>@orderItem.SubTotal.ToString("C")</td>
+                        <td>@order.Status</td>
+                        <td>
+                            @if (order.Status == "Delivered")
+                            {
+                                <a href="@Url.Action("RateProduct", "Shop", new { orderId = order.OrderId, productId = orderItem.ProductId })">Rate Product</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No orders found.</p>
+}

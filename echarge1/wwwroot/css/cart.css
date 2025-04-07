@@ -1,0 +1,49 @@
+﻿/* Add your custom styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table img {
+    border-radius: 10px;
+}
+
+.btn {
+    cursor: pointer;
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+
+.btn-outline-primary {
+    border: 1px solid #1ABC9C;
+    color: #1ABC9C;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #1ABC9C;
+        color: white;
+    }
+
+.btn-success {
+    background-color: #1ABC9C;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #FF5733;
+    color: white;
+}
+
+.btn-sm {
+    font-size: 0.85rem;
+}
+
+input[type="text"] {
+    width: 60px;
+    text-align: center;
+}

@@ -1,0 +1,41 @@
+﻿@model echarge1.Models.ServiceCard
+
+@{
+    ViewData["Title"] = "Edit Service Card";
+}
+
+<h2>Edit Service Card</h2>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+
+        <label for="Title">Title</label>
+        <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" required />
+    </div>
+    <input type="hidden" asp-for="ServiceCardId" />  
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <textarea class="form-control" id="Description" name="Description" required>@Model.Description</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="ImageUrl">Current Image</label>
+        <div>
+            <img src="@Model.ImageUrl" alt="Current Image" style="width: 100px; height: 100px;" />
+        </div>
+        <label for="ImageFile">Change Image (optional)</label>
+        <input type="file" class="form-control" id="ImageFile" name="imageFile" />
+    </div>
+
+    <div class="form-group">
+        <label for="ButtonText">Button Text</label>
+        <input type="text" class="form-control" id="ButtonText" name="ButtonText" value="@Model.ButtonText" required />
+    </div>
+
+    <div class="form-group">
+        <label for="ButtonLink">Button Link</label>
+        <input type="text" class="form-control" id="ButtonLink" name="ButtonLink" value="@Model.ButtonLink" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>

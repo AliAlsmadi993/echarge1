@@ -1,0 +1,76 @@
+﻿/* adminmessages.css - Style file for Admin Messages and Testimonials */
+
+body {
+    background-color: #F0F0F0;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #009688;
+    margin-bottom: 30px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+    .table th {
+        background-color: #009688;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+
+    .table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #E0E0E0;
+    }
+
+    .table tr:hover {
+        background-color: #F0F0F0;
+    }
+
+.btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-reply {
+    background-color: #FFAA00;
+}
+
+.btn-delete {
+    background-color: #F44336;
+}
+
+.btn-transfer {
+    background-color: #2196F3;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.btn-add {
+    background-color: #009688;
+    padding: 10px 20px;
+    margin-top: 20px;
+}

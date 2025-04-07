@@ -1,0 +1,144 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+}
+<section id="hero">
+    <div class="video-background">
+        <video autoplay loop muted>
+            <source src="~/lib/HOME.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="hero-content">
+        <h1 class="animated-title">Welcome to E-CHARGE</h1>
+        <p class="animated-text">The Future of Electric Vehicle Charging</p>
+        <a class="btn btn-custom" href="#services">Explore Services</a>
+    </div>
+</section>
+<section id="about-us" class="container mt-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="about-images">
+                <img src="~/lib/images/111.jpg" alt="Image 1" class="about-img">
+                <img src="~/lib/images/12221.webp" alt="Image 2" class="about-img image-second">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="about-text">
+                <h2 class="animated-title animated-text about-text">Powering the Future of Electric Vehicles</h2>
+                <p class="animated-text">
+                    At E-CHARGE, we are committed to transforming the way you charge and interact with electric vehicles. We aim to provide fast, efficient, and accessible charging solutions for every electric vehicle owner.
+                </p>
+                <div class="service-box">
+                    <h4>Smart Charging Solutions</h4>
+                    <p>Our network of charging stations ensures that your electric vehicle is ready for the road, wherever you are.</p>
+                </div>
+                <a class="btn btn-custom" href="@Url.Action("About", "Home")">Learn More</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="our-services" class="container mt-5">
+    <h2 class="text-center mb-4">Our Services</h2>
+    <div class="row">
+        @foreach (var card in ViewBag.ServiceCards)
+        {
+            <div class="col-md-4">
+                <div class="service-card">
+                    <img src="@card.ImageUrl" alt="@card.Title" class="service-img">
+                    <h3>@card.Title</h3>
+                    <p>@card.Description</p>
+                    <a href="@card.ButtonLink" class="btn btn-custom">@card.ButtonText</a>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+<section class="why-choose-us">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 position-relative">
+                <div class="image-large">
+                    <img src="/images/Screenshot 2025-02-16 21311620250320012626.png" class="img-fluid rounded-circle shadow" alt="EV Users">
+                </div>
+                <div class="image-small">
+                    <img src="/images/Screenshot 2025-02-16 21311620250320014714.png" class="img-fluid rounded-circle shadow" alt="EV Charging">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="why-choose-container">
+                    <h2 class="why-choose-title">Why Choose E-CHARGE?</h2>
+                    <ul class="why-choose-list">
+                        <li><i class="fas fa-dollar-sign"></i> Affordable and Transparent Pricing</li>
+                        <li><i class="fas fa-globe"></i> Reliable Nationwide Coverage</li>
+                        <li><i class="fas fa-leaf"></i> Eco-Friendly and Innovative Solutions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="testimonials-section">
+    <h2>What Our Clients Say</h2>
+    <div class="testimonials-container">
+        @foreach (var testimonial in ViewBag.Testimonials)
+        {
+            <div class="testimonial-card">
+                <img src="@testimonial.ProfileImage" alt="Client" class="testimonial-image">
+                <div class="testimonial-content">
+                    <div class="testimonial-title">@testimonial.Subject</div>
+                    <p class="testimonial-message">@testimonial.Message</p>
+                    <div class="testimonial-author">- @testimonial.UserName</div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+<section class="statistics-section py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Website Achievements</h2>
+        <div class="row text-center">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-card p-4 bg-white shadow-sm rounded">
+                    <div class="stat-icon mb-2">
+                        <i class="fas fa-users fa-2x text-primary"></i>
+                    </div>
+                    <h3 class="stat-number">@ViewBag.Statistics.UserCount</h3>
+                    <p class="stat-label">Registered Users</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-card p-4 bg-white shadow-sm rounded">
+                    <div class="stat-icon mb-2">
+                        <i class="fas fa-charging-station fa-2x text-success"></i>
+                    </div>
+                    <h3 class="stat-number">@ViewBag.Statistics.StationCount</h3>
+                    <p class="stat-label">Charging Stations</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-card p-4 bg-white shadow-sm rounded">
+                    <div class="stat-icon mb-2">
+                        <i class="fas fa-star fa-2x text-warning"></i>
+                    </div>
+                    <h3 class="stat-number">@ViewBag.Statistics.ReviewCount</h3>
+                    <p class="stat-label">Total Reviews</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-card p-4 bg-white shadow-sm rounded">
+                    <div class="stat-icon mb-2">
+                        <i class="fas fa-comments fa-2x text-info"></i>
+                    </div>
+                    <h3 class="stat-number">@ViewBag.Statistics.TestimonialCount</h3>
+                    <p class="stat-label">Client Testimonials</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

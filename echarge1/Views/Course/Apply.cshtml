@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Apply Now";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admintestomonialstyle.css" asp-append-version="true" />
+}
+
+@if (ViewBag.SelectedCourse != null)
+{
+    <h2 style="color:#1ABC9C">Applying for: @ViewBag.SelectedCourse.Title</h2>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div style="color: green;">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div style="color: red;">@TempData["Error"]</div>
+}
+
+<form asp-action="Apply" asp-controller="Course" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="CourseId" value="@ViewBag.SelectedCourse.CourseId" />
+    <input type="hidden" name="UserId" id="userIdField" />
+
+    <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="FullName" required />
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="Email" required />
+    </div>
+
+    <div class="form-group">
+        <label>Phone</label>
+        <input type="text" name="Phone" required />
+    </div>
+
+    <div class="form-group">
+        <label>Upload CV</label>
+        <input type="file" name="CvUpload" accept=".pdf,.doc,.docx" required />
+    </div>
+
+    <div class="form-group">
+        <label>Upload ID</label>
+        <input type="file" name="IdUpload" accept=".jpg,.png,.pdf" required />
+    </div>
+
+    <div class="form-group">
+        <label>Additional Info</label>
+        <textarea name="AdditionalInfo"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit Application</button>
+</form>
+
+<script>
+    // جلب UserId من sessionStorage
+    document.addEventListener("DOMContentLoaded", function () {
+        const userId = sessionStorage.getItem("userId");
+        if (userId) {
+            document.getElementById("userIdField").value = userId;
+        }
+    });
+</script>
