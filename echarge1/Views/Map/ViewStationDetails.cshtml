@@ -1,0 +1,41 @@
+﻿@model List<ChargingBooking>
+
+<h2>Bookings for @ViewBag.StationName</h2>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">No bookings found for this station.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Date</th>
+                <th>Charger Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model)
+            {
+                <tr>
+                    <td>@b.UserId</td>
+                    <td>@b.BookingDate.ToString("g")</td>
+                    <td>@b.ChargerType</td>
+                    <td>@b.Status</td>
+                    <td>
+                        <a asp-action="EditBooking" asp-route-id="@b.BookingId" class="btn btn-sm btn-warning">Edit</a>
+                        <form asp-action="DeleteBooking" asp-route-id="@b.BookingId" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="MyStations" class="btn btn-secondary">🔙 Back</a>

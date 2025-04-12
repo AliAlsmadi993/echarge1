@@ -1,0 +1,47 @@
+﻿@model List<ChargingStation>
+
+@{
+    Layout = "~/Views/Shared/_ProviderLayout.cshtml";
+}
+
+<h2>My Charging Stations</h2>
+
+<a asp-controller="ChargingStation" asp-action="AddStation" class="btn btn-success mb-3">➕ Add New Station</a>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Capacity</th>
+            <th>Available Spots</th>
+            <th>Price/Charge</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var station in Model)
+        {
+            <tr>
+                <td>@station.Name</td>
+                <td>@station.Location</td>
+                <td>@station.Capacity</td>
+                <td>@station.AvailableSpots</td>
+                <td>@station.PricePerCharge JOD</td>
+                <td>
+                    <a asp-action="ViewStationDetails" asp-controller="Map" asp-route-id="@station.StationId" class="btn btn-sm btn-info">📋 Bookings</a>
+
+                    <a asp-action="EditStation" asp-route-id="@station.StationId" class="btn btn-warning btn-sm">Edit</a>
+                    <form asp-action="DeleteStation" asp-route-id="@station.StationId" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

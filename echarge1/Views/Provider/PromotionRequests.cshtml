@@ -1,0 +1,53 @@
+﻿@model IEnumerable<echarge1.Models.PromotionRequest>
+@{
+    ViewData["Title"] = "My Promotion Requests";
+    Layout = "~/Views/Shared/_ProviderLayout.cshtml";
+}
+
+<h2 class="mb-4">🎯 My Promotion Requests</h2>
+
+@if (Model.Any())
+{
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr><th>Product</th><th>Date</th><th>Status</th><th>Until</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.Product.Name</td>
+                    <td>@r.RequestDate.ToShortDateString()</td>
+                    <td>
+                        @if (r.Status == "Pending")
+                        {
+                            <span class="badge badge-warning">Pending</span>
+                        }
+                        else if (r.Status == "Approved")
+                        {
+                            <span class="badge badge-success">Approved</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger">Rejected</span>
+                        }
+                    </td>
+                    <td>
+                        @if (r.ApprovedUntil != null)
+                        {
+                            @r.ApprovedUntil.Value.ToShortDateString()
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">You haven’t submitted any promotion requests yet.</div>
+}

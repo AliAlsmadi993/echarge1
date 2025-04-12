@@ -3,6 +3,15 @@
 @{
     ViewData["Title"] = "Order History";
 }
+<div class="col-md-3">
+    <div class="list-group">
+        <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action active">My Profile</a>
+        <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">Edit Profile</a>
+        <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action">My Orders</a>
+        <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action">My Bookings</a>
+    </div>
+</div>
+
 
 <h2>Your Order History</h2>
 

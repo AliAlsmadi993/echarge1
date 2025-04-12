@@ -1,0 +1,48 @@
+﻿@model echarge1.Models.Order
+
+<div>
+    <h5>Order Information</h5>
+    <p><strong>Order ID:</strong> @Model.OrderId</p>
+    <p><strong>Date:</strong> @Model.OrderDate?.ToString("yyyy-MM-dd HH:mm")</p>
+    <p><strong>Status:</strong> @Model.Status</p>
+
+    <h5>User Information</h5>
+    <p><strong>User Name:</strong> @Model.User.FullName</p>
+    <p><strong>User Email:</strong> @Model.User.Email</p>
+
+    <h5>Shipping Address</h5>
+    <p>@Model.ShippingAddress</p>
+
+    <h5>Order Items</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderItems)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Product.Price</td>
+                    <td>@item.SubTotal</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h5>Receipt Image</h5>
+    @if (!string.IsNullOrEmpty(Model.ReceiptImageUrl))
+    {
+        <img src="@Model.ReceiptImageUrl" alt="Receipt Image" class="img-fluid" />
+    }
+    else
+    {
+        <p>No receipt uploaded yet.</p>
+    }
+</div>

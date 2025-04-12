@@ -41,5 +41,7 @@ public partial class Product
 
     public virtual ICollection<ProductReview> ProductReviews { get; set; } = new List<ProductReview>();
 
+    public virtual ICollection<PromotionRequest> PromotionRequests { get; set; } = new List<PromotionRequest>();
+
     public virtual AppUser? Provider { get; set; }
 }

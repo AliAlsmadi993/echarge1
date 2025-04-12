@@ -15,6 +15,10 @@ public partial class Order
 
     public string? Status { get; set; }
 
+    public string? ReceiptImageUrl { get; set; }
+
+    public string? ShippingAddress { get; set; }
+
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

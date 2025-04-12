@@ -15,6 +15,8 @@ public partial class ChargingBooking
 
     public string? Status { get; set; }
 
+    public string ChargerType { get; set; } = null!;
+
     public virtual ChargingStation? Station { get; set; }
 
     public virtual AppUser? User { get; set; }

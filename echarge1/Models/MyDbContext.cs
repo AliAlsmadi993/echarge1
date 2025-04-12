@@ -19,6 +19,8 @@ public partial class MyDbContext : DbContext
 
     public virtual DbSet<AppUser> AppUsers { get; set; }
 
+    public virtual DbSet<BlacklistedUser> BlacklistedUsers { get; set; }
+
     public virtual DbSet<CartItem> CartItems { get; set; }
 
     public virtual DbSet<ChargingBooking> ChargingBookings { get; set; }
@@ -48,6 +50,8 @@ public partial class MyDbContext : DbContext
     public virtual DbSet<ProductImage> ProductImages { get; set; }
 
     public virtual DbSet<ProductReview> ProductReviews { get; set; }
+
+    public virtual DbSet<PromotionRequest> PromotionRequests { get; set; }
 
     public virtual DbSet<Review> Reviews { get; set; }
 
@@ -99,6 +103,22 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.UserType)
                 .HasMaxLength(20)
                 .HasDefaultValue("Customer");
+            entity.Property(e => e.WarningCount).HasDefaultValue(0);
+        });
+
+        modelBuilder.Entity<BlacklistedUser>(entity =>
+        {
+            entity.HasKey(e => e.BlacklistId).HasName("PK__Blacklis__AFDBF418BE7B2D3B");
+
+            entity.Property(e => e.BlockedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Reason).HasMaxLength(255);
+
+            entity.HasOne(d => d.User).WithMany(p => p.BlacklistedUsers)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Blacklist__UserI__56E8E7AB");
         });
 
         modelBuilder.Entity<CartItem>(entity =>
@@ -130,6 +150,9 @@ public partial class MyDbContext : DbContext
 
             entity.Property(e => e.BookingId).HasColumnName("BookingID");
             entity.Property(e => e.BookingDate).HasColumnType("datetime");
+            entity.Property(e => e.ChargerType)
+                .HasMaxLength(50)
+                .HasDefaultValue("Type1");
             entity.Property(e => e.StationId).HasColumnName("StationID");
             entity.Property(e => e.Status)
                 .HasMaxLength(20)
@@ -391,6 +414,30 @@ public partial class MyDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_ProductReviews_Users");
+        });
+
+        modelBuilder.Entity<PromotionRequest>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Promotio__3214EC077F7FC279");
+
+            entity.Property(e => e.AmountPaid).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.ApprovedUntil).HasColumnType("datetime");
+            entity.Property(e => e.RequestDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasDefaultValue("Pending");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.PromotionRequests)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PromotionRequest_Product");
+
+            entity.HasOne(d => d.Provider).WithMany(p => p.PromotionRequests)
+                .HasForeignKey(d => d.ProviderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PromotionRequest_Provider");
         });
 
         modelBuilder.Entity<Review>(entity =>

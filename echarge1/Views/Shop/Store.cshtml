@@ -2,15 +2,16 @@
 @{
     ViewData["Title"] = "Shop";
     var categories = ViewBag.Categories as List<string>;
-    var selectedCategory = ViewBag.SelectedCategory; // التصحيح: استخدام ViewBag بدلًا من Request
-    var searchValue = ViewBag.Search; // التصحيح: استخدام ViewBag بدلًا من Request
+    var selectedCategory = ViewBag.SelectedCategory;
+    var searchValue = ViewBag.Search;
+    var siteProducts = ViewBag.SiteProducts as List<echarge1.Models.Product>;
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/store.css" asp-append-version="true" /> <!-- التصحيح: علامة <link> -->
+    <link rel="stylesheet" href="~/css/store.css" asp-append-version="true" />
 }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /> <!-- التصحيح: إضافة .css وإغلاق العلامة -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <div class="container mt-5">
     <h2 class="text-center text-success mb-4">Discover Our Products</h2>
@@ -26,7 +27,7 @@
                 <option value="">All Categories</option>
                 @foreach (var cat in categories)
                 {
-                    <option value="@cat" selected="@(cat == selectedCategory)">@cat</option> <!-- التصحيح: استخدام selected مع شرط -->
+                    <option value="@cat" selected="@(cat == selectedCategory)">@cat</option>
                 }
             </select>
         </div>
@@ -40,29 +41,34 @@
         </div>
     </form>
 
-    <!-- ⭐️ المساحة الإعلانية للمنتجات المميزة -->
-    <div class="row mb-5">
-        @foreach (var product in Model.Where(p => p.IsFeatured == true))
-        {
-            <div class="col-md-6 mb-4">
-                <div class="card border-success">
-                    <div class="row no-gutters">
-                        <div class="col-md-4">
-                            <img src="@(product.PromotionImageUrl ?? product.ImageUrl)" class="img-fluid" alt="@product.Name" />
-                        </div>
-                        <div class="col-md-8 p-3">
-                            <h5 class="text-success">@product.PromotionText</h5>
-                            <p>@product.Name - @product.Price JOD</p>
-                            <a href="@Url.Action("Details", "Shop", new { id = product.ProductId })"
-                               class="btn btn-outline-success btn-sm">View Product</a>
+    <!-- ⭐️ المنتجات المميزة -->
+    @if (Model.Any(p => p.IsFeatured == true))
+    {
+        <div class="row mb-5">
+            <h4 class="text-success mb-3">Featured Products</h4>
+            @foreach (var product in Model.Where(p => p.IsFeatured == true))
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card border-success">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <img src="@(product.PromotionImageUrl ?? product.ImageUrl)" class="img-fluid" alt="@product.Name" />
+                            </div>
+                            <div class="col-md-8 p-3">
+                                <h5 class="text-success">@product.PromotionText</h5>
+                                <p>@product.Name - @product.Price JOD</p>
+                                <a href="@Url.Action("Details", "Shop", new { id = product.ProductId })"
+                                   class="btn btn-outline-success btn-sm">View Product</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
 
-    <!-- 🛒 عرض المنتجات -->
+    <!-- 🛒 منتجات المزودين -->
+    <h4 class="text-primary mb-3">Provider Products</h4>
     <div class="row">
         @foreach (var product in Model.Where(p => p.IsFeatured != true))
         {
@@ -99,11 +105,41 @@
             </div>
         }
     </div>
+
+    <!-- 🏷️ منتجات الموقع الرسمي -->
+    @if (siteProducts != null && siteProducts.Any())
+    {
+        <h4 class="text-dark mt-5 mb-3">Official E-Charge Products</h4>
+        <div class="row">
+            @foreach (var product in siteProducts)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border border-primary shadow">
+                        <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text">@product.Description.Substring(0, Math.Min(80, product.Description.Length))...</p>
+
+                            <p><strong>@product.Price JOD</strong></p>
+
+                            <div class="mt-auto">
+                                <form method="post" asp-action="AddToCart" asp-controller="Shop">
+                                    <input type="hidden" name="productId" value="@product.ProductId" />
+                                    <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                                </form>
+                                <a href="@Url.Action("Details", "Shop", new { id = product.ProductId })"
+                                   class="btn btn-outline-dark w-100 mt-2">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>
 
 @section Scripts {
     <script>
-        // 🎙️ Voice Search
         document.getElementById('voiceSearchBtn').addEventListener('click', function () {
             const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = 'en-US';

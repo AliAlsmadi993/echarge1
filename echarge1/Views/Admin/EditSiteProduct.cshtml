@@ -1,0 +1,39 @@
+﻿@model echarge1.Models.Product
+
+@{
+    ViewData["Title"] = "Edit Site Product";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<h2 class="text-info">Edit Site Product</h2>
+
+<form asp-action="EditSiteProduct" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="ProductId" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="StockQuantity" class="form-label"></label>
+        <input asp-for="StockQuantity" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Images" class="form-label">Upload New Images</label>
+        <input type="file" name="Images" multiple class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Update Product</button>
+</form>

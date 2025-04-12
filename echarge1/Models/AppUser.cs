@@ -25,7 +25,11 @@ public partial class AppUser
 
     public DateTime? LastLogin { get; set; }
 
+    public int? WarningCount { get; set; }
+
     public virtual ICollection<Admin> Admins { get; set; } = new List<Admin>();
+
+    public virtual ICollection<BlacklistedUser> BlacklistedUsers { get; set; } = new List<BlacklistedUser>();
 
     public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 
@@ -42,6 +46,8 @@ public partial class AppUser
     public virtual ICollection<ProductReview> ProductReviews { get; set; } = new List<ProductReview>();
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+
+    public virtual ICollection<PromotionRequest> PromotionRequests { get; set; } = new List<PromotionRequest>();
 
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 

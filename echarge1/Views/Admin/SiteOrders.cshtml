@@ -1,0 +1,61 @@
+﻿@foreach (var order in Model)
+{
+    @if (order != null)
+    {
+        <div class="card mb-3 shadow">
+            <div class="card-header">
+                <strong>Order #@order.OrderId</strong> - @order.OrderDate?.ToString("yyyy-MM-dd HH:mm")
+                <span class="badge badge-info float-right">@order.Status</span>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                            <th>User</th>
+                            <th>Shipping Address</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in order.OrderItems ?? Enumerable.Empty<OrderItem>())
+                        {
+                            <tr>
+                                <td>@item.Product.Name</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.Product.Price</td>
+                                <td>@item.SubTotal</td>
+                                <td>@order.User.FullName</td>
+                                <td>@order.ShippingAddress</td>
+                                <td>
+                                    <!-- Dropdown to change order status -->
+                                    <form method="post" action="@Url.Action("UpdateOrderStatus", "Admin")">
+                                        <input type="hidden" name="OrderId" value="@order.OrderId" />
+
+                                        @Html.DropDownList("Status", new List<SelectListItem>
+                            {
+                            new SelectListItem { Text = "Pending", Value = "Pending", Selected = order.Status == "Pending" },
+                            new SelectListItem { Text = "On the Way", Value = "On the Way", Selected = order.Status == "On the Way" },
+                            new SelectListItem { Text = "Not Received", Value = "Not Received", Selected = order.Status == "Not Received" },
+                            new SelectListItem { Text = "Delivered", Value = "Delivered", Selected = order.Status == "Delivered" }
+                            }, new { @class = "form-control", style = "width:150px;" })
+
+                                        <button type="submit" class="btn btn-primary btn-sm mt-2">Save</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <!-- View Button to navigate to order details -->
+                                    <a href="@Url.Action("GetOrderDetails", "Admin", new { id = order.OrderId })" class="btn btn-info btn-sm">View</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}

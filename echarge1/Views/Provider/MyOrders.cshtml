@@ -1,0 +1,77 @@
+﻿@model IEnumerable<echarge1.Models.Order>
+
+@{
+    ViewData["Title"] = "My Orders";
+    Layout = "~/Views/Shared/_ProviderLayout.cshtml";
+}
+
+<h2 class="mb-4">📋 Orders Containing My Products</h2>
+
+@if (Model.Any())
+{
+    foreach (var order in Model)
+    {
+        <div class="card mb-3 shadow">
+            <div class="card-header">
+                <strong>Order #@order.OrderId</strong> - @order.OrderDate?.ToString("yyyy-MM-dd HH:mm")
+                <span class="badge badge-info float-right">@order.Status</span>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                            <th>User</th>
+                            <th>Shipping Address</th>
+                            <th>Status</th>
+                            <th>Actions</th> <!-- Added Actions column for dropdown -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in order.OrderItems.Where(x => x.Product.ProviderId == @Context.Session.GetInt32("UserId")))
+                        {
+                            <tr>
+                                <td>@item.Product.Name</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.Product.Price</td>
+                                <td>@item.SubTotal</td>
+                                <td>@order.User.FullName</td>
+                                <td>@order.ShippingAddress</td>
+                                <td>
+                                    <!-- Dropdown to select order status -->
+                                    <form method="post" action="@Url.Action("UpdateOrderStatus", "Provider")">
+                                        <input type="hidden" name="OrderId" value="@order.OrderId" />
+
+                                        <!-- Dropdown for order status with buttons inside -->
+                                        @Html.DropDownList("Status", new List<SelectListItem>
+                            {
+                            new SelectListItem { Text = "Pending", Value = "Pending", Selected = order.Status == "Pending" },
+                            new SelectListItem { Text = "On the Way", Value = "On the Way", Selected = order.Status == "On the Way" },
+                            new SelectListItem { Text = "Not Received", Value = "Not Received", Selected = order.Status == "Not Received" },
+                            new SelectListItem { Text = "Delivered", Value = "Delivered", Selected = order.Status == "Delivered" }
+                            }, new { @class = "form-control", style = "width:150px;" })
+
+
+                                        <!-- Submit button for changing the status -->
+                                        <button type="submit" class="btn btn-primary btn-sm mt-2">Save</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <!-- View Button to navigate to order details -->
+                                    <a href="@Url.Action("GetOrderDetails", "Provider", new { id = order.OrderId })" class="btn btn-info btn-sm">View</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-info">You currently have no orders linked to your products.</div>
+}

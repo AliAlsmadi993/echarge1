@@ -16,7 +16,7 @@ namespace echarge1.Controllers
         // ✅ عرض المتجر مع الفلاتر والبحث
         public async Task<IActionResult> Store(string? search, string? category, bool? isFeatured)
         {
-            var productsQuery = _context.Products
+            var baseQuery = _context.Products
                 .Include(p => p.ProductImages)
                 .Include(p => p.ProductReviews)
                 .Include(p => p.Provider)
@@ -24,20 +24,29 @@ namespace echarge1.Controllers
 
             if (!string.IsNullOrWhiteSpace(search))
             {
-                productsQuery = productsQuery.Where(p => p.Name.Contains(search) || p.Description.Contains(search));
+                baseQuery = baseQuery.Where(p => p.Name.Contains(search) || p.Description.Contains(search));
             }
 
             if (!string.IsNullOrWhiteSpace(category))
             {
-                productsQuery = productsQuery.Where(p => p.Category == category);
+                baseQuery = baseQuery.Where(p => p.Category == category);
             }
 
             if (isFeatured == true)
             {
-                productsQuery = productsQuery.Where(p => p.IsFeatured == true);
+                baseQuery = baseQuery.Where(p => p.IsFeatured == true);
             }
 
-            var products = await productsQuery.ToListAsync();
+            // 🧩 قسم المنتجات حسب المصدر
+            var providerProducts = await baseQuery
+                .Where(p => p.ProviderId != null)
+                .ToListAsync();
+
+            var siteProducts = await baseQuery
+                .Where(p => p.ProviderId == null)
+                .ToListAsync();
+
+            // التصنيفات
             ViewBag.Categories = await _context.Products
                 .Where(p => p.Category != null)
                 .Select(p => p.Category)
@@ -46,8 +55,9 @@ namespace echarge1.Controllers
 
             ViewBag.Search = search;
             ViewBag.SelectedCategory = category;
+            ViewBag.SiteProducts = siteProducts;
 
-            return View(products);
+            return View(providerProducts);
         }
 
         // ✅ عرض تفاصيل منتج معين
@@ -82,16 +92,23 @@ namespace echarge1.Controllers
             if (userId == null)
             {
                 // ❗ إذا ما في يوزر في السيشن، خزنه مؤقتًا في الكوكيز
-                Response.Cookies.Append("Cart_Pending_Product", productId.ToString(), new CookieOptions
+                var cartCookie = Request.Cookies["Cart_Pending_Product"];
+                var productIds = cartCookie != null ? cartCookie.Split(',').ToList() : new List<string>();
+
+                // إضافة المنتج الجديد إلى الكوكيز
+                productIds.Add(productId.ToString());
+
+                // تخزين الكوكيز
+                Response.Cookies.Append("Cart_Pending_Product", string.Join(",", productIds), new CookieOptions
                 {
                     Expires = DateTimeOffset.Now.AddMinutes(30)
                 });
 
-                TempData["Error"] = "Please log in to add items to your cart.";
-                return RedirectToAction("Login", "Account");
+                TempData["Success"] = "Product added to your cart successfully.";
+                return RedirectToAction("Store");
             }
 
-            // ✅ التحقق إذا المنتج موجود مسبقًا في الكارت
+            // ✅ التحقق إذا المنتج موجود مسبقًا في الكارت (إذا كان المستخدم مسجل دخول)
             var existingItem = await _context.CartItems
                 .FirstOrDefaultAsync(c => c.ProductId == productId && c.UserId == userId && !c.IsCheckedOut);
 
@@ -120,6 +137,7 @@ namespace echarge1.Controllers
         // ✅ عرض المنتجات المميزة فقط
         public async Task<IActionResult> Featured()
         {
+            await RemoveExpiredFeaturedProducts();
             var featuredProducts = await _context.Products
                 .Where(p => p.IsFeatured == true && p.IsAvailable)
                 .Include(p => p.ProductImages)
@@ -197,6 +215,9 @@ namespace echarge1.Controllers
         }
 
         // التحقق من عملية الدفع والتحويل لصفحة الدفع
+
+
+        [HttpGet]
         public async Task<IActionResult> Checkout()
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
@@ -218,21 +239,26 @@ namespace echarge1.Controllers
                 return RedirectToAction("Store");
             }
 
-            // حساب المجموع
             var totalAmount = cartItems.Sum(c => c.Quantity * c.Product.Price);
-
             ViewBag.CartItems = cartItems;
             ViewBag.TotalAmount = totalAmount;
 
             return View();
         }
 
-        // تنفيذ عملية الدفع
+
         [HttpPost]
-        [HttpPost]
-        [HttpPost]
-        public async Task<IActionResult> Checkout(int userId)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmCheckout(IFormFile ReceiptImage, string shippingAddress)
         {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null || userId == 0)
+            {
+                TempData["Error"] = "Please log in to proceed to checkout.";
+                return RedirectToAction("Login", "Account");
+            }
+
             var cartItems = await _context.CartItems
                 .Where(c => c.UserId == userId && !c.IsCheckedOut)
                 .Include(c => c.Product)
@@ -244,55 +270,68 @@ namespace echarge1.Controllers
                 return RedirectToAction("Store");
             }
 
-            // إنشاء طلب جديد
             var order = new Order
             {
-                UserId = userId,
+                UserId = userId.Value,
                 OrderDate = DateTime.Now,
                 Status = "Pending",
-                TotalAmount = cartItems.Sum(c => c.Quantity * c.Product.Price)
+                TotalAmount = cartItems.Sum(c => c.Quantity * c.Product.Price),
+                ShippingAddress = shippingAddress, // تخزين العنوان
             };
+
+            // التعامل مع رفع صورة الوصل
+            if (ReceiptImage != null && ReceiptImage.Length > 0)
+            {
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ReceiptImage.FileName);
+                var filePath = Path.Combine(uploadPath, fileName);
+
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await ReceiptImage.CopyToAsync(stream);
+                }
+
+                // حفظ مسار الصورة في الـ Order
+                order.ReceiptImageUrl = "/uploads/" + fileName;
+            }
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
-            // إضافة عناصر الطلب
             foreach (var item in cartItems)
             {
-                var orderItem = new OrderItem
+                _context.OrderItems.Add(new OrderItem
                 {
                     OrderId = order.OrderId,
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
                     SubTotal = item.Quantity * item.Product.Price
-                };
-
-                _context.OrderItems.Add(orderItem);
+                });
             }
 
-            // إضافة الدفع الوهمي (يمكنك استبداله بطريقة دفع حقيقية هنا)
-            var payment = new Payment
+            _context.Payments.Add(new Payment
             {
-                UserId = userId,
+                UserId = userId.Value,
                 OrderId = order.OrderId,
                 PaymentDate = DateTime.Now,
                 AmountPaid = order.TotalAmount,
-                PaymentMethod = "Fake Payment"  // استبدلها بطريقة الدفع الحقيقية
-            };
+                PaymentMethod = "Cash"
+            });
 
-            _context.Payments.Add(payment);
-
-            // تحديث السلة (تحديد العناصر التي تم دفعها)
             foreach (var item in cartItems)
             {
-                item.IsCheckedOut = true; // تحديث حالة السلة إلى "تم الدفع"
+                item.IsCheckedOut = true;
             }
 
             await _context.SaveChangesAsync();
 
-            // الانتقال إلى صفحة تفاصيل الطلب بعد الدفع
             TempData["Success"] = "Your order has been placed successfully!";
-            return RedirectToAction("OrderDetails", "Shop", new { id = order.OrderId });
+            return RedirectToAction("OrderDetails", new { id = order.OrderId });
         }
 
         // عرض تفاصيل الطلب
@@ -362,6 +401,27 @@ namespace echarge1.Controllers
             }
 
             return View(review);
+        }
+        private async Task RemoveExpiredFeaturedProducts()
+        {
+            var now = DateTime.Now;
+
+            var expiredPromos = await _context.PromotionRequests
+                .Include(p => p.Product)
+                .Where(p => p.Status == "Approved" && p.ApprovedUntil < now)
+                .ToListAsync();
+
+            foreach (var promo in expiredPromos)
+            {
+                if (promo.Product != null)
+                {
+                    promo.Product.IsFeatured = false;
+                }
+
+                promo.Status = "Expired"; // خيار إضافي لتحديث حالة الطلب
+            }
+
+            await _context.SaveChangesAsync();
         }
 
     }

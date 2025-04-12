@@ -19,5 +19,9 @@ public partial class ChargingStation
 
     public DateTime? CreatedAt { get; set; }
 
+    public string? ChargerTypesJson { get; set; }
+
+    public int ProviderId { get; set; }
+
     public virtual ICollection<ChargingBooking> ChargingBookings { get; set; } = new List<ChargingBooking>();
 }

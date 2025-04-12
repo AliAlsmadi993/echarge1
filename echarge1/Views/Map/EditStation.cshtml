@@ -1,0 +1,34 @@
+﻿@model ChargingStation
+
+<h2>Edit Charging Station</h2>
+
+<form asp-action="EditStation" method="post">
+    <input type="hidden" asp-for="StationId" />
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Location"></label>
+        <input asp-for="Location" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Capacity"></label>
+        <input asp-for="Capacity" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AvailableSpots"></label>
+        <input asp-for="AvailableSpots" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PricePerCharge"></label>
+        <input asp-for="PricePerCharge" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

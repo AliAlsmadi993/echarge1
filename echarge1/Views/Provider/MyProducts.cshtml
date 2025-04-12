@@ -1,0 +1,59 @@
+﻿@model IEnumerable<echarge1.Models.Product>
+@{
+    ViewData["Title"] = "My Products";
+    Layout = "~/Views/Shared/_ProviderLayout.cshtml";
+}
+
+<h2 class="mb-4">📦 My Products</h2>
+
+<a asp-action="AddProduct" class="btn btn-success mb-3">➕ Add Product</a>
+
+@if (Model.Any())
+{
+    <table class="table table-hover shadow-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th>Price (JD)</th>
+                <th>Stock</th>
+                <th>Promotion</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                    <td>@p.Price.ToString("0.00")</td>
+                    <td>@p.StockQuantity</td>
+                    <td>
+                        @if (p.IsFeatured == true)
+                        {
+                            <span class="badge badge-success">Featured</span>
+
+                            <br />
+                            <small>@p.PromotionText</small>
+                        }
+                        else
+                        {
+                            <form method="post" asp-action="RequestPromotion" asp-route-productId="@p.ProductId">
+                                <button type="submit" class="btn btn-warning btn-sm">Promote (10 JD)</button>
+                            </form>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="EditProduct" asp-route-id="@p.ProductId" class="btn btn-sm btn-primary">Edit</a>
+                        <form asp-action="DeleteProduct" asp-route-id="@p.ProductId" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">No products found. Start by adding a new product!</div>
+}

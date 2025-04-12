@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Provider Dashboard</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    @RenderSection("Styles", required: false)
+
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #0d6efd;
+            color: white;
+            flex-shrink: 0;
+        }
+
+            .sidebar a {
+                color: white;
+                padding: 15px;
+                display: block;
+                text-decoration: none;
+            }
+
+                .sidebar a:hover {
+                    background-color: #084298;
+                }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h4 class="text-center py-3">Provider Panel</h4>
+        <a asp-controller="Provider" asp-action="Dashboard"><i class="fas fa-chart-bar"></i> Dashboard</a>
+        <a asp-controller="Provider" asp-action="MyProducts"><i class="fas fa-box"></i> My Products</a>
+        <a asp-controller="Provider" asp-action="AddProduct"><i class="fas fa-plus"></i> Add Product</a>
+        <a asp-controller="Provider" asp-action="MyOrders"><i class="fas fa-shopping-cart"></i> Orders</a>
+        <a asp-controller="Provider" asp-action="PromotionRequests"><i class="fas fa-bullhorn"></i> Promotion Requests</a>
+        <a asp-controller="Map" asp-action="MyStations"><i class="fas fa-charging-station"></i> My Stations</a>
+        <a asp-controller="Provider" asp-action="Profile"><i class="fas fa-user-circle"></i> My Profile</a>
+        <a asp-controller="Provider" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="main-content">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

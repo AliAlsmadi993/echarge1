@@ -1,0 +1,47 @@
+﻿@model List<echarge1.Models.Course>
+@{
+    ViewData["Title"] = "All Courses";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-success">📚 All Courses</h2>
+        <a asp-action="AddCourse" class="btn btn-primary">➕ Add New Course</a>
+    </div>
+
+    @if (Model.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Title</th>
+                    <th>Instructor</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var course in Model)
+                {
+                    <tr>
+                        <td>@course.Title</td>
+                        <td>@course.Instructor</td>
+                        <td>@course.StartDate.ToString("dd/MM/yyyy")</td>
+                        <td>@course.EndDate.ToString("dd/MM/yyyy")</td>
+                        <td>@course.Price.ToString("0.00") JOD</td>
+                        <td>
+                            <a asp-action="CourseApplications" asp-route-id="@course.CourseId" class="btn btn-info btn-sm">📥 View Applications</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center">No courses found.</div>
+    }
+</div>

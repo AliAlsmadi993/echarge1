@@ -1,0 +1,55 @@
+﻿@model List<PromotionRequest>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<h2 class="mb-3">Promotion Requests</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Provider</th>
+            <th>Status</th>
+            <th>Amount Paid</th>
+            <th>Requested At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var req in Model)
+        {
+            <tr>
+                <td>@req.Product?.Name</td>
+                <td>@req.Provider?.FullName</td>
+                <td>
+                    @if (req.Status == "Approved")
+                    {
+                        <span class="badge bg-success">Approved</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    }
+                </td>
+                <td>@req.AmountPaid.ToString("C")
+
+                <td>@req.RequestDate.ToShortDateString()</td>
+                <td>
+                    @if (req.Status == "Pending")
+                    {
+                        <form asp-action="ApprovePromotion" method="post">
+                            <input type="hidden" name="requestId" value="@req.Id" />
+                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-muted">✓</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

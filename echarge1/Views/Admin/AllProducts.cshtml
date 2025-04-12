@@ -1,0 +1,31 @@
+﻿@{
+    var providerProducts = ViewBag.ProviderProducts as List<Product>;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="text-success mb-4">🛒 Provider Products</h3>
+
+@if (providerProducts != null && providerProducts.Any())
+{
+    <div class="row">
+        @foreach (var product in providerProducts)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text"><strong>@product.Price</strong> JOD</p>
+                        <p class="text-muted"><small>By: @product.Provider?.FullName</small></p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">
+        No provider products available.
+    </div>
+}

@@ -1,0 +1,33 @@
+﻿<div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3">
+        <div class="list-group">
+            <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action active">My Profile</a>
+            <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">Edit Profile</a>
+            <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action">My Orders</a>
+            <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action">My Bookings</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9">
+        <h2>Your Profile</h2>
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        <h4>Full Name: @Model.FullName</h4>
+        <p>Email: @Model.Email</p>
+        <p>Phone: @Model.PhoneNumber</p>
+
+        @if (!string.IsNullOrEmpty(Model.ProfileImage))
+        {
+            <img src="@Model.ProfileImage" alt="Profile Image" width="150" />
+        }
+        else
+        {
+            <p>No profile image available.</p>
+        }
+    </div>
+</div>

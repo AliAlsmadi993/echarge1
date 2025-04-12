@@ -1,0 +1,35 @@
+﻿@model IEnumerable<ChargingStation>
+
+<h2>Manage Charging Stations</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Capacity</th>
+            <th>Available</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.Name</td>
+                <td>@s.Location</td>
+                <td>@s.Capacity</td>
+                <td>@s.AvailableSpots</td>
+                <td>@s.PricePerCharge JOD</td>
+                <td>
+                    <a asp-action="EditStation" asp-route-id="@s.StationId" class="btn btn-warning btn-sm">Edit</a>
+                    <form asp-action="DeleteStation" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@s.StationId" />
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

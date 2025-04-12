@@ -1,5 +1,9 @@
 ﻿@model echarge1.Models.CartItem
 
+@{
+    ViewData["Title"] = "Checkout";
+}
+
 <h2>Checkout</h2>
 
 @section Styles {
@@ -37,15 +41,29 @@
                 <tr>
                     <td>@item.Product.Name</td>
                     <td>@item.Quantity</td>
-                    <td>@item.Product.Price</td>
+                    <td>@item.Product.Price $</td>
                     <td>@(item.Quantity * item.Product.Price) $</td>
                 </tr>
             }
         </tbody>
     </table>
-    <h3>Total Amount: @ViewBag.TotalAmount $</h3>
 
-    <form method="post" asp-action="Checkout" asp-controller="Shop">
-        <button type="submit" class="btn btn-success w-100">Proceed to Payment</button>
+    <h3>Total Amount: <strong>@ViewBag.TotalAmount $</strong></h3>
+
+    <div>
+        <h4>Payment Information:</h4>
+        <p>Make payment to the following number: <strong>0777785218</strong> and upload the receipt image.</p>
+        <p>Please upload your receipt for payment confirmation:</p>
+        <input type="file" name="ReceiptImage" accept="image/*" required />
+    </div>
+
+    <div>
+        <h4>Shipping Address:</h4>
+        <textarea name="shippingAddress" class="form-control" placeholder="Enter your shipping address" rows="4" required></textarea>
+    </div>
+
+    <form method="post" asp-action="ConfirmCheckout" asp-controller="Shop" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-success w-100 mt-3">Proceed to Payment</button>
     </form>
 </div>

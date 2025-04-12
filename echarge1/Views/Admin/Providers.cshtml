@@ -1,0 +1,34 @@
+﻿@model List<AppUser>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<h2 class="mb-3">All Providers</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var provider in Model)
+        {
+            <tr>
+                <td>@provider.FullName</td>
+                <td>@provider.Email</td>
+                <td>@provider.PhoneNumber</td>
+                <td>
+                    <form asp-action="DeleteProvider" method="post" onsubmit="return confirm('Are you sure you want to delete this provider and all their products?')">
+                        <input type="hidden" name="id" value="@provider.UserId" />
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

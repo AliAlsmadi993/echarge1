@@ -1,0 +1,47 @@
+﻿@model ChargingStation
+
+<h2>Edit Station</h2>
+
+<form asp-action="EditStation" method="post">
+    <input type="hidden" asp-for="StationId" />
+
+    <div>
+        <label>Name:</label>
+        <input asp-for="Name" class="form-control" required />
+    </div>
+
+    <div>
+        <label>Capacity:</label>
+        <input asp-for="Capacity" class="form-control" required />
+    </div>
+
+    <div>
+        <label>Price Per Charge:</label>
+        <input asp-for="PricePerCharge" class="form-control" required />
+    </div>
+
+    <div>
+        <label>Google Maps Link:</label>
+        <input type="text" name="locationUrl" class="form-control" />
+    </div>
+
+    <div>
+        <label>OR Device Location:</label>
+        <input type="text" name="deviceLocation" id="deviceLocation" class="form-control" />
+        <button type="button" onclick="getLocation()">📍 Use Current Location</button>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Update</button>
+</form>
+
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                document.getElementById("deviceLocation").value = `${pos.coords.latitude},${pos.coords.longitude}`;
+            });
+        } else {
+            alert("Geolocation not supported");
+        }
+    }
+</script>

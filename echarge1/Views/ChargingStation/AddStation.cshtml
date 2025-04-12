@@ -1,0 +1,124 @@
+﻿@model ChargingStation
+
+<h2>Add New Charging Station</h2>
+
+<form asp-action="AddStation" method="post">
+    <div>
+        <label>Name:</label>
+        <input asp-for="Name" class="form-control" required />
+    </div>
+
+    <div>
+        <label>Capacity:</label>
+        <input asp-for="Capacity" class="form-control" required />
+    </div>
+
+    <div>
+        <label>Price Per Charge:</label>
+        <input asp-for="PricePerCharge" class="form-control" required />
+    </div>
+
+    <!-- ✅ أنواع الشواحن (Dropdown + manual + count) -->
+    <div class="form-group">
+        <label>Charger Types</label>
+
+        <div id="charger-types-list">
+            <div class="d-flex mb-2">
+                <select class="form-control me-2 charger-type-select" style="width: 50%;" required>
+                    <option value="">-- Select Type --</option>
+                    <option value="CCS">CCS</option>
+                    <option value="CHAdeMO">CHAdeMO</option>
+                    <option value="Tesla">Tesla</option>
+                    <option value="Type1">Type1</option>
+                    <option value="Type2">Type2</option>
+                    <option value="GB/T">GB/T</option>
+                    <option value="Other">Other (Manual)</option>
+                </select>
+                <input type="number" class="form-control charger-count-input" placeholder="Count" min="1" style="width: 25%;" required />
+                <button type="button" class="btn btn-danger ms-2 remove-charger">✖</button>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary mb-2" onclick="addChargerRow()">➕ Add Charger Type</button>
+
+        <!-- ✅ هذا هو المهم: حقل مخفي سيتم فيه تخزين JSON -->
+        <input type="hidden" name="chargerTypesJson" id="chargerTypesJson" />
+    </div>
+
+    <div>
+        <label>📍 Google Maps Link:</label>
+        <input type="text" name="locationUrl" class="form-control" />
+    </div>
+
+    <div>
+        <label>OR Get My Location:</label>
+        <input type="text" name="deviceLocation" id="deviceLocation" readonly class="form-control" />
+        <button type="button" onclick="getLocation()">📍 Use Current Location</button>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-2">Add Station</button>
+</form>
+
+<!-- ✅ سكربت -->
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                document.getElementById("deviceLocation").value = `${pos.coords.latitude},${pos.coords.longitude}`;
+            });
+        } else {
+            alert("Geolocation not supported");
+        }
+    }
+
+    function addChargerRow() {
+        const html = `
+            <div class="d-flex mb-2">
+                <select class="form-control me-2 charger-type-select" style="width: 50%;" required>
+                    <option value="">-- Select Type --</option>
+                    <option value="CCS">CCS</option>
+                    <option value="CHAdeMO">CHAdeMO</option>
+                    <option value="Tesla">Tesla</option>
+                    <option value="Type1">Type1</option>
+                    <option value="Type2">Type2</option>
+                    <option value="GB/T">GB/T</option>
+                    <option value="Other">Other (Manual)</option>
+                </select>
+                <input type="number" class="form-control charger-count-input" placeholder="Count" min="1" style="width: 25%;" required />
+                <button type="button" class="btn btn-danger ms-2 remove-charger">✖</button>
+            </div>
+        `;
+        document.getElementById('charger-types-list').insertAdjacentHTML('beforeend', html);
+    }
+
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-charger')) {
+            e.target.parentElement.remove();
+        }
+
+        if (e.target.classList.contains('charger-type-select') && e.target.value === 'Other') {
+            const input = prompt("Enter custom charger type:");
+            if (input) {
+                const opt = document.createElement("option");
+                opt.value = input;
+                opt.text = input;
+                opt.selected = true;
+                e.target.appendChild(opt);
+            } else {
+                e.target.value = "";
+            }
+        }
+    });
+
+    document.querySelector('form').addEventListener('submit', function () {
+        const types = {};
+        document.querySelectorAll('#charger-types-list .d-flex').forEach(row => {
+            const type = row.querySelector('.charger-type-select').value;
+            const count = row.querySelector('.charger-count-input').value;
+            if (type && count > 0) {
+                types[type] = parseInt(count);
+            }
+        });
+        document.getElementById('chargerTypesJson').value = JSON.stringify(types);
+    });
+</script>

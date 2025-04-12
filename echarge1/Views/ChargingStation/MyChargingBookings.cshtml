@@ -1,0 +1,30 @@
+﻿@model IEnumerable<ChargingBooking>
+
+<h2>My Charging Bookings</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You don't have any bookings yet.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Station</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model)
+            {
+                <tr>
+                    <td>@b.Station?.Name</td>
+                    <td>@b.BookingDate.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@b.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
