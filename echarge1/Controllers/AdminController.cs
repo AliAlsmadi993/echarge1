@@ -374,12 +374,14 @@ public class AdminController : Controller
         var orders = await _context.Orders
             .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
-            .Where(o => o.OrderItems.Any(oi => oi.Product.ProviderId == null)) // فقط المنتجات التابعة للموقع
+            .Include(o => o.User) // ✅ ضروري عشان order.User ما يكون null
+            .Where(o => o.OrderItems.Any(oi => oi.Product.ProviderId == null)) // فقط المنتجات الخاصة بالموقع
             .OrderByDescending(o => o.OrderDate)
             .ToListAsync();
 
-        return View(orders); // تمرير البيانات إلى الـ View
+        return View(orders);
     }
+
 
     [HttpPost]
     public async Task<IActionResult> UpdateOrderStatus(int OrderId, string Status)

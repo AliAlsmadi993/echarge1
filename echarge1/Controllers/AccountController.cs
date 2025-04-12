@@ -82,46 +82,46 @@ public class AccountController : Controller
         HttpContext.Session.SetInt32("UserId", user.UserId);
         HttpContext.Session.SetString("UserType", user.UserType);
         HttpContext.Session.SetString("UserName", user.FullName);
-
-        // تخزين صورة المستخدم في ViewBag أو ViewData
         HttpContext.Session.SetString("UserProfileImage", user.ProfileImage ?? "/images/default-profile.png");
 
         user.LastLogin = DateTime.Now;
         await _context.SaveChangesAsync();
 
-        // ✅ Logging: التحقق إذا كانت الكوكيز تحتوي على بيانات
+        // ✅ دمج السلة من الكوكيز إلى قاعدة البيانات
         var cartCookie = Request.Cookies["Cart_Pending_Product"];
         if (!string.IsNullOrEmpty(cartCookie))
         {
             var productIds = cartCookie.Split(',').Select(int.Parse).ToList();
+            var grouped = productIds.GroupBy(id => id)
+                                     .Select(g => new { ProductId = g.Key, Count = g.Count() })
+                                     .ToList();
 
-            // ✅ إضافة المنتجات إلى السلة الخاصة بالمستخدم
-            foreach (var productId in productIds)
+            foreach (var item in grouped)
             {
                 var existingItem = await _context.CartItems
-                    .FirstOrDefaultAsync(c => c.ProductId == productId && c.UserId == user.UserId);
+                    .FirstOrDefaultAsync(c => c.ProductId == item.ProductId && c.UserId == user.UserId && !c.IsCheckedOut);
 
-                if (existingItem == null)
+                if (existingItem != null)
+                {
+                    existingItem.Quantity += item.Count;
+                }
+                else
                 {
                     _context.CartItems.Add(new CartItem
                     {
-                        ProductId = productId,
+                        ProductId = item.ProductId,
                         UserId = user.UserId,
-                        Quantity = 1,
+                        Quantity = item.Count,
                         DateAdded = DateTime.Now,
                         IsCheckedOut = false
                     });
                 }
             }
 
-            // ✅ حفظ التغييرات في قاعدة البيانات
             await _context.SaveChangesAsync();
-
-            // ✅ حذف الكوكيز بعد إضافة المنتجات إلى السلة
             Response.Cookies.Delete("Cart_Pending_Product");
         }
 
-        // ✅ توجيه المستخدم حسب نوعه
         return user.UserType switch
         {
             "Admin" => RedirectToAction("AdminDashboard", "Admin"),
@@ -140,19 +140,16 @@ public class AccountController : Controller
             return RedirectToAction("Login", "Account");
         }
 
-        var user = await _context.AppUsers
-            .FirstOrDefaultAsync(u => u.UserId == userId);
-
+        var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.UserId == userId);
         if (user == null)
         {
             TempData["Error"] = "User not found.";
             return RedirectToAction("Login", "Account");
         }
 
-        return View(user);  // تمرير البيانات للمودل في الـ View
+        return View(user);
     }
 
-    // ✅ عرض صفحة تعديل البروفايل
     public async Task<IActionResult> Edit()
     {
         int? userId = HttpContext.Session.GetInt32("UserId");
@@ -163,19 +160,16 @@ public class AccountController : Controller
             return RedirectToAction("Login", "Account");
         }
 
-        var user = await _context.AppUsers
-            .FirstOrDefaultAsync(u => u.UserId == userId);
-
+        var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.UserId == userId);
         if (user == null)
         {
             TempData["Error"] = "User not found.";
             return RedirectToAction("Login", "Account");
         }
 
-        return View(user);  // تمرير بيانات المستخدم إلى View لتعديلها
+        return View(user);
     }
 
-    // ✅ حفظ التعديلات على البروفايل
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Update(AppUser model, IFormFile profileImage)
@@ -188,21 +182,17 @@ public class AccountController : Controller
             return RedirectToAction("Login", "Account");
         }
 
-        var user = await _context.AppUsers
-            .FirstOrDefaultAsync(u => u.UserId == userId);
-
+        var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.UserId == userId);
         if (user == null)
         {
             TempData["Error"] = "User not found.";
             return RedirectToAction("Login", "Account");
         }
 
-        // تحديث بيانات المستخدم
         user.FullName = model.FullName;
         user.Email = model.Email;
         user.PhoneNumber = model.PhoneNumber;
 
-        // التعامل مع صورة البروفايل
         if (profileImage != null && profileImage.Length > 0)
         {
             var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
@@ -210,16 +200,12 @@ public class AccountController : Controller
             var filePath = Path.Combine(uploadPath, fileName);
 
             if (!Directory.Exists(uploadPath))
-            {
                 Directory.CreateDirectory(uploadPath);
-            }
 
             using (var stream = new FileStream(filePath, FileMode.Create))
-            {
                 await profileImage.CopyToAsync(stream);
-            }
 
-            user.ProfileImage = "/uploads/" + fileName; // حفظ مسار الصورة
+            user.ProfileImage = "/uploads/" + fileName;
         }
 
         await _context.SaveChangesAsync();
@@ -228,10 +214,9 @@ public class AccountController : Controller
         return RedirectToAction("Profile");
     }
 
-    // ✅ تسجيل الخروج
     public IActionResult Logout()
     {
-        HttpContext.Session.Clear(); // مسح جميع البيانات من الجلسة
+        HttpContext.Session.Clear();
         return RedirectToAction("Login", "Account");
     }
 
@@ -257,7 +242,6 @@ public class AccountController : Controller
             return View(user);
         }
 
-        // إعداد بيانات الأدمن
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(Password);
         user.UserType = "Admin";
         user.CreatedAt = DateTime.Now;
@@ -267,11 +251,10 @@ public class AccountController : Controller
         _context.AppUsers.Add(user);
         await _context.SaveChangesAsync();
 
-        // إضافة إلى جدول Admin
         var admin = new Admin
         {
             UserId = user.UserId,
-            Role = "SuperAdmin" // أو Admin حسب الحاجة
+            Role = "SuperAdmin"
         };
 
         _context.Admins.Add(admin);
@@ -280,5 +263,4 @@ public class AccountController : Controller
         TempData["Success"] = "Admin registered successfully.";
         return RedirectToAction("Login", "Account");
     }
-
 }

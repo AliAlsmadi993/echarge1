@@ -1,4 +1,8 @@
 ﻿@model echarge1.Models.Order
+@{
+    var returnUrl = Context.Request.Headers["Referer"].ToString();
+}
+
 
 @{
     ViewData["Title"] = "Order Details";
@@ -14,11 +18,40 @@
 }
 
 <div class="order-info mt-4 mb-4">
-    <h4>Order #@Model.OrderId</h4>
+    <h4>🧾 Order #@Model.OrderId</h4>
     <p><strong>Date:</strong> @Model.OrderDate?.ToString("yyyy-MM-dd HH:mm")</p>
     <p><strong>Status:</strong> @Model.Status</p>
+    <p><strong>Total:</strong> @Model.TotalAmount $</p>
+    <p><strong>Shipping Address:</strong> @Model.ShippingAddress</p>
+    @if (!string.IsNullOrEmpty(Model.ReceiptImageUrl))
+    {
+        <p>
+            <strong>Receipt:</strong><br />
+            <img src="@Model.ReceiptImageUrl" alt="Receipt" style="max-width: 300px;" />
+        </p>
+    }
 </div>
 
+<hr />
+
+<h4>User Information</h4>
+@if (Model.User != null)
+{
+    <ul>
+        <li><strong>Name:</strong> @Model.User.FullName</li>
+        <li><strong>Email:</strong> @Model.User.Email</li>
+        <li><strong>Phone:</strong> @Model.User.PhoneNumber</li>
+        <li><strong>Account Type:</strong> @Model.User.UserType</li>
+    </ul>
+}
+else
+{
+    <p><em>User not found (may be deleted)</em></p>
+}
+
+<hr />
+
+<h4>Products</h4>
 <table class="table table-bordered">
     <thead class="thead-dark">
         <tr>
@@ -32,10 +65,10 @@
         @foreach (var item in Model.OrderItems)
         {
             <tr>
-                <td>@item.Product.Name</td>
-                <td>@item.Product.Price $</td>
+                <td>@item.Product?.Name</td>
+                <td>@item.Product?.Price $</td>
                 <td>@item.Quantity</td>
-                <td>@(item.SubTotal) $</td>
+                <td>@item.SubTotal $</td>
             </tr>
         }
     </tbody>
@@ -45,18 +78,28 @@
     <h4>Total: <strong>@Model.TotalAmount $</strong></h4>
 </div>
 
-<a href="@Url.Action("History", "Shop")" class="btn btn-primary mt-3">Back to Orders</a>
+<a href="@returnUrl" class="btn btn-secondary mt-3">← Back</a>
 
 @section Styles {
     <style>
-        h2 {
+        h2, h4 {
             color: #2c3e50;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .order-info p {
             margin: 0;
             font-size: 16px;
         }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+            ul li {
+                font-size: 15px;
+                margin-bottom: 5px;
+            }
     </style>
 }

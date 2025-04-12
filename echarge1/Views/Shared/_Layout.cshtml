@@ -10,74 +10,106 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-SdJ+yZJWJ5w0zkvF6I6KDPIkKP9BZhh44BJ5l6g34tKvDkE68/5nXCM+UVcBsXHaNhDtPPDnp0g3yWaRfGO29g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- Leaflet CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        .navbar-custom {
+            background-color: #1ABC9C;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-    <!-- Leaflet Routing Machine CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
-    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            transition: 0.3s;
+        }
 
-    <!-- Leaflet Rotated Marker -->
-    <script src="https://rawcdn.githack.com/bbecquet/Leaflet.RotatedMarker/master/leaflet.rotatedMarker.js"></script>
+            .nav-link:hover {
+                color: #f1f1f1 !important;
+            }
 
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 10px;
+        }
+
+        .cart-preview {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 300px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            z-index: 1050;
+        }
+
+        .cart-hover:hover .cart-preview {
+            display: block;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255, 0.8)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+    </style>
     @RenderSection("Styles", required: false)
 </head>
 <body>
-    @* 🔽 استخراج صورة المستخدم من الـ Session *@
     @{
         var userImage = HttpContextAccessor.HttpContext.Session.GetString("UserProfileImage");
     }
 
-    <!-- Navbar -->
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <nav class="navbar navbar-expand-lg navbar-custom">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">E-CHARGE</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand text-white fw-bold" asp-controller="Home" asp-action="Index">E-CHARGE</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Map" asp-action="Index">Map</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Shop" asp-action="Store">Shop</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Shop" asp-action="History">History</a></li>
+                        <li class="nav-item cart-hover">
+                            <a class="nav-link position-relative cart-icon" href="/Shop/Cart">
+                                <i class="fas fa-shopping-cart fa-lg"></i>
+                                <span id="cart-count" class="cart-badge">0</span>
+                            </a>
+                            <div class="cart-preview" id="cart-preview">
+                                <p class="text-muted">Loading cart...</p>
+                            </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Map" asp-action="Index"> Map</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Shop" asp-action="Store">Shop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Shop" asp-action="History">History</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Shop" asp-action="Cart">Cart</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Course" asp-action="AllCourses">Courses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
-                        </li>
-
+                        <li class="nav-item"><a class="nav-link" asp-controller="Course" asp-action="AllCourses">Courses</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
                         @if (!string.IsNullOrEmpty(userImage))
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Profile">
-                                    <img src="@userImage" alt="User Image" class="rounded-circle" width="40" height="40" />
+                                <a class="nav-link" asp-controller="Account" asp-action="Profile">
+                                    <img src="@userImage" class="rounded-circle" style="width:35px;height:35px;object-fit:cover;" />
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                                <a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
                             </li>
                         }
                     </ul>
@@ -86,48 +118,77 @@
         </nav>
     </header>
 
-    <!-- Content -->
     <div class="container mt-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-dark text-white py-4 mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
                     <h5>About E-CHARGE</h5>
                     <p>Fast and reliable EV charging services with advanced booking and tracking features.</p>
-                    <p>We aim to provide the best experience for electric vehicle owners.</p>
                 </div>
                 <div class="col-md-4">
                     <h5>Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a class="text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a class="text-white" asp-area="" asp-controller="Home" asp-action="About">About Us</a></li>
-                        <li><a class="text-white" asp-area="" asp-controller="Home" asp-action="Booking">Booking</a></li>
-                        <li><a class="text-white" asp-area="" asp-controller="Home" asp-action="Contact">Contact Us</a></li>
+                        <li><a class="text-white" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a class="text-white" asp-controller="Home" asp-action="About">About Us</a></li>
+                        <li><a class="text-white" asp-controller="Home" asp-action="Booking">Booking</a></li>
+                        <li><a class="text-white" asp-controller="Home" asp-action="Contact">Contact Us</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">
                     <h5>Follow Us</h5>
                     <div class="social-icons mb-3">
-                        <a href="https://facebook.com" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://twitter.com" class="text-white me-3"><i class="fab fa-twitter"></i></a>
-                        <a href="https://instagram.com" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-                        <a href="https://linkedin.com" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="mt-3 text-center">&copy; 2025 E-CHARGE. All Rights Reserved.</div>
+            <div class="text-center mt-3">&copy; 2025 E-CHARGE. All Rights Reserved.</div>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/Shop/GetCartCount')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("cart-count").textContent = data.count;
+                });
+
+            fetch('/Shop/GetCartPreview')
+                .then(res => res.json())
+                .then(items => {
+                    const container = document.getElementById("cart-preview");
+                    container.innerHTML = "";
+
+                    if (items.length === 0) {
+                        container.innerHTML = "<p class='text-muted'>Your cart is empty.</p>";
+                    } else {
+                        items.forEach(item => {
+                            const row = document.createElement("div");
+                            row.classList.add("d-flex", "align-items-center", "mb-2");
+                            row.innerHTML = `
+                                <img src="${item.imageUrl}" style="width:40px;height:40px;object-fit:cover;margin-right:10px;">
+                                <div>
+                                    <strong>${item.name}</strong><br>
+                                    <small>${item.quantity} x $${item.price}</small>
+                                </div>
+                            `;
+                            container.appendChild(row);
+                        });
+                    }
+                });
+        });
+    </script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

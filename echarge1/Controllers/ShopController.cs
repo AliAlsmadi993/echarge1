@@ -340,6 +340,7 @@ namespace echarge1.Controllers
             var order = await _context.Orders
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Product)
+                .Include(o => o.User) // ⬅️ ضروري لجلب بيانات المستخدم
                 .FirstOrDefaultAsync(o => o.OrderId == id);
 
             if (order == null)
@@ -423,6 +424,65 @@ namespace echarge1.Controllers
 
             await _context.SaveChangesAsync();
         }
+
+        [HttpGet]
+        public IActionResult GetCartPreview()
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            List<object> previewItems = new();
+
+            if (userId != null)
+            {
+                var items = _context.CartItems
+                    .Where(c => c.UserId == userId && !c.IsCheckedOut)
+                    .Include(c => c.Product)
+                    .Take(3)
+                    .ToList();
+
+                previewItems = items.Select(i => new
+                {
+                    name = i.Product.Name,
+                    imageUrl = i.Product.ImageUrl ?? "/images/default.jpg",
+                    quantity = i.Quantity,
+                    price = i.Product.Price
+                }).ToList<object>();
+            }
+            else
+            {
+                // fallback لسلة الزوار إذا كنت تخزنها في الكوكيز أو سيشن مثلاً
+                previewItems = new List<object>(); // أو رجع عناصر من الكوكيز إن وجدت
+            }
+
+            return Json(previewItems);
+        }
+        [HttpGet]
+        public IActionResult GetCartCount()
+        {
+            int count = 0;
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId != null)
+            {
+                // للمستخدم المسجل
+                count = _context.CartItems
+                    .Where(c => c.UserId == userId && !c.IsCheckedOut)
+                    .Sum(c => c.Quantity);
+            }
+            else
+            {
+                // للزائر، إذا كنت مخزن السلة في session كـ string مثلًا: "1,2,2,3"
+                var cartString = HttpContext.Session.GetString("cart");
+                if (!string.IsNullOrEmpty(cartString))
+                {
+                    var productIds = cartString.Split(',').Select(int.Parse);
+                    count = productIds.Count();
+                }
+            }
+
+            return Json(new { count });
+        }
+
 
     }
 }
