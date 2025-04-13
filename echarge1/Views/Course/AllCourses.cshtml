@@ -31,7 +31,6 @@
                 <p>@course.Description</p>
                 <p class="price">@course.Price.ToString("0.00") JOD</p>
                 <div class="buttons">
-                    <a href="#" class="cta-button">Enroll Now</a>
                     <a asp-controller="Course" asp-action="Apply" asp-route-id="@course.CourseId" class="apply-button">Apply Now</a>
                     <button class="info-button" onclick="toggleInfo(event, @course.CourseId)">More Info</button>
                 </div>

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using System.Text.Json;
+using System.Globalization;
 
 namespace echarge1.Controllers
 {
@@ -282,5 +283,81 @@ namespace echarge1.Controllers
             return View(bookings);
         }
 
+        // ✅ GET: Edit Station Page
+        [HttpGet]
+        public async Task<IActionResult> EditStation(int id)
+        {
+            var station = await _context.ChargingStations.FindAsync(id);
+            if (station == null)
+                return NotFound();
+
+            return View(station);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditStation(int id, ChargingStation updated, string? locationUrl, string? deviceLocation, string? chargerTypesJson)
+        {
+            var existing = await _context.ChargingStations.FirstOrDefaultAsync(s => s.StationId == id);
+            if (existing == null)
+                return NotFound();
+
+            // تحديث الحقول الأساسية فقط
+            existing.Name = updated.Name;
+            existing.Capacity = updated.Capacity;
+            existing.AvailableSpots = updated.AvailableSpots;
+            existing.PricePerCharge = updated.PricePerCharge;
+
+            if (!string.IsNullOrEmpty(locationUrl))
+            {
+                var location = ExtractCoordinatesFromGoogleMapsUrl(locationUrl);
+                if (location == null)
+                {
+                    ModelState.AddModelError("Location", "Invalid Google Maps link.");
+                    return View(existing);
+                }
+                existing.Location = location;
+            }
+            else if (!string.IsNullOrEmpty(deviceLocation))
+            {
+                existing.Location = deviceLocation;
+            }
+
+            if (!string.IsNullOrEmpty(chargerTypesJson))
+            {
+                existing.ChargerTypesJson = chargerTypesJson;
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Station updated successfully.";
+            return RedirectToAction("MyStations");
+        }
+
+        private string? ExtractCoordinatesFromGoogleMapsUrl(string url)
+        {
+            try
+            {
+                int atIndex = url.IndexOf("@");
+                if (atIndex != -1)
+                {
+                    string coordsPart = url.Substring(atIndex + 1);
+                    string[] parts = coordsPart.Split(',');
+
+                    if (parts.Length >= 2)
+                    {
+                        double lat = double.Parse(parts[0], CultureInfo.InvariantCulture);
+                        double lng = double.Parse(parts[1], CultureInfo.InvariantCulture);
+                        return $"{lat},{lng}";
+                    }
+                }
+            }
+            catch
+            {
+                // ignore error
+            }
+
+            return null;
+        }
     }
 }
+

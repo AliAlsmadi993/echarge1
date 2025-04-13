@@ -1,0 +1,112 @@
+﻿body {
+    background-color: #f4f7fa;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* التخطيط الجانبي */
+.profile-layout {
+    display: flex;
+    max-width: 1100px;
+    margin: 2rem auto;
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+/* الشريط الجانبي */
+.sidebar {
+    width: 260px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 1rem 0;
+    flex-shrink: 0;
+}
+
+    .sidebar .list-group-item {
+        border: none;
+        padding: 1rem 1.5rem;
+        font-weight: 500;
+        font-size: 1rem;
+        color: #2c3e50;
+        transition: 0.2s ease-in-out;
+    }
+
+        .sidebar .list-group-item:hover,
+        .sidebar .list-group-item.active {
+            background-color: #1abc9c;
+            color: #fff !important;
+        }
+
+/* المحتوى */
+.content {
+    flex: 1;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.page-title {
+    color: #1abc9c;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+/* الجدول */
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+    .order-table th {
+        background-color: #ecf0f1;
+        padding: 0.75rem;
+        text-align: left;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .order-table td {
+        padding: 0.75rem;
+        border-top: 1px solid #ddd;
+        vertical-align: middle;
+    }
+
+/* حالة الطلب */
+.status-badge {
+    background-color: #3498db;
+    color: white;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+/* زر التقييم */
+.btn-rate {
+    background-color: #1abc9c;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+    .btn-rate:hover {
+        background-color: #16a085;
+    }
+
+/* حالة عدم وجود طلبات */
+.no-orders {
+    background-color: #dff9fb;
+    color: #1e3799;
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 10px;
+    font-weight: 500;
+    margin-top: 2rem;
+}

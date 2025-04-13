@@ -483,6 +483,29 @@ namespace echarge1.Controllers
             return Json(new { count });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateQuantity(int productId, string action)
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return RedirectToAction("Cart");
+
+            var item = await _context.CartItems
+                .FirstOrDefaultAsync(c => c.UserId == userId && c.ProductId == productId && !c.IsCheckedOut);
+
+            if (item != null)
+            {
+                if (action == "increase")
+                    item.Quantity++;
+                else if (action == "decrease" && item.Quantity > 1)
+                    item.Quantity--;
+
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Cart");
+        }
+
+
 
     }
 }

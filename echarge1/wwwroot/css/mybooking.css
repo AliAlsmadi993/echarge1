@@ -1,0 +1,141 @@
+﻿/* خلفية عامة */
+body {
+    background-color: #f4f7fa;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* تخطيط الصفحة الجانبي */
+.profile-layout {
+    display: flex;
+    max-width: 1100px;
+    margin: 2rem auto;
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+/* الشريط الجانبي */
+.sidebar {
+    width: 260px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 1rem 0;
+    flex-shrink: 0;
+}
+
+    .sidebar .list-group-item {
+        border: none;
+        padding: 1rem 1.5rem;
+        font-weight: 500;
+        font-size: 1rem;
+        color: #2c3e50;
+        transition: 0.2s ease-in-out;
+    }
+
+        .sidebar .list-group-item:hover,
+        .sidebar .list-group-item.active {
+            background-color: #1abc9c;
+            color: #fff !important;
+        }
+
+/* المحتوى الرئيسي */
+.content {
+    flex: 1;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* عنوان الصفحة */
+.page-title {
+    color: #1abc9c;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+    font-size: 1.6rem;
+}
+
+/* التنبيه */
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+/* الجدول */
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    margin-top: 1rem;
+}
+
+    .order-table th {
+        background-color: #ecf0f1;
+        padding: 0.75rem;
+        text-align: left;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .order-table td {
+        padding: 0.75rem;
+        border-top: 1px solid #ddd;
+        vertical-align: middle;
+    }
+
+/* حالة الحجز */
+.status-badge {
+    background-color: #3498db;
+    color: white;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+/* زر تعديل */
+.btn-edit {
+    background-color: #f39c12;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+    .btn-edit:hover {
+        background-color: #e67e22;
+    }
+
+/* زر حذف */
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+    .btn-delete:hover {
+        background-color: #c0392b;
+    }
+
+/* حالة لا توجد بيانات */
+.no-orders {
+    background-color: #dff9fb;
+    color: #1e3799;
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 10px;
+    font-weight: 500;
+    margin-top: 2rem;
+}

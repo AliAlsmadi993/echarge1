@@ -1,0 +1,129 @@
+﻿  <link rel="stylesheet" href="~/css/About.css" />
+
+
+<script>
+        fetch('./nav.html')
+         .then(response => response.text())
+         .then(data => {
+             document.getElementById('navbar').innerHTML = data;
+
+             // إعادة تفعيل زر الـ Burger Menu
+             const menuToggle = document.querySelector('.menu-toggle');
+             const menu = document.querySelector('.menu');
+             if (menuToggle) {
+                 menuToggle.addEventListener('click', () => {
+                     menu.classList.toggle('active');
+                 });
+             }
+         });
+
+
+
+         </script>
+
+
+    <!-- Navbar -->
+    <div id="navbar"></div>
+
+    <!-- About Us Section with Animated Background -->
+    <section class="about-section">
+        <div class="background-slider">
+            <div class="slide active" style="background-image: url('/img/111.jpg');">
+                <div class="text-overlay">
+
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('/img/12221.webp');">
+                <div class="text-overlay">
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us -->
+    <section class="about-content">
+        <div class="container">
+            <h1>About Us</h1>
+            <p>At <strong>E-Charge</strong>, we are dedicated to enhancing the charging experience for electric vehicle owners and station operators by minimizing waiting times through our advanced booking system.</p>
+
+            <div class="about-item" data-aos="fade-right">
+                <img src="/img/imgab1.png" alt="Efficient Booking" class="about-image">
+                <div class="about-text">
+                    <h2>Our Mission</h2>
+                    <p>To revolutionize the electric vehicle charging experience by introducing an easy-to-use booking system that saves time and eliminates unnecessary waiting at stations.</p>
+                </div>
+            </div>
+
+            <div class="about-item" data-aos="fade-left">
+                <img src="/img/imgab2.webp" alt="User Convenience" class="about-image">
+                <div class="about-text">
+                    <h2>Our Vision</h2>
+                    <p>To create a seamless, user-focused charging experience by integrating cutting-edge technology and real-time data analytics for electric vehicle owners and station operators.</p>
+                </div>
+            </div>
+
+            <div class="about-item" data-aos="fade-right">
+                <img src="/img/imgab3.webp" alt="Our Technology" class="about-image">
+                <div class="about-text">
+                    <h2>Our Technology</h2>
+                    <p>Our platform leverages real-time tracking, smart scheduling, and AI-driven predictions to optimize charging station usage and reduce waiting times.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Future Goals -->
+    <section class="future-section" data-aos="fade-up">
+        <div class="container">
+            <h2>Our Goals for the Future</h2>
+            <p>As we continue to grow, we aim to:</p>
+            <ul>
+                <li>Expand our platform to cover more locations globally.</li>
+                <li>Introduce advanced features like predictive analytics and dynamic pricing.</li>
+                <li>Collaborate with station operators to create a unified charging network.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section class="community-section" data-aos="fade-up">
+        <div class="container">
+            <h2>Our Community</h2>
+            <p>We are building a network of EV owners and station operators who are committed to sustainability and efficiency.</p>
+            <ul>
+                <li>Workshops for EV owners on maximizing battery life.</li>
+                <li>Collaboration with operators to improve station performance.</li>
+                <li>Feedback-driven improvements to our platform.</li>
+            </ul>
+            <img src="/img/aboutend.webp" alt="Community Engagement" class="community-image">
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <script>
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('footer').innerHTML = data);
+    </script>
+
+    <!-- AOS Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1200,
+            easing: 'ease-in-out',
+            once: true,
+        });
+
+        // Background Image Slider Animation
+        let slides = document.querySelectorAll('.slide');
+        let index = 0;
+        setInterval(() => {
+            slides[index].classList.remove('active');
+            index = (index + 1) % slides.length;
+            slides[index].classList.add('active');
+        }, 5000);
+    </script>

@@ -1,0 +1,107 @@
+﻿body {
+    background-color: #f4f7fa;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* الحاوية الرئيسية */
+.profile-layout {
+    display: flex;
+    max-width: 1100px;
+    margin: 2rem auto;
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+/* الشريط الجانبي */
+.sidebar {
+    width: 260px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 1rem 0;
+    flex-shrink: 0;
+}
+
+    .sidebar .list-group-item {
+        border: none;
+        padding: 1rem 1.5rem;
+        font-weight: 500;
+        font-size: 1rem;
+        color: #2c3e50;
+        transition: 0.2s ease-in-out;
+    }
+
+        .sidebar .list-group-item:hover,
+        .sidebar .list-group-item.active {
+            background-color: #1abc9c;
+            color: #fff !important;
+        }
+
+/* المحتوى */
+.content {
+    flex: 1;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* النموذج */
+form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="file"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #1abc9c;
+    outline: none;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #1abc9c;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #16a085;
+}
+
+form img {
+    margin-top: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}

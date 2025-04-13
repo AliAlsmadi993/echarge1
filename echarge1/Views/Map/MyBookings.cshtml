@@ -1,46 +1,58 @@
 ﻿@model List<ChargingBooking>
+<link rel="stylesheet" href="~/css/mybooking.css" />
 
-<h2>My Charging Bookings</h2>
+<div class="profile-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="list-group">
+            <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action">My Profile</a>
+            <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">Edit Profile</a>
+            <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action">My Orders</a>
+            <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action active">My Bookings</a>
+        </div>
+    </div>
 
+    <!-- Main Content -->
+    <div class="content">
+        <h2 class="page-title">🔌 My Charging Bookings</h2>
 
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">@TempData["Success"]</div>
-}
-<div class="col-md-3">
-    <div class="list-group">
-        <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action active">My Profile</a>
-        <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">Edit Profile</a>
-        <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action">My Orders</a>
-        <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action">My Bookings</a>
+        @if (Model.Any())
+        {
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Station</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in Model)
+                    {
+                        <tr>
+                            <td>@booking.Station?.Name</td>
+                            <td>@booking.BookingDate.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td><span class="status-badge">@booking.Status</span></td>
+                            <td>
+                                <a asp-action="EditBooking" asp-route-id="@booking.BookingId" class="btn-edit">Edit</a>
+                                <form asp-action="DeleteBooking" asp-route-id="@booking.BookingId" method="post" style="display:inline;">
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="no-orders">You currently have no bookings.</div>
+        }
     </div>
 </div>
-
-
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Station</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var booking in Model)
-        {
-            <tr>
-                <td>@booking.Station?.Name</td>
-                <td>@booking.BookingDate.ToString("yyyy-MM-dd HH:mm")</td>
-                <td>@booking.Status</td>
-                <td>
-                    <a asp-action="EditBooking" asp-route-id="@booking.BookingId" class="btn btn-sm btn-warning">Edit</a>
-                    <form asp-action="DeleteBooking" asp-route-id="@booking.BookingId" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>

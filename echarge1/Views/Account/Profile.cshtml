@@ -1,6 +1,8 @@
-﻿<div class="row">
+﻿<link rel="stylesheet" href="~/css/profile-style.css" />
+
+<div class="profile-layout">
     <!-- Sidebar -->
-    <div class="col-md-3">
+    <div class="sidebar">
         <div class="list-group">
             <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action active">My Profile</a>
             <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">Edit Profile</a>
@@ -10,24 +12,32 @@
     </div>
 
     <!-- Main Content -->
-    <div class="col-md-9">
+    <div class="content">
         <h2>Your Profile</h2>
         @if (TempData["Error"] != null)
         {
             <div class="alert alert-danger">@TempData["Error"]</div>
         }
 
-        <h4>Full Name: @Model.FullName</h4>
-        <p>Email: @Model.Email</p>
-        <p>Phone: @Model.PhoneNumber</p>
+        <div class="profile-card">
+            <h4>Full Name:</h4>
+            <p>@Model.FullName</p>
 
-        @if (!string.IsNullOrEmpty(Model.ProfileImage))
-        {
-            <img src="@Model.ProfileImage" alt="Profile Image" width="150" />
-        }
-        else
-        {
-            <p>No profile image available.</p>
-        }
+            <h4>Email:</h4>
+            <p>@Model.Email</p>
+
+            <h4>Phone:</h4>
+            <p>@Model.PhoneNumber</p>
+
+            <h4>Profile Image:</h4>
+            @if (!string.IsNullOrEmpty(Model.ProfileImage))
+            {
+                <img src="@Model.ProfileImage" alt="Profile Image" width="150" />
+            }
+            else
+            {
+                <p>No profile image available.</p>
+            }
+        </div>
     </div>
 </div>

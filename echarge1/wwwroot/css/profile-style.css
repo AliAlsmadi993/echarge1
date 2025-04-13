@@ -1,0 +1,74 @@
+﻿body {
+    background-color: #f4f7fa;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* تخطيط الصفحة الجانبي */
+.profile-layout {
+    display: flex;
+    max-width: 1000px;
+    margin: 2rem auto;
+    gap: 2rem;
+}
+
+/* الشريط الجانبي */
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+    flex-shrink: 0;
+}
+
+    .sidebar .list-group-item {
+        border: none;
+        padding: 1rem 1.5rem;
+        font-weight: 500;
+        color: #34495e;
+        transition: all 0.3s ease;
+    }
+
+        .sidebar .list-group-item:hover,
+        .sidebar .list-group-item.active {
+            background-color: #1abc9c;
+            color: #fff !important;
+        }
+
+/* المحتوى */
+.content {
+    flex-grow: 1;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* تفاصيل البروفايل */
+.profile-card h4 {
+    margin-top: 1rem;
+    color: #1abc9c;
+    font-weight: 600;
+}
+
+.profile-card p {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #2c3e50;
+}
+
+.profile-card img {
+    margin-top: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* رسالة الخطأ */
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}

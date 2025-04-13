@@ -1,57 +1,65 @@
 ﻿@model IEnumerable<echarge1.Models.Order>
-
 @{
     ViewData["Title"] = "Order History";
 }
-<div class="col-md-3">
-    <div class="list-group">
-        <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action active">My Profile</a>
-        <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">Edit Profile</a>
-        <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action">My Orders</a>
-        <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action">My Bookings</a>
+<link rel="stylesheet" href="~/css/history.css" />
+
+<div class="profile-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="list-group">
+            <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action">My Profile</a>
+            <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">Edit Profile</a>
+            <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action active">My Orders</a>
+            <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action">My Bookings</a>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <h2 class="page-title">🧾 Your Order History</h2>
+
+        @if (Model.Any())
+        {
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Order Date</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        foreach (var orderItem in order.OrderItems)
+                        {
+                            <tr>
+                                <td>@order.OrderDate?.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                <td>@orderItem.Product.Name</td>
+                                <td>@orderItem.Quantity</td>
+                                <td>@orderItem.SubTotal.ToString("C")</td>
+                                <td>
+                                    <span class="status-badge">@order.Status</span>
+                                </td>
+                                <td>
+                                    @if (order.Status == "Delivered")
+                                    {
+                                        <a href="@Url.Action("RateProduct", "Shop", new { orderId = order.OrderId, productId = orderItem.ProductId })" class="btn-rate">Rate Product</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="no-orders">No orders found.</div>
+        }
     </div>
 </div>
-
-
-<h2>Your Order History</h2>
-
-@if (Model.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Order Date</th>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var order in Model)
-            {
-                foreach (var orderItem in order.OrderItems)
-                {
-                    <tr>
-                        <td>@order.OrderDate?.ToString("yyyy-MM-dd HH:mm:ss") ?? "No Date"</td>
-                        <td>@orderItem.Product.Name</td>
-                        <td>@orderItem.Quantity</td>
-                        <td>@orderItem.SubTotal.ToString("C")</td>
-                        <td>@order.Status</td>
-                        <td>
-                            @if (order.Status == "Delivered")
-                            {
-                                <a href="@Url.Action("RateProduct", "Shop", new { orderId = order.OrderId, productId = orderItem.ProductId })">Rate Product</a>
-                            }
-                        </td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No orders found.</p>
-}

@@ -1,186 +1,154 @@
-﻿* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+﻿/* أساسيات */
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #f8f8f8;
-    color: #333;
-    line-height: 1.6;
+    margin: 0;
+    background-color: #f4f7fa;
+    color: #2c3e50;
 }
 
-h1, h2, h3 {
-    font-weight: 600;
-    color: #1ABC9C;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* Hero Section */
+/* قسم البطل */
 .hero {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://via.placeholder.com/1920x600');
-    background-size: cover;
-    background-position: center;
-    padding: 150px 20px;
-    text-align: center;
+    background: linear-gradient(135deg, #1abc9c, #16a085);
     color: white;
-    border-radius: 10px;
-    margin-bottom: 40px;
+    padding: 4rem 1rem;
+    text-align: center;
 }
 
     .hero h1 {
-        font-size: 3.5rem;
-        margin-bottom: 20px;
-        animation: fadeIn 2s ease-in-out;
+        font-size: 2.8rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
     }
 
     .hero p {
-        font-size: 1.3rem;
-        margin-bottom: 30px;
-        animation: fadeIn 3s ease-in-out;
-    }
-
-    .hero .cta-button {
-        background-color: #1ABC9C;
-        padding: 15px 30px;
         font-size: 1.2rem;
-        border-radius: 30px;
-        color: white;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-        animation: fadeIn 4s ease-in-out;
+        margin-bottom: 2rem;
     }
 
-        .hero .cta-button:hover {
-            background-color: #148f77;
-        }
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+.cta-button {
+    background-color: white;
+    color: #1abc9c;
+    padding: 0.8rem 1.5rem;
+    border-radius: 30px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s ease;
+    border: none;
 }
 
-/* Courses Section */
+    .cta-button:hover {
+        background-color: #ecf0f1;
+        color: #16a085;
+    }
+
+/* قسم الدورات */
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 2rem 1rem;
+}
+
+    .container h2 {
+        text-align: center;
+        font-size: 2rem;
+        color: #1abc9c;
+        margin-bottom: 2rem;
+    }
+
 .courses {
-    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
 }
 
 .course-item {
     background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    transition: transform 0.3s;
     position: relative;
-    overflow: hidden;
 }
 
     .course-item:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
     .course-item h3 {
-        font-size: 1.5rem;
-        color: #1ABC9C;
-        margin-right: 20px;
+        font-size: 1.3rem;
+        color: #34495e;
+        margin-bottom: 0.5rem;
     }
 
     .course-item p {
-        color: #777;
-        flex: 1;
+        margin: 0.5rem 0;
+        font-size: 0.95rem;
     }
 
-    .course-item .price {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: #1ABC9C;
-        margin-left: 20px;
-    }
-
-    .course-item .buttons {
-        display: flex;
-        gap: 10px;
-    }
-
-    .course-item .cta-button {
-        background-color: #1ABC9C;
-        padding: 10px 20px;
-        font-size: 1rem;
-        border-radius: 5px;
-        color: white;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-    }
-
-        .course-item .cta-button:hover {
-            background-color: #148f77;
-        }
-
-    .course-item .apply-button {
-        background-color: #3498db;
-        padding: 10px 20px;
-        font-size: 1rem;
-        border-radius: 5px;
-        color: white;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-    }
-
-        .course-item .apply-button:hover {
-            background-color: #2980b9;
-        }
-
-    .course-item .more-info {
-        display: none;
-        padding: 15px;
-        background-color: #f8f8f8;
-        border-top: 1px solid #ddd;
-        margin-top: 15px;
-        animation: slideDown 0.5s ease-in-out;
-    }
-
-        .course-item .more-info p {
-            color: #555;
-        }
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.price {
+    color: #1abc9c;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
 }
 
-/* Footer */
-.footer {
-    background-color: #1ABC9C;
+/* أزرار الإجراءات */
+.buttons {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.apply-button {
+    background-color: #1abc9c;
     color: white;
-    text-align: center;
-    padding: 20px;
-    margin-top: 40px;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
 }
 
-    .footer p {
-        margin: 0;
+    .apply-button:hover {
+        background-color: #16a085;
     }
+
+.info-button {
+    background-color: transparent;
+    color: #1abc9c;
+    border: 1px solid #1abc9c;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+    .info-button:hover {
+        background-color: #1abc9c;
+        color: white;
+    }
+
+/* المزيد من المعلومات */
+.more-info {
+    display: none;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #2c3e50;
+}
+
+/* الفوتر */
+.footer {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #1abc9c;
+    color: white;
+    font-size: 0.9rem;
+    margin-top: 3rem;
+}

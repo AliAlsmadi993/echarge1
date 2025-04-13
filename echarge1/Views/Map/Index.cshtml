@@ -1,118 +1,257 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Map";
+}
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<!-- Leaflet JS (يجب أن تأتي أولاً) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Routing Machine CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
+<!-- Routing Machine JS (بعد Leaflet فقط!) -->
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
+
+<!-- Leaflet CSS (حطه هنا داخل الـ Body مباشرة أو بالـ Layout) -->
 <style>
     body {
         margin: 0;
-        font-family: Arial, sans-serif;
+        font-family: 'Poppins', sans-serif;
+        background-color: #f4f7fa;
     }
 
     #map {
-        height: 100vh;
+        height: calc(100vh - 80px); /* ينزل عن الناف بار */
+        margin-top: 80px;
         width: 100%;
     }
 
     #controls {
-        position: absolute;
-        top: 10px;
+        position: fixed;
+        top: 65px!important;
         left: 50%;
         transform: translateX(-50%);
         background: white;
-        padding: 10px;
-        border-radius: 8px;
+        padding: 12px 20px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
-        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
-        width: 80%;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        width: 90%;
+        max-width: 900px;
         justify-content: space-between;
         z-index: 1000;
+        gap: 10px;
     }
 
     #destination-input {
-        width: 45%;
-        padding: 5px;
-        font-size: 14px;
-        border: none;
+        flex: 1;
+        padding: 10px 15px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
         outline: none;
+        transition: 0.3s;
     }
+
+        #destination-input:focus {
+            border-color: #1abc9c;
+        }
 
     #start-navigation,
     #stop-navigation,
     #locate-me {
-        padding: 5px 10px;
-        background: blue;
+        padding: 10px 15px;
+        background: #1abc9c;
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 8px;
         cursor: pointer;
         font-size: 14px;
-        margin-left: 5px;
+        transition: background-color 0.3s;
+        white-space: nowrap;
     }
 
+        #start-navigation:hover,
+        #stop-navigation:hover,
+        #locate-me:hover {
+            background-color: #16a085;
+        }
+
     #next-instruction {
-        position: absolute;
-        top: 70px;
+        position: fixed;
+        bottom: 20px;
         left: 50%;
         transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.85);
         color: white;
-        padding: 10px;
-        border-radius: 8px;
+        padding: 15px 20px;
+        border-radius: 12px;
         font-size: 16px;
         text-align: center;
         display: none;
-        width: 80%;
+        width: 90%;
+        max-width: 600px;
         z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     #suggestions {
         position: absolute;
-        top: 50px;
+        top: 70px;
         left: 50%;
         transform: translateX(-50%);
         background: white;
-        padding: 10px;
-        border-radius: 8px;
-        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
-        width: 80%;
-        z-index: 1000;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 900px;
+        z-index: 999;
         display: none;
+        padding: 10px;
     }
 
         #suggestions div {
             cursor: pointer;
-            padding: 5px 0;
-            border-bottom: 1px solid #ccc;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            transition: 0.2s;
         }
+
+            #suggestions div:hover {
+                background-color: #f4f4f4;
+            }
 
     .station-popup {
         text-align: center;
+        font-size: 14px;
     }
 
         .station-popup button {
-            padding: 5px 10px;
-            margin: 5px;
+            padding: 8px 12px;
+            margin: 5px 3px;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
         }
 
             .station-popup button.navigate {
-                background: blue;
+                background: #1abc9c;
                 color: white;
             }
 
             .station-popup button.details {
-                background: green;
+                background: #3498db;
                 color: white;
+            }
+
+            .station-popup button:hover {
+                opacity: 0.9;
             }
 
     .leaflet-routing-alternatives-container {
         display: none !important;
     }
 
+    /* تحسين شكل البالونات */
+    .leaflet-popup-content-wrapper {
+        border-radius: 12px;
+    }
+
+    .leaflet-popup-content {
+        margin: 8px 10px;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        overflow: hidden; /* يمنع السكروول */
+    }
+
+    #map {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        z-index: 1;
+    }
+
+    #controls {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 12px 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #destination-input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        width: 350px;
+    }
+
+    #start-navigation,
+    #stop-navigation,
+    #locate-me {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        background-color: #1abc9c;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        #start-navigation:hover,
+        #stop-navigation:hover,
+        #locate-me:hover {
+            background-color: #16a085;
+        }
+
+    #suggestions,
+    #next-instruction {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1001;
+    }
+
+    #suggestions {
+        top: 70px;
+        background: white;
+        padding: 10px;
+        width: 400px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        display: none;
+    }
+
+    #next-instruction {
+        bottom: 30px;
+        background: rgba(0, 0, 0, 0.85);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-size: 16px;
+        display: none;
+    }
+
 </style>
 
-<!-- داخل صفحة Views/Map/Index.cshtml -->
-
+<!-- UI -->
 <div id="controls">
     <input type="text" id="destination-input" placeholder="Search for a destination or charging station..." />
     <button id="start-navigation">Start</button>
@@ -124,234 +263,241 @@
 <div id="map"></div>
 <div id="next-instruction">Instructions will appear here...</div>
 
-<script>
-    let map, userMarker, userLocation, routingControl;
-    let speechSynthesisAPI = window.speechSynthesis;
-    let voiceLanguage = "en-US";
-    let nextInstruction = document.getElementById("next-instruction");
-    let suggestionsDiv = document.getElementById("suggestions");
+<!-- سكربتات -->
+@section Scripts {
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
 
-    let currentInstructions = [];
-    let currentStepIndex = 0;
-    let spoken300m = false;
-    let spoken50m = false;
+    <!-- سكربتك كما هو بدون أي تعديل -->
+    <script>
+        let map, userMarker, userLocation, routingControl;
+        let speechSynthesisAPI = window.speechSynthesis;
+        let voiceLanguage = "en-US";
+        let nextInstruction = document.getElementById("next-instruction");
+        let suggestionsDiv = document.getElementById("suggestions");
 
-    map = L.map("map").setView([31.963158, 35.930359], 12);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap contributors",
-    }).addTo(map);
+        let currentInstructions = [];
+        let currentStepIndex = 0;
+        let spoken300m = false;
+        let spoken50m = false;
 
-    fetch("/Map/GetStationsJson")
-        .then((response) => response.json())
-        .then((stations) => {
-            stations.forEach((station) => {
-                let marker = L.marker([station.lat, station.lng], {
-                    icon: L.icon({
-                        iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
-                        iconSize: [40, 40],
-                        className: "station-marker",
-                    }),
-                }).addTo(map);
-
-                marker.bindTooltip(station.name, { permanent: true, direction: "top" });
-
-                marker.bindPopup(`
-                    <div class="station-popup">
-                        <h3>${station.name}</h3>
-                        <p>Charger Type: ${station.chargers}</p>
-                        <p>Status: ${station.status}</p>
-                        <p>Distance: ${station.distance}</p>
-                        <p>Estimated Time: ${station.time}</p>
-                        <button class="navigate" onclick="navigateToStation(${station.lat}, ${station.lng})">🚗 Navigate</button>
-                        <button class="details" onclick="window.location.href='/Map/BookCharging?stationId=${station.id}'">🔌 Book Charging</button>
-                    </div>
-                `);
-            });
-        })
-        .catch((error) => console.error("Error fetching stations:", error));
-
-    function trackUserLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.watchPosition(
-                (position) => {
-                    userLocation = [position.coords.latitude, position.coords.longitude];
-
-                    if (!userMarker) {
-                        userMarker = L.marker(userLocation, {
-                            icon: L.icon({
-                                iconUrl: "data:image/svg+xml;utf8," + encodeURIComponent(`
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
-                                        <path fill="#e91e63" d="M12 2L19 21H5z"/>
-                                    </svg>
-                                `),
-                                iconSize: [50, 50],
-                                iconAnchor: [25, 25],
-                            }),
-                        }).addTo(map).bindPopup("📍 Your Location").openPopup();
-                    } else {
-                        userMarker.setLatLng(userLocation);
-                        if (position.coords.heading !== null) {
-                            userMarker.setRotationAngle(position.coords.heading);
-                        }
-                    }
-
-                    if (routingControl && currentInstructions.length > 0) {
-                        const currentRouteStart = routingControl.getWaypoints()[0].latLng;
-                        const distanceFromRoute = L.latLng(userLocation).distanceTo(currentRouteStart);
-                        if (distanceFromRoute > 50) {
-                            const destination = routingControl.getWaypoints()[1].latLng;
-                            map.removeControl(routingControl);
-                            routingControl = L.Routing.control({
-                                waypoints: [L.latLng(userLocation[0], userLocation[1]), destination],
-                                routeWhileDragging: false,
-                                lineOptions: { styles: [{ color: "blue", weight: 6 }] },
-                                show: false,
-                            }).addTo(map);
-                            currentInstructions = [];
-                            currentStepIndex = 0;
-                            spoken300m = false;
-                            spoken50m = false;
-
-                            routingControl.on("routesfound", function (e) {
-                                currentInstructions = e.routes[0].instructions;
-                                updateCurrentStep();
-                            });
-                        }
-                    }
-
-                    if (currentInstructions.length > 0) {
-                        updateCurrentStep();
-                    }
-                },
-                (error) => console.error("Error getting location:", error),
-                { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
-            );
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
-    trackUserLocation();
-
-    function speak(text) {
-        if (speechSynthesisAPI.speaking) speechSynthesisAPI.cancel();
-        let utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = voiceLanguage;
-        speechSynthesisAPI.speak(utterance);
-    }
-
-    function formatDistance(distance) {
-        return distance < 1000 ? `${Math.round(distance)} m` : `${(distance / 1000).toFixed(1)} km`;
-    }
-
-    function getManeuverSVG(instruction) {
-        let type = instruction.type ? instruction.type.toLowerCase() : "";
-        if (type.includes("left")) return `<svg width="24" height="24"><polygon points="16,4 8,12 16,20" fill="#2196f3"/></svg>`;
-        if (type.includes("right")) return `<svg width="24" height="24"><polygon points="8,4 16,12 8,20" fill="#2196f3"/></svg>`;
-        return `<svg width="24" height="24"><polygon points="12,4 20,16 4,16" fill="#2196f3"/></svg>`;
-    }
-
-    function navigateToStation(lat, lng) {
-        if (!userLocation) return alert("Please enable location services first.");
-        if (routingControl) map.removeControl(routingControl);
-
-        currentInstructions = [];
-        currentStepIndex = 0;
-        spoken300m = false;
-        spoken50m = false;
-
-        routingControl = L.Routing.control({
-            waypoints: [L.latLng(userLocation[0], userLocation[1]), L.latLng(lat, lng)],
-            routeWhileDragging: false,
-            lineOptions: { styles: [{ color: "blue", weight: 6 }] },
-            show: false,
+        map = L.map("map").setView([31.963158, 35.930359], 12);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "&copy; OpenStreetMap contributors",
         }).addTo(map);
 
-        routingControl.on("routesfound", function (e) {
-            currentInstructions = e.routes[0].instructions;
-            updateCurrentStep();
-        });
-    }
+        fetch("/Map/GetStationsJson")
+            .then((response) => response.json())
+            .then((stations) => {
+                stations.forEach((station) => {
+                    let marker = L.marker([station.lat, station.lng], {
+                        icon: L.icon({
+                            iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+                            iconSize: [40, 40],
+                            className: "station-marker",
+                        }),
+                    }).addTo(map);
 
-    function updateCurrentStep() {
-        if (currentStepIndex >= currentInstructions.length) {
-            nextInstruction.innerHTML = "You have arrived at your destination.";
-            speak("You have arrived at your destination.");
-            return;
-        }
+                    marker.bindTooltip(station.name, { permanent: true, direction: "top" });
 
-        let step = currentInstructions[currentStepIndex];
-        let stepLatLng = step.latLng;
-        let distanceToNext = stepLatLng ? L.latLng(userLocation).distanceTo(stepLatLng) : step.distance;
-        let stepText = step.text;
-        let arrowSVG = getManeuverSVG(step);
-        let distFormatted = formatDistance(distanceToNext);
+                    marker.bindPopup(`
+                        <div class="station-popup">
+                            <h3>${station.name}</h3>
+                            <p>Charger Type: ${station.chargers}</p>
+                            <p>Status: ${station.status}</p>
+                            <p>Distance: ${station.distance}</p>
+                            <p>Estimated Time: ${station.time}</p>
+                            <button class="navigate" onclick="navigateToStation(${station.lat}, ${station.lng})">🚗 Navigate</button>
+                            <button class="details" onclick="window.location.href='/Map/BookCharging?stationId=${station.id}'">🔌 Book Charging</button>
+                        </div>
+                    `);
+                });
+            })
+            .catch((error) => console.error("Error fetching stations:", error));
 
-        nextInstruction.style.display = "block";
-        nextInstruction.innerHTML = `<span>${arrowSVG}</span> <span style="margin-left:8px;">${stepText} - ${distFormatted} remaining</span>`;
+        function trackUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(
+                    (position) => {
+                        userLocation = [position.coords.latitude, position.coords.longitude];
 
-        if (distanceToNext <= 300 && !spoken300m) { speak(`In 300 meters, ${stepText}`); spoken300m = true; }
-        if (distanceToNext <= 50 && !spoken50m) { speak(`In 50 meters, ${stepText}`); spoken50m = true; }
+                        if (!userMarker) {
+                            userMarker = L.marker(userLocation, {
+                                icon: L.icon({
+                                    iconUrl: "data:image/svg+xml;utf8," + encodeURIComponent(`
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                                            <path fill="#e91e63" d="M12 2L19 21H5z"/>
+                                        </svg>
+                                    `),
+                                    iconSize: [50, 50],
+                                    iconAnchor: [25, 25],
+                                }),
+                            }).addTo(map).bindPopup("📍 Your Location").openPopup();
+                        } else {
+                            userMarker.setLatLng(userLocation);
+                            if (position.coords.heading !== null) {
+                                userMarker.setRotationAngle(position.coords.heading);
+                            }
+                        }
 
-        if (distanceToNext < 10) {
-            currentStepIndex++;
-            spoken300m = false;
-            spoken50m = false;
-            if (currentStepIndex < currentInstructions.length) {
-                speak(`Now, ${currentInstructions[currentStepIndex].text}`);
+                        if (routingControl && currentInstructions.length > 0) {
+                            const currentRouteStart = routingControl.getWaypoints()[0].latLng;
+                            const distanceFromRoute = L.latLng(userLocation).distanceTo(currentRouteStart);
+                            if (distanceFromRoute > 50) {
+                                const destination = routingControl.getWaypoints()[1].latLng;
+                                map.removeControl(routingControl);
+                                routingControl = L.Routing.control({
+                                    waypoints: [L.latLng(userLocation[0], userLocation[1]), destination],
+                                    routeWhileDragging: false,
+                                    lineOptions: { styles: [{ color: "blue", weight: 6 }] },
+                                    show: false,
+                                }).addTo(map);
+                                currentInstructions = [];
+                                currentStepIndex = 0;
+                                spoken300m = false;
+                                spoken50m = false;
+
+                                routingControl.on("routesfound", function (e) {
+                                    currentInstructions = e.routes[0].instructions;
+                                    updateCurrentStep();
+                                });
+                            }
+                        }
+
+                        if (currentInstructions.length > 0) {
+                            updateCurrentStep();
+                        }
+                    },
+                    (error) => console.error("Error getting location:", error),
+                    { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+                );
             } else {
-                nextInstruction.innerHTML = "You have arrived at your destination.";
-                speak("You have arrived at your destination.");
+                alert("Geolocation is not supported by this browser.");
             }
         }
-    }
+        trackUserLocation();
 
-    document.getElementById("stop-navigation").addEventListener("click", () => {
-        if (routingControl) map.removeControl(routingControl);
-        routingControl = null;
-        nextInstruction.style.display = "none";
-        currentInstructions = [];
-        currentStepIndex = 0;
-        speechSynthesisAPI.cancel();
-    });
+        function speak(text) {
+            if (speechSynthesisAPI.speaking) speechSynthesisAPI.cancel();
+            let utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = voiceLanguage;
+            speechSynthesisAPI.speak(utterance);
+        }
 
-    document.getElementById("locate-me").addEventListener("click", () => {
-        if (userLocation) map.setView(userLocation, 15);
-        else alert("Location not found yet!");
-    });
+        function formatDistance(distance) {
+            return distance < 1000 ? `${Math.round(distance)} m` : `${(distance / 1000).toFixed(1)} km`;
+        }
 
-    document.getElementById("destination-input").addEventListener("input", function () {
-        let query = this.value;
-        if (query.length > 2) {
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
+        function getManeuverSVG(instruction) {
+            let type = instruction.type ? instruction.type.toLowerCase() : "";
+            if (type.includes("left")) return `<svg width="24" height="24"><polygon points="16,4 8,12 16,20" fill="#2196f3"/></svg>`;
+            if (type.includes("right")) return `<svg width="24" height="24"><polygon points="8,4 16,12 8,20" fill="#2196f3"/></svg>`;
+            return `<svg width="24" height="24"><polygon points="12,4 20,16 4,16" fill="#2196f3"/></svg>`;
+        }
+
+        function navigateToStation(lat, lng) {
+            if (!userLocation) return alert("Please enable location services first.");
+            if (routingControl) map.removeControl(routingControl);
+
+            currentInstructions = [];
+            currentStepIndex = 0;
+            spoken300m = false;
+            spoken50m = false;
+
+            routingControl = L.Routing.control({
+                waypoints: [L.latLng(userLocation[0], userLocation[1]), L.latLng(lat, lng)],
+                routeWhileDragging: false,
+                lineOptions: { styles: [{ color: "blue", weight: 6 }] },
+                show: false,
+            }).addTo(map);
+
+            routingControl.on("routesfound", function (e) {
+                currentInstructions = e.routes[0].instructions;
+                updateCurrentStep();
+            });
+        }
+
+        function updateCurrentStep() {
+            if (currentStepIndex >= currentInstructions.length) {
+                nextInstruction.innerHTML = "You have arrived at your destination.";
+                speak("You have arrived at your destination.");
+                return;
+            }
+
+            let step = currentInstructions[currentStepIndex];
+            let stepLatLng = step.latLng;
+            let distanceToNext = stepLatLng ? L.latLng(userLocation).distanceTo(stepLatLng) : step.distance;
+            let stepText = step.text;
+            let arrowSVG = getManeuverSVG(step);
+            let distFormatted = formatDistance(distanceToNext);
+
+            nextInstruction.style.display = "block";
+            nextInstruction.innerHTML = `<span>${arrowSVG}</span> <span style="margin-left:8px;">${stepText} - ${distFormatted} remaining</span>`;
+
+            if (distanceToNext <= 300 && !spoken300m) { speak(`In 300 meters, ${stepText}`); spoken300m = true; }
+            if (distanceToNext <= 50 && !spoken50m) { speak(`In 50 meters, ${stepText}`); spoken50m = true; }
+
+            if (distanceToNext < 10) {
+                currentStepIndex++;
+                spoken300m = false;
+                spoken50m = false;
+                if (currentStepIndex < currentInstructions.length) {
+                    speak(`Now, ${currentInstructions[currentStepIndex].text}`);
+                } else {
+                    nextInstruction.innerHTML = "You have arrived at your destination.";
+                    speak("You have arrived at your destination.");
+                }
+            }
+        }
+
+        document.getElementById("stop-navigation").addEventListener("click", () => {
+            if (routingControl) map.removeControl(routingControl);
+            routingControl = null;
+            nextInstruction.style.display = "none";
+            currentInstructions = [];
+            currentStepIndex = 0;
+            speechSynthesisAPI.cancel();
+        });
+
+        document.getElementById("locate-me").addEventListener("click", () => {
+            if (userLocation) map.setView(userLocation, 15);
+            else alert("Location not found yet!");
+        });
+
+        document.getElementById("destination-input").addEventListener("input", function () {
+            let query = this.value;
+            if (query.length > 2) {
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        suggestionsDiv.innerHTML = "";
+                        data.forEach((item) => {
+                            let suggestion = document.createElement("div");
+                            suggestion.innerText = item.display_name;
+                            suggestion.addEventListener("click", () => {
+                                document.getElementById("destination-input").value = item.display_name;
+                                suggestionsDiv.style.display = "none";
+                                navigateToStation(item.lat, item.lon);
+                            });
+                            suggestionsDiv.appendChild(suggestion);
+                        });
+                        suggestionsDiv.style.display = "block";
+                    });
+            } else {
+                suggestionsDiv.style.display = "none";
+            }
+        });
+
+        document.getElementById("start-navigation").addEventListener("click", () => {
+            let input = document.getElementById("destination-input").value.trim();
+            if (input === "") return alert("Please enter a destination.");
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${input}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    suggestionsDiv.innerHTML = "";
-                    data.forEach((item) => {
-                        let suggestion = document.createElement("div");
-                        suggestion.innerText = item.display_name;
-                        suggestion.addEventListener("click", () => {
-                            document.getElementById("destination-input").value = item.display_name;
-                            suggestionsDiv.style.display = "none";
-                            navigateToStation(item.lat, item.lon);
-                        });
-                        suggestionsDiv.appendChild(suggestion);
-                    });
-                    suggestionsDiv.style.display = "block";
+                    if (data.length > 0) navigateToStation(data[0].lat, data[0].lon);
+                    else alert("No results found.");
                 });
-        } else {
-            suggestionsDiv.style.display = "none";
-        }
-    });
-
-    document.getElementById("start-navigation").addEventListener("click", () => {
-        let input = document.getElementById("destination-input").value.trim();
-        if (input === "") return alert("Please enter a destination.");
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${input}`)
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.length > 0) navigateToStation(data[0].lat, data[0].lon);
-                else alert("No results found.");
-            });
-    });
-</script>
-
+        });
+    </script>
+}

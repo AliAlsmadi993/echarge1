@@ -9,6 +9,80 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/store.css" asp-append-version="true" />
+    <style>
+        body {
+            background: linear-gradient(145deg, #f8fafa, #e4f5f5);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+
+        .card {
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            }
+
+        .btn-success, .btn-primary {
+            border-radius: 12px;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+
+            .btn-success:hover, .btn-primary:hover {
+                transform: scale(1.03);
+            }
+
+        .card-img-top {
+            object-fit: cover;
+            height: 220px;
+        }
+
+        .card-title {
+            color: #1ABC9C;
+            font-weight: 700;
+        }
+
+        .text-success {
+            font-weight: 700;
+            color: #16a085 !important;
+        }
+
+        .badge {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        h2, h4 {
+            font-weight: 700;
+            color: #1ABC9C;
+        }
+
+        select.form-control, input.form-control {
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .form-control:focus {
+            border-color: #1ABC9C;
+            box-shadow: 0 0 8px rgba(26, 188, 156, 0.2);
+        }
+
+        .btn-outline-primary {
+            border-color: #1ABC9C;
+            color: #1ABC9C;
+        }
+
+            .btn-outline-primary:hover {
+                background-color: #1ABC9C;
+                color: white;
+            }
+    </style>
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -50,7 +124,7 @@
             {
                 <div class="col-md-6 mb-4">
                     <div class="card border-success">
-                        <div class="row no-gutters">
+                        <div class="row g-0">
                             <div class="col-md-4">
                                 <img src="@(product.PromotionImageUrl ?? product.ImageUrl)" class="img-fluid" alt="@product.Name" />
                             </div>

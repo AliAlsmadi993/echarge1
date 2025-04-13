@@ -1,0 +1,115 @@
+﻿body {
+    background-color: #f4f7fa;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 1rem;
+}
+
+.page-title {
+    text-align: center;
+    color: #1abc9c;
+    margin-bottom: 2rem;
+    font-weight: bold;
+    font-size: 1.8rem;
+}
+
+.order-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.order-header {
+    background-color: #1abc9c;
+    color: white;
+    padding: 1rem 1.5rem;
+    font-size: 1.05rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-badge {
+    background-color: #2980b9;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.order-body {
+    padding: 1.5rem;
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+    .order-table th {
+        background-color: #ecf0f1;
+        padding: 0.75rem;
+        text-align: left;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .order-table td {
+        padding: 0.75rem;
+        border-top: 1px solid #ddd;
+        vertical-align: middle;
+    }
+
+/* Select */
+.form-select {
+    width: 150px;
+    padding: 0.4rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+}
+
+/* Buttons */
+.btn-save {
+    margin-top: 0.5rem;
+    background-color: #1abc9c;
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+    .btn-save:hover {
+        background-color: #16a085;
+    }
+
+.btn-view {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+    .btn-view:hover {
+        background-color: #2980b9;
+    }
+
+/* Empty state */
+.no-orders {
+    background-color: #dff9fb;
+    color: #1e3799;
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 10px;
+    font-weight: 500;
+    margin: 2rem auto;
+}

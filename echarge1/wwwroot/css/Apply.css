@@ -1,0 +1,90 @@
+﻿body {
+    background-color: #f4f7fa;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 2rem;
+}
+
+/* عنوان التقديم */
+h2 {
+    text-align: center;
+    color: #1abc9c;
+    margin-bottom: 2rem;
+}
+
+/* تنسيقات رسائل التنبيه */
+.alert-success, .alert-error {
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* كرت الفورم */
+form {
+    background-color: white;
+    max-width: 600px;
+    margin: auto;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* كل حقل */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="file"],
+textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+    input:focus,
+    textarea:focus {
+        border-color: #1abc9c;
+        outline: none;
+    }
+
+/* الزر */
+button[type="submit"] {
+    width: 100%;
+    background-color: #1abc9c;
+    border: none;
+    color: white;
+    padding: 0.9rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    button[type="submit"]:hover {
+        background-color: #16a085;
+    }

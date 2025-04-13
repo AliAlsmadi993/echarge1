@@ -54,7 +54,7 @@ namespace echarge1.Controllers
         }
 
         // Displays the privacy policy page
-        public IActionResult Privacy()
+        public IActionResult About()
         {
             return View();
         }

@@ -12,36 +12,59 @@
         body {
             display: flex;
             min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e8fdf9, #ffffff);
+            overflow-x: hidden;
         }
 
         .sidebar {
-            width: 250px;
-            background-color: #0d6efd;
+            width: 260px;
+            background: linear-gradient(to bottom, #1ABC9C, #16a085);
             color: white;
             flex-shrink: 0;
+            box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
+            animation: slideInLeft 0.6s ease;
         }
+
+            .sidebar h4 {
+                padding: 20px;
+                text-align: center;
+                font-weight: 700;
+                font-size: 22px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            }
 
             .sidebar a {
                 color: white;
-                padding: 15px;
-                display: block;
+                padding: 16px 24px;
+                display: flex;
+                align-items: center;
                 text-decoration: none;
+                transition: background 0.3s ease;
             }
 
+                .sidebar a i {
+                    margin-right: 12px;
+                }
+
                 .sidebar a:hover {
-                    background-color: #084298;
+                    background-color: rgba(255, 255, 255, 0.1);
                 }
 
         .main-content {
             flex-grow: 1;
-            padding: 20px;
-            background-color: #f8f9fa;
+            padding: 40px 30px;
+            background-color: #f9fdfd;
+            animation: fadeIn 0.7s ease-in-out;
+            min-height: 100vh;
         }
+
+     
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <h4 class="text-center py-3">Provider Panel</h4>
+        <h4>Provider Panel</h4>
         <a asp-controller="Provider" asp-action="Dashboard"><i class="fas fa-chart-bar"></i> Dashboard</a>
         <a asp-controller="Provider" asp-action="MyProducts"><i class="fas fa-box"></i> My Products</a>
         <a asp-controller="Provider" asp-action="AddProduct"><i class="fas fa-plus"></i> Add Product</a>

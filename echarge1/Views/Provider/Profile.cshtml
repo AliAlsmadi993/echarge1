@@ -4,6 +4,51 @@
     ViewData["Title"] = "My Profile";
 }
 
+@section Styles {
+    <style>
+        h2 {
+            color: #1abc9c;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            padding: 10px 14px;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+            .form-control:focus {
+                border-color: #1abc9c;
+                box-shadow: 0 0 10px rgba(26, 188, 156, 0.3);
+            }
+
+        .btn-primary {
+            background-color: #1abc9c;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 10px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+            .btn-primary:hover {
+                background-color: #16a085;
+            }
+
+        .img-thumbnail {
+            border: 3px solid #1abc9c;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+}
+
 <div class="container mt-4">
     <h2 class="mb-4">👤 My Profile</h2>
 
@@ -14,7 +59,7 @@
 
     <div class="row">
         <div class="col-md-4 text-center">
-            <img src="@Model.ProfileImage" alt="Profile Image" class="img-thumbnail rounded-circle mb-3" style="width: 150px; height: 150px;" />
+            @* <img src="@Model.ProfileImage" alt="Profile Image" class="img-thumbnail rounded-circle mb-3" style="width: 150px; height: 150px;" /> *@
             <p><strong>User Type:</strong> @Model.UserType</p>
             <p><strong>Status:</strong> @Model.Status</p>
             <p><strong>Joined:</strong> @Model.CreatedAt?.ToString("yyyy-MM-dd")</p>

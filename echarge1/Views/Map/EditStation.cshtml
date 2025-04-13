@@ -1,34 +1,203 @@
 ﻿@model ChargingStation
+@{
+    ViewData["Title"] = "Edit Charging Station";
+}
+@{
+    Layout = "~/Views/Shared/_ProviderLayout.cshtml";
+}
 
-<h2>Edit Charging Station</h2>
+@section Styles {
+    <style>
+        h2 {
+            color: #1abc9c;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
 
-<form asp-action="EditStation" method="post">
+        .form-group label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            padding: 10px 14px;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+            .form-control:focus {
+                border-color: #1abc9c;
+                box-shadow: 0 0 10px rgba(26, 188, 156, 0.3);
+            }
+
+        .btn-primary {
+            background-color: #1abc9c;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 10px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+            .btn-primary:hover {
+                background-color: #16a085;
+            }
+
+        .btn-outline-success, .btn-outline-primary, .btn-secondary {
+            border-radius: 10px;
+            font-weight: 500;
+            padding: 8px 16px;
+        }
+
+        .btn-outline-success {
+            border-color: #1abc9c;
+            color: #1abc9c;
+        }
+
+            .btn-outline-success:hover {
+                background-color: #1abc9c;
+                color: white;
+            }
+
+        .btn-outline-primary {
+            border-color: #3498db;
+            color: #3498db;
+        }
+
+            .btn-outline-primary:hover {
+                background-color: #3498db;
+                color: white;
+            }
+
+        .btn-secondary {
+            background-color: #bdc3c7;
+            color: #2c3e50;
+        }
+
+            .btn-secondary:hover {
+                background-color: #95a5a6;
+            }
+
+        .charger-entry {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .remove-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+            .remove-btn:hover {
+                background-color: #c0392b;
+            }
+    </style>
+}
+
+<h2 class="mb-4">⚙️ Edit Charging Station</h2>
+
+<form method="post" asp-action="EditStation" enctype="multipart/form-data">
     <input type="hidden" asp-for="StationId" />
 
     <div class="form-group">
         <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
+        <input asp-for="Name" class="form-control" required />
     </div>
 
     <div class="form-group">
-        <label asp-for="Location"></label>
-        <input asp-for="Location" class="form-control" />
+        <label>Google Maps Link:</label>
+        <input type="text" name="locationUrl" class="form-control" />
     </div>
 
     <div class="form-group">
-        <label asp-for="Capacity"></label>
-        <input asp-for="Capacity" class="form-control" />
+        <label>OR Device Location:</label>
+        <div class="d-flex gap-2">
+            <input type="text" name="deviceLocation" id="deviceLocation" class="form-control" placeholder="latitude,longitude" />
+            <button type="button" class="btn btn-outline-primary" onclick="getLocation()">📍 Use My Location</button>
+        </div>
     </div>
 
     <div class="form-group">
-        <label asp-for="AvailableSpots"></label>
-        <input asp-for="AvailableSpots" class="form-control" />
+        <label asp-for="Capacity">Total Chargers Capacity</label>
+        <input asp-for="Capacity" class="form-control" required />
     </div>
 
     <div class="form-group">
-        <label asp-for="PricePerCharge"></label>
-        <input asp-for="PricePerCharge" class="form-control" />
+        <label asp-for="AvailableSpots">Available Spots</label>
+        <input asp-for="AvailableSpots" class="form-control" required />
     </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
+    <div class="form-group">
+        <label asp-for="PricePerCharge">Charging Price (per session)</label>
+        <input asp-for="PricePerCharge" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label>Charger Types</label>
+        <div id="chargerTypesContainer"></div>
+        <button type="button" onclick="addChargerType()" class="btn btn-outline-success mt-2">➕ Add Charger Type</button>
+        <input type="hidden" name="chargerTypesJson" id="chargerTypesJson" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+    <a asp-action="ManageStations" class="btn btn-secondary">Cancel</a>
 </form>
+
+@section Scripts {
+    <script>
+        let chargerTypes = [];
+
+        document.addEventListener("DOMContentLoaded", function () {
+            try {
+                const existing = @Html.Raw(ViewBag.ChargerTypesJson ?? "{}");
+                chargerTypes = Object.entries(existing);
+                chargerTypes.forEach(([type, count]) => addChargerType(type, count));
+            } catch { }
+        });
+
+        function addChargerType(type = '', count = '') {
+            const container = document.getElementById("chargerTypesContainer");
+            const div = document.createElement("div");
+            div.className = "charger-entry";
+
+            div.innerHTML = `
+                <input type="text" placeholder="Charger Type" value="${type}" class="form-control type" required />
+                <input type="number" placeholder="Count" value="${count}" class="form-control count" required />
+                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">✖</button>
+            `;
+
+            container.appendChild(div);
+        }
+
+        document.querySelector("form").addEventListener("submit", function (e) {
+            const entries = document.querySelectorAll(".charger-entry");
+            const data = {};
+            entries.forEach(entry => {
+                const type = entry.querySelector(".type").value.trim();
+                const count = entry.querySelector(".count").value;
+                if (type && count) data[type] = parseInt(count);
+            });
+            document.getElementById("chargerTypesJson").value = JSON.stringify(data);
+        });
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    document.getElementById("deviceLocation").value = `${pos.coords.latitude},${pos.coords.longitude}`;
+                }, () => {
+                    alert("Could not get your location.");
+                });
+            } else {
+                alert("Geolocation not supported by your browser.");
+            }
+        }
+    </script>
+}

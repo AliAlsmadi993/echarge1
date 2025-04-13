@@ -36,7 +36,7 @@
                 <td>
                     <a asp-action="ViewStationDetails" asp-controller="Map" asp-route-id="@station.StationId" class="btn btn-sm btn-info">📋 Bookings</a>
 
-                    <a asp-action="EditStation" asp-route-id="@station.StationId" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-controller="Map" asp-action="EditStation" asp-route-id="@station.StationId" class="btn btn-warning btn-sm">Edit</a>
                     <form asp-action="DeleteStation" asp-route-id="@station.StationId" method="post" style="display:inline;">
                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                     </form>
