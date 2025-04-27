@@ -6,59 +6,149 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/allcorcess.css" asp-append-version="true" />
+    <style>
+        .course-item {
+            min-height: 450px; /* أقل ارتفاع للكارد */
+            max-height: 450px; /* أقصى ارتفاع للكارد */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
 }
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
 <!-- Hero Section -->
 <section class="hero">
     <div class="container">
-        <h1>Electric Vehicle Maintenance Training</h1>
-        <p>Learn the latest techniques in EV charging station maintenance and electric vehicle repair.</p>
-        <a href="#courses" class="cta-button">Explore Courses</a>
+        <h1>Master Electric Vehicle Maintenance</h1>
+        <p>Join our professional training programs and become an expert in EV charging station maintenance and electric vehicle repair technologies.</p>
+        <a href="#courses" class="cta-button">Browse Courses <i class="fas fa-arrow-down"></i></a>
     </div>
 </section>
 
 <!-- Courses Section -->
 <section class="container" id="courses">
-    <h2>Our Courses</h2>
+    <div class="section-title">
+        <h2>Our Training Programs</h2>
+        <p>Comprehensive courses designed by industry experts to equip you with the latest EV maintenance skills</p>
+    </div>
+
     <div class="courses">
         @foreach (var course in Model)
         {
             <div class="course-item">
-                <h3>@course.Title</h3>
-                <p>@course.Description</p>
-                <p class="price">@course.Price.ToString("0.00") JOD</p>
-                <div class="buttons">
-                    <a asp-controller="Course" asp-action="Apply" asp-route-id="@course.CourseId" class="apply-button">Apply Now</a>
-                    <button class="info-button" onclick="toggleInfo(event, @course.CourseId)">More Info</button>
+                <div class="course-image">
+                    <i class="fas fa-charging-station"></i>
                 </div>
-                <div class="more-info" id="more-info-@course.CourseId">
-                    <p><strong>Instructor:</strong> @course.Instructor</p>
-                    <p><strong>Start Date:</strong> @course.StartDate.ToShortDateString()</p>
-                    <p><strong>End Date:</strong> @course.EndDate.ToShortDateString()</p>
+
+                <div class="course-content">
+                    <h3>@course.Title</h3>
+                    <p class="course-description">
+                        @(course.Description.Length > 100 ? course.Description.Substring(0, 100) + "..." : course.Description)
+                    </p>
+
+                    <div class="course-meta">
+                        <div class="price">@course.Price.ToString("0.00") JOD</div>
+                        <div class="duration">@((course.EndDate - course.StartDate).Days) days</div>
+                    </div>
+
+                    <button class="info-button" onclick="showPopup(@course.CourseId)">
+                        <i class="fas fa-info-circle"></i> Course Details
+                    </button>
+                </div>
+
+                <!-- Hidden popup content -->
+                <div class="popup-content" id="popup-@course.CourseId" style="display:none;">
+                    <div class="popup-header">
+                        <i class="fas fa-charging-station"></i>
+                    </div>
+                    <div class="popup-body">
+                        <h3 class="popup-title">@course.Title</h3>
+                        <p class="popup-description">@course.Description</p>
+
+                        <div class="popup-details">
+                            <div class="popup-detail-item">
+                                <div class="popup-detail-icon">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div class="popup-detail-content">
+                                    <h4>Instructor</h4>
+                                    <p>@course.Instructor</p>
+                                    @if (!string.IsNullOrEmpty(course.InstructorDescription))
+                                    {
+                                        <p><small>@course.InstructorDescription</small></p>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="popup-detail-item">
+                                <div class="popup-detail-icon">
+                                    <i class="far fa-calendar-alt"></i>
+                                </div>
+                                <div class="popup-detail-content">
+                                    <h4>Schedule</h4>
+                                    <p>@course.StartDate.ToShortDateString() - @course.EndDate.ToShortDateString()</p>
+                                    <p>@((course.EndDate - course.StartDate).Days) days program</p>
+                                </div>
+                            </div>
+
+                            <div class="popup-detail-item">
+                                <div class="popup-detail-icon">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <div class="popup-detail-content">
+                                    <h4>Investment</h4>
+                                    <p>@course.Price.ToString("0.00") JOD</p>
+                                    <p><small>Flexible payment options available</small></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a asp-controller="Course" asp-action="Apply" asp-route-id="@course.CourseId" class="popup-apply">
+                            Enroll Now <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         }
     </div>
 </section>
 
+<!-- Popup Overlay -->
+<div class="popup-overlay" id="popup-overlay" onclick="hidePopup()">
+    <div class="popup-container" id="current-popup" onclick="event.stopPropagation()">
+        <!-- Content will be inserted here by JavaScript -->
+        <button class="popup-close" onclick="hidePopup()">&times;</button>
+    </div>
+</div>
+
 <!-- Footer -->
-<footer class="footer">
-    <p>&copy; 2025 EV Training Academy. All rights reserved.</p>
-</footer>
 
 <script>
-    function toggleInfo(event, courseNumber) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const moreInfo = document.getElementById(`more-info-${courseNumber}`);
-        if (moreInfo.style.display === "none" || moreInfo.style.display === "") {
-            moreInfo.style.display = "block";
-        } else {
-            moreInfo.style.display = "none";
-        }
+    function showPopup(courseId) {
+        const popupContent = document.getElementById(`popup-${courseId}`).innerHTML;
+        document.getElementById('current-popup').innerHTML = popupContent;
+        document.getElementById('popup-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
+
+    function hidePopup() {
+        document.getElementById('popup-overlay').classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close popup when pressing Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            hidePopup();
+        }
+    });
 </script>

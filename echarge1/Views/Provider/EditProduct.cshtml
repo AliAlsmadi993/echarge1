@@ -71,15 +71,56 @@
             animation: fadeInUp 0.5s ease;
         }
 
-       
+        .upload-area {
+            border: 2px dashed #1ABC9C;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 25px;
+            background-color: rgba(26, 188, 156, 0.05);
+            transition: all 0.3s ease;
+        }
+
+            .upload-area:hover {
+                background-color: rgba(26, 188, 156, 0.1);
+            }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #1ABC9C;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            color: #1ABC9C;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f1f1;
+        }
+
+        .image-actions {
+            margin-top: 10px;
+        }
+
+        .fixed-submit-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
     </style>
 }
 
-<div class="container mt-5">
+<div class="container mt-5" style="padding-bottom: 100px;">
     <div class="form-wrapper">
         <h2 class="mb-4">✏️ Edit Product</h2>
 
-        <form method="post" enctype="multipart/form-data" asp-action="EditProduct">
+        <form id="form1" method="post" enctype="multipart/form-data" asp-action="EditProduct">
             <input type="hidden" asp-for="ProductId" />
 
             <div class="form-group mb-3">
@@ -103,37 +144,112 @@
                 </div>
                 <div class="col-md-4">
                     <label>Category</label>
-                    <input asp-for="Category" class="form-control" />
+                    <select asp-for="Category" class="form-control">
+                        <option value="">Select Category</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Home">Home</option>
+                        <option value="Beauty">Beauty</option>
+                        <option value="Sports">Sports</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="form-group mb-4">
-                <label>Upload New Images</label>
-                <input type="file" name="Images" class="form-control" multiple />
+            <!-- Upload New Images -->
+            <div class="mb-4">
+                <h5 class="section-title">➕ Add New Images</h5>
+                <div class="upload-area">
+                    <div class="upload-icon">📤</div>
+                    <h5>Drag & Drop Images Here</h5>
+                    <p class="text-muted">or</p>
+                    <input type="file" name="Images" class="form-control" multiple onchange="displayFileNames(this)" />
+                    <div id="fileNames" class="mt-2 small text-muted"></div>
+                </div>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> You can upload multiple images at once. Maximum size per image: 5MB.
+                </div>
             </div>
 
-            <div class="form-group mb-4">
-                <label>Existing Images</label>
-                <div class="row">
-                    @foreach (var image in Model.ProductImages)
-                    {
-                        <div class="col-md-3 mb-3">
-                            <div class="image-card text-center">
-                                <img src="@image.ImageUrl" class="img-thumbnail mb-2" style="height: 120px; object-fit: cover;" />
-                                <form asp-action="DeleteProductImage" method="post" asp-route-id="@image.ImageId" onsubmit="return confirm('Delete this image?');">
-                                    <input type="hidden" name="productId" value="@Model.ProductId" />
-                                    <button type="submit" class="btn btn-sm btn-danger">🗑 Delete</button>
-                                </form>
+            <!-- Existing Images -->
+            <div class="mb-4">
+                <h5 class="section-title">🖼️ Existing Images</h5>
+                @if (Model.ProductImages != null && Model.ProductImages.Any())
+                {
+                    <div class="row">
+                        @foreach (var image in Model.ProductImages)
+                        {
+                            <div class="col-md-3 mb-3">
+                                <div class="image-card text-center">
+                                    <img src="@image.ImageUrl" class="img-thumbnail mb-2" style="height: 120px; object-fit: cover;" />
+                                    <div class="image-actions">
+                                        <form asp-action="DeleteProductImage" method="post" asp-route-id="@image.ImageId" onsubmit="return confirm('Delete this image?');">
+                                            <input type="hidden" name="productId" value="@Model.ProductId" />
+                                            <button type="submit" class="btn btn-sm btn-danger">🗑 Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    }
-                </div>
-            </div>
-
-            <div class="d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary">💾 Update Product</button>
-                <a asp-action="MyProducts" class="btn btn-secondary">❌ Cancel</a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        No images available for this product.
+                    </div>
+                }
             </div>
         </form>
     </div>
 </div>
+
+<!-- Submit Button -->
+<div class="fixed-submit-bar">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="text-muted">
+                <i class="fas fa-exclamation-circle"></i> Don't forget to save your changes
+            </div>
+            <div>
+                <a asp-action="MyProducts" class="btn btn-secondary mr-2">❌ Cancel</a>
+                <button type="submit" form="form1" class="btn btn-primary">💾 Update Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function displayFileNames(input) {
+            const fileNamesContainer = document.getElementById('fileNames');
+            if (input.files.length > 0) {
+                let names = '';
+                for (let i = 0; i < input.files.length; i++) {
+                    names += `<div>${input.files[i].name}</div>`;
+                }
+                fileNamesContainer.innerHTML = names;
+            } else {
+                fileNamesContainer.innerHTML = 'No files selected';
+            }
+        }
+
+        const uploadArea = document.querySelector('.upload-area');
+        const fileInput = document.querySelector('input[type="file"]');
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = 'rgba(26, 188, 156, 0.15)';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.backgroundColor = 'rgba(26, 188, 156, 0.05)';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = 'rgba(26, 188, 156, 0.05)';
+            fileInput.files = e.dataTransfer.files;
+            displayFileNames(fileInput);
+        });
+    </script>
+}

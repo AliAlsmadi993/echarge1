@@ -4,21 +4,263 @@
     ViewData["Title"] = "Product Details";
 }
 @section Styles {
-    <link rel="stylesheet" href="~/css/productdetalse.css" asp-append-version="true" /> <!-- التصحيح: علامة <link> -->
+    <link rel="stylesheet" href="~/css/productdetalse.css" asp-append-version="true" />
+    <style>
+        .product-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .product-gallery-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .thumbnail-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .thumbnail-column img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .thumbnail-column img:hover,
+        .thumbnail-column img.active {
+            border-color: #00b894;
+            transform: scale(1.05);
+        }
+
+        .main-image-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .main-image {
+            max-width: 600px;
+            max-height: 500px;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .thumbnail-column::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .thumbnail-column::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .thumbnail-column::-webkit-scrollbar-thumb {
+            background: #00b894;
+            border-radius: 10px;
+        }
+
+        .thumbnail-column::-webkit-scrollbar-thumb:hover {
+            background: #00997b;
+        }
+
+        .product-details {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .product-info {
+            flex: 2;
+        }
+
+        .product-specs {
+            flex: 1;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .price {
+            font-size: 24px;
+            margin: 15px 0;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            margin-right: 10px;
+        }
+
+        .discounted-price {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .badge {
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .quantity button {
+            background: #f1f1f1;
+            border: none;
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .quantity span {
+            margin: 0 15px;
+            font-size: 18px;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .add-to-cart {
+            background: #00b894;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background: #00997b;
+        }
+
+        .related-products {
+            margin-top: 50px;
+        }
+
+        .related-products h3 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+            height: 100%;
+        }
+
+        .card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .card-img-top {
+            height: 180px;
+            object-fit: contain;
+            padding: 10px;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            background: #00b894;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #00997b;
+        }
+
+        @@media (max-width: 768px) {
+            .product-gallery-container {
+                flex-direction: column-reverse;
+            }
+            
+            .thumbnail-column {
+                flex-direction: row;
+                max-height: none;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding-bottom: 10px;
+            }
+
+            .product-details {
+                flex-direction: column;
+            }
+
+            .main-image {
+                max-height: 400px;
+            }
+        }
+    </style>
 }
 
 <div class="product-page">
     <h1>@Model.Name</h1>
 
     <!-- Product Gallery -->
-    <div class="product-gallery">
-        <div class="main-image">
-            <img src="@Model.ImageUrl" alt="@Model.Name" id="main-image" />
-        </div>
-        <div class="thumbnails">
-            @foreach (var image in Model.ProductImages)
+    <div class="product-gallery-container">
+        <!-- Thumbnail Column -->
+        <div class="thumbnail-column">
+            @if (Model.ProductImages != null)
             {
-                <img src="@image.ImageUrl" alt="Thumbnail" onclick="changeImage(this, '@image.ImageUrl')" />
+                foreach (var image in Model.ProductImages)
+                {
+                    if (!string.IsNullOrEmpty(image.ImageUrl))
+                    {
+                        <img src="@image.ImageUrl" 
+                             alt="Thumbnail" 
+                             onclick="changeImage(this, '@image.ImageUrl')" 
+                             @(Model.ProductImages.First() == image ? "class=active" : "") />
+                    }
+                }
+            }
+        </div>
+
+        <!-- Main Image -->
+        <div class="main-image-container">
+            @if (Model.ProductImages != null && Model.ProductImages.Any())
+            {
+                <img src="@Model.ProductImages.First().ImageUrl" alt="@Model.Name" id="main-image" class="main-image" />
             }
         </div>
     </div>
@@ -32,13 +274,13 @@
             <div class="price">
                 @if (Model.Discount.HasValue && Model.Discount > 0)
                 {
-                    <span class="original-price">@Model.Price JOD</span>
+                    <span class="original-price">@Model.Price.ToString("0.00") JOD</span>
                     <span class="discounted-price">@((Model.Price - (Model.Price * Model.Discount.Value / 100)).ToString("0.00")) JOD</span>
                     <span class="badge bg-danger">-@Model.Discount% OFF</span>
                 }
                 else
                 {
-                    <strong>@Model.Price JOD</strong>
+                    <strong>@Model.Price.ToString("0.00") JOD</strong>
                 }
             </div>
 
@@ -50,6 +292,7 @@
 
             <form method="post" asp-action="AddToCart" asp-controller="Shop">
                 <input type="hidden" name="productId" value="@Model.ProductId" />
+                <input type="hidden" name="quantity" id="productQuantity" value="1" />
                 <button type="submit" class="add-to-cart">Add to Cart</button>
             </form>
         </div>
@@ -69,48 +312,36 @@
         </div>
     </div>
 
-    <!-- Related Products -->
-    <div class="related-products">
-        <h3>Related Products</h3>
-        <div class="row">
-            @foreach (var relatedProduct in ViewBag.RelatedProducts)
-            {
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="@relatedProduct.ImageUrl" class="card-img-top" alt="@relatedProduct.Name" />
-                        <div class="card-body">
-                            <h5 class="card-title">@relatedProduct.Name</h5>
-                            <p class="card-text">
-                                @if (relatedProduct.Description.Length > 80)
-                                {
-                                    @relatedProduct.Description.Substring(0, 80)
-                                            }
-                                else
-                                {
-                                    @relatedProduct.Description
-                                }
-                            </p>
-                            <a href="@Url.Action("Details", "Shop", new { id = relatedProduct.ProductId })" class="btn btn-primary">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-</div>
+
 
 <script>
-    // Change main image on thumbnail click
+    // Change main image with active state for thumbnails
     function changeImage(thumbnail, newSrc) {
-        document.getElementById('main-image').src = newSrc;
+        const mainImage = document.getElementById('main-image');
+        
+        // Remove active class from all thumbnails
+        document.querySelectorAll('.thumbnail-column img').forEach(img => {
+            img.classList.remove('active');
+        });
+        
+        // Add active class to clicked thumbnail
+        thumbnail.classList.add('active');
+        
+        // Smooth transition for main image
+        mainImage.style.opacity = 0;
+        setTimeout(() => {
+            mainImage.src = newSrc;
+            mainImage.style.opacity = 1;
+        }, 300);
     }
 
-    // Update quantity of the product
     function updateQuantity(button, change) {
         const quantityElement = button.parentElement.querySelector('span');
+        const quantityInput = document.getElementById('productQuantity');
         let quantity = parseInt(quantityElement.textContent);
         quantity += change;
-        if (quantity < 1) quantity = 1; // Prevent negative quantities
+        if (quantity < 1) quantity = 1;
         quantityElement.textContent = quantity;
+        quantityInput.value = quantity;
     }
 </script>

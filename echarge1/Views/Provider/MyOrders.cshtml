@@ -1,75 +1,329 @@
 ﻿@model IEnumerable<echarge1.Models.Order>
-<link rel="stylesheet" href="~/css/orders-style.css" />
-
 @{
     ViewData["Title"] = "My Orders";
     Layout = "~/Views/Shared/_ProviderLayout.cshtml";
 }
 
-<h2 class="page-title">📋 Orders Containing My Products</h2>
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #1abc9c;
+            --primary-light: rgba(26, 188, 156, 0.1);
+            --primary-dark: #16a085;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
 
-@if (Model.Any())
-{
-    foreach (var order in Model)
+        .orders-container {
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+            .order-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+            }
+
+        .order-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .order-header strong {
+                font-weight: 600;
+            }
+
+        .status-badge {
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .order-body {
+            padding: 1.5rem;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .order-table th {
+                text-align: left;
+                padding: 0.75rem 1rem;
+                background-color: #f8f9fa;
+                font-weight: 600;
+                color: #2c3e50;
+                text-transform: uppercase;
+                font-size: 0.85rem;
+                border-bottom: 2px solid var(--primary-light);
+            }
+
+            .order-table td {
+                padding: 1rem;
+                border-bottom: 1px solid #eee;
+                vertical-align: middle;
+            }
+
+            .order-table tr:last-child td {
+                border-bottom: none;
+            }
+
+        .form-select {
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 0.9rem;
+            min-width: 120px;
+            margin-right: 0.5rem;
+        }
+
+        .btn-save {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 0.85rem;
+        }
+
+            .btn-save:hover {
+                background-color: #27ae60;
+                transform: translateY(-2px);
+            }
+
+        .btn-view {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+            .btn-view:hover {
+                background-color: #2980b9;
+                transform: translateY(-2px);
+            }
+
+        .no-orders {
+            background: #f8f9fa;
+            border-left: 5px solid var(--primary-color);
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Status Colors */
+        .status-pending {
+            color: var(--warning-color);
+        }
+
+        .status-ontheway {
+            color: var(--secondary-color);
+        }
+
+        .status-notreceived {
+            color: var(--danger-color);
+        }
+
+        .status-delivered {
+            color: var(--success-color);
+        }
+
+        /* Responsive Design */
+        @@media (max-width: 992px) {
+            .order-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .order-table td {
+                display: block;
+                width: 100%;
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+
+                .order-table td::before {
+                    content: attr(data-label);
+                    position: absolute;
+                    left: 1rem;
+                    width: calc(50% - 1rem);
+                    padding-right: 1rem;
+                    text-align: left;
+                    font-weight: 600;
+                    color: #2c3e50;
+                }
+
+            .order-table thead {
+                display: none;
+            }
+
+            .order-table tr {
+                margin-bottom: 1rem;
+                display: block;
+                border: 1px solid #eee;
+                border-radius: 8px;
+            }
+
+                .order-table tr:last-child {
+                    margin-bottom: 0;
+                }
+        }
+    </style>
+}
+
+<div class="orders-container">
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="fas fa-clipboard-list"></i> Orders Containing My Products
+        </h1>
+    </div>
+
+    @if (Model.Any())
     {
-        <div class="order-card">
-            <div class="order-header">
-                <div>
-                    <strong>Order #@order.OrderId</strong> - @order.OrderDate?.ToString("yyyy-MM-dd HH:mm")
+        foreach (var order in Model)
+        {
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <strong>Order #@order.OrderId</strong> - @order.OrderDate?.ToString("yyyy-MM-dd HH:mm")
+                    </div>
+                    <span class="status-badge">@order.Status</span>
                 </div>
-                <span class="status-badge">@order.Status</span>
-            </div>
 
-            <div class="order-body">
-                <table class="order-table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Qty</th>
-                            <th>Price</th>
-                            <th>Total</th>
-                            <th>User</th>
-                            <th>Shipping Address</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in order.OrderItems.Where(x => x.Product.ProviderId == @Context.Session.GetInt32("UserId")))
-                        {
+                <div class="order-body">
+                    <table class="order-table">
+                        <thead>
                             <tr>
-                                <td>@item.Product.Name</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.Product.Price</td>
-                                <td>@item.SubTotal</td>
-                                <td>@order.User.FullName</td>
-                                <td>@order.ShippingAddress</td>
-                                <td>
-                                    <form method="post" action="@Url.Action("UpdateOrderStatus", "Provider")">
-                                        <input type="hidden" name="OrderId" value="@order.OrderId" />
-                                        @Html.DropDownList("Status", new List<SelectListItem>
-                            {
-                            new SelectListItem { Text = "Pending", Value = "Pending", Selected = order.Status == "Pending" },
-                            new SelectListItem { Text = "On the Way", Value = "On the Way", Selected = order.Status == "On the Way" },
-                            new SelectListItem { Text = "Not Received", Value = "Not Received", Selected = order.Status == "Not Received" },
-                            new SelectListItem { Text = "Delivered", Value = "Delivered", Selected = order.Status == "Delivered" }
-                            }, new { @class = "form-select" })
-
-                                        <button type="submit" class="btn-save">Save</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <a href="@Url.Action("GetOrderDetails", "Provider", new { id = order.OrderId })" class="btn-view">View</a>
-                                </td>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <th>User</th>
+                                <th>Shipping Address</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in order.OrderItems.Where(x => x.Product.ProviderId == Context.Session.GetInt32("UserId")))
+                            {
+                                <tr>
+                                    <td data-label="Product">@item.Product.Name</td>
+                                    <td data-label="Quantity">@item.Quantity</td>
+                                    <td data-label="Price">@item.Product.Price.ToString("0.00") JOD</td>
+                                    <td data-label="Total">@item.SubTotal.ToString("0.00") JOD</td>
+                                    <td data-label="User">@order.User.FullName</td>
+                                    <td data-label="Shipping">@order.ShippingAddress</td>
+                                    <td data-label="Status">
+                                        <form method="post" action="@Url.Action("UpdateOrderStatus", "Provider")" class="d-flex align-items-center">
+                                            <input type="hidden" name="OrderId" value="@order.OrderId" />
+                                            @Html.DropDownList("Status", new List<SelectListItem>
+                                {
+                                new SelectListItem { Text = "Pending", Value = "Pending", Selected = order.Status == "Pending" },
+                                new SelectListItem { Text = "On the Way", Value = "On the Way", Selected = order.Status == "On the Way" },
+                                new SelectListItem { Text = "Not Received", Value = "Not Received", Selected = order.Status == "Not Received" },
+                                new SelectListItem { Text = "Delivered", Value = "Delivered", Selected = order.Status == "Delivered" }
+                                }, new { @class = "form-select" })
+
+                                            <button type="submit" class="btn-save">
+                                                <i class="fas fa-save"></i> Save
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td data-label="Actions">
+                                        <a href="@Url.Action("GetOrderDetails", "Provider", new { id = order.OrderId })" class="btn-view">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        }
+    }
+    else
+    {
+        <div class="no-orders">
+            <i class="fas fa-box-open" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+            <h4>No Orders Found</h4>
+            <p class="text-muted">You currently have no orders linked to your products.</p>
         </div>
     }
-}
-else
-{
-    <div class="no-orders">You currently have no orders linked to your products.</div>
-}
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Add hover effect to order cards
+        $('.order-card').hover(
+            function() {
+                $(this).css('transform', 'translateY(-5px)');
+            },
+            function() {
+                $(this).css('transform', 'translateY(0)');
+            }
+        );
+
+        // Add status color classes
+        $('.status-badge').each(function() {
+            const status = $(this).text().trim().toLowerCase().replace(/\s+/g, '');
+            $(this).addClass('status-' + status);
+        });
+    });
+</script>

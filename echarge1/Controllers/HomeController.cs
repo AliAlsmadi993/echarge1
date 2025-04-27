@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using echarge1.Models;
@@ -18,19 +18,21 @@ namespace echarge1.Controllers
         {
             var serviceCards = await _context.ServiceCards.ToListAsync();
             var testimonials = await _context.Testimonials
-                                     .Join(_context.AppUsers,
-                                           t => t.UserId,
-                                           u => u.UserId,
-                                           (t, u) => new
-                                           {
-                                               t.TestimonialId,
-                                               t.Subject,
-                                               t.Message,
-                                               t.CreatedAt,
-                                               UserName = u.FullName,
-                                               ProfileImage = u.ProfileImage
-                                           })
-                                     .ToListAsync();
+      .Select(t => new
+      {
+          t.TestimonialId,
+          t.Subject,
+          t.Message,
+          t.CreatedAt,
+          UserName = t.UserId != null
+              ? _context.AppUsers.Where(u => u.UserId == t.UserId).Select(u => u.FullName).FirstOrDefault()
+              : "",  // لو ما فيه UserId، نحط اسمه "مجهول" أو "Anonymous"
+          ProfileImage = t.UserId != null
+              ? _context.AppUsers.Where(u => u.UserId == t.UserId).Select(u => u.ProfileImage).FirstOrDefault()
+              : "/images/default-user.png"  // صورة افتراضية لو ما فيه صورة
+      })
+      .ToListAsync();
+
 
             var userCount = await _context.AppUsers.CountAsync();
             var stationCount = await _context.ChargingStations.CountAsync();

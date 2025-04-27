@@ -8,226 +8,775 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/store.css" asp-append-version="true" />
-    <style>
-        body {
-            background: linear-gradient(145deg, #f8fafa, #e4f5f5);
-            font-family: 'Poppins', sans-serif;
-            color: #333;
-        }
-
-        .card {
-            border-radius: 16px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-            .card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        <link rel="stylesheet" href="~/css/store.css" asp-append-version="true" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+        <style>
+            :root {
+                --primary-color: #16a085;
+                --primary-light: #1abc9c;
+                --primary-dark: #0d6e5c;
+                --secondary-color: #f39c12;
+                --dark-color: #2c3e50;
+                --light-color: #ecf0f1;
             }
 
-        .btn-success, .btn-primary {
-            border-radius: 12px;
-            font-weight: 600;
-            transition: background 0.3s ease, transform 0.2s;
-        }
+            body {
+                background: linear-gradient(145deg, #f8fafa, #e4f5f5);
+                font-family: 'Poppins', sans-serif;
+                color: #333;
+                margin: 0;
+                padding: 0;
+                min-height: 100vh;
+            }
 
-            .btn-success:hover, .btn-primary:hover {
+            .main-container {
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            /* 🔍 شريط البحث */
+            .search-container {
+                background: white;
+                border-radius: 0 0 20px 20px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+                padding: 25px 15px;
+                margin-bottom: 30px;
+                width: 100%;
+            }
+
+            /* 🎠 سلايدر العروض */
+            .featured-slider {
+                border-radius: 20px;
+                overflow: hidden;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                margin-bottom: 50px;
+                border: 1px solid rgba(22, 160, 133, 0.2);
+                width: 100%;
+            }
+
+            .featured-slide {
+                position: relative;
+                height: 400px;
+                background-size: cover;
+                background-position: center;
+                display: flex;
+                align-items: flex-end;
+                cursor: pointer;
+                transition: all 0.5s ease;
+            }
+
+            .featured-slide:hover {
+                transform: scale(1.02);
+            }
+
+            .slide-overlay {
+                background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+                width: 100%;
+                padding: 25px;
+                color: white;
+                border-radius: 0 0 20px 20px;
+            }
+
+            .slide-badge {
+                background: var(--secondary-color);
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                padding: 8px 15px;
+                border-radius: 30px;
+                font-weight: bold;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+                font-size: 14px;
+                animation: pulse 2s infinite;
+            }
+
+            /* 🛍️ كروت المنتجات */
+            .product-card {
+                border: none;
+                border-radius: 15px;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+                margin-bottom: 25px;
+                background: white;
+                position: relative;
+                height: 100%;
+            }
+
+            .product-card:hover {
+                transform: translateY(-10px) scale(1.03);
+                box-shadow: 0 15px 30px rgba(26, 188, 156, 0.3);
+            }
+
+            .card-img-container {
+                height: 220px;
+                overflow: hidden;
+                position: relative;
+            }
+
+            .product-img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+                transition: transform 0.5s ease;
+            }
+
+            .product-card:hover .product-img {
+                transform: scale(1.1);
+            }
+
+            .product-badge {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                background: var(--primary-color);
+                color: white;
+                padding: 5px 10px;
+                border-radius: 5px;
+                font-size: 12px;
+                font-weight: 600;
+                z-index: 2;
+            }
+
+            .discount-badge {
+                background: #e74c3c;
+            }
+
+            .new-badge {
+                background: #3498db;
+            }
+
+            .card-body {
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .product-title {
+                color: var(--dark-color);
+                font-weight: 700;
+                margin-bottom: 10px;
+                font-size: 1.1rem;
+                min-height: 50px;
+            }
+
+            .product-description {
+                color: #7f8c8d;
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+                flex-grow: 1;
+            }
+
+            .price-container {
+                margin-bottom: 15px;
+            }
+
+            .current-price {
+                color: var(--primary-color);
+                font-weight: 700;
+                font-size: 1.2rem;
+            }
+
+            .original-price {
+                text-decoration: line-through;
+                color: #95a5a6;
+                font-size: 0.9rem;
+                margin-left: 8px;
+            }
+
+            .btn-add-to-cart {
+                background: var(--primary-color);
+                border: none;
+                border-radius: 8px;
+                padding: 10px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .btn-add-to-cart:hover {
+                background: var(--primary-dark);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(22, 160, 133, 0.3);
+            }
+
+            .btn-details {
+                border: 2px solid var(--primary-color);
+                color: var(--primary-color);
+                background: transparent;
+                border-radius: 8px;
+                padding: 8px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                margin-top: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .btn-details:hover {
+                background: var(--primary-color);
+                color: white;
+            }
+
+            /* 🏷️ عناوين الأقسام */
+            .section-title {
+                position: relative;
+                margin: 40px 0 30px;
+                padding-bottom: 15px;
+                color: var(--dark-color);
+                font-weight: 700;
+                width: 100%;
+            }
+
+            .section-title:after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 60px;
+                height: 3px;
+                background: var(--primary-color);
+            }
+
+            /* 🎤 زر البحث الصوتي */
+            .voice-btn {
+                background: var(--primary-light);
+                color: white;
+                border: none;
+                border-radius: 10px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .voice-btn:hover {
+                background: var(--primary-dark);
                 transform: scale(1.03);
             }
 
-        .card-img-top {
-            object-fit: cover;
-            height: 220px;
-        }
-
-        .card-title {
-            color: #1ABC9C;
-            font-weight: 700;
-        }
-
-        .text-success {
-            font-weight: 700;
-            color: #16a085 !important;
-        }
-
-        .badge {
-            font-size: 12px;
-            padding: 4px 8px;
-            border-radius: 8px;
-        }
-
-        h2, h4 {
-            font-weight: 700;
-            color: #1ABC9C;
-        }
-
-        select.form-control, input.form-control {
-            border-radius: 10px;
-            border: 1px solid #ccc;
-        }
-
-        .form-control:focus {
-            border-color: #1ABC9C;
-            box-shadow: 0 0 8px rgba(26, 188, 156, 0.2);
-        }
-
-        .btn-outline-primary {
-            border-color: #1ABC9C;
-            color: #1ABC9C;
-        }
-
-            .btn-outline-primary:hover {
-                background-color: #1ABC9C;
-                color: white;
+            .voice-btn.listening::before {
+                content: '';
+                position: absolute;
+                top: -10px;
+                left: -10px;
+                right: -10px;
+                bottom: -10px;
+                background: rgba(231, 76, 60, 0.3);
+                border-radius: 50%;
+                animation: pulse 1.5s infinite;
+                z-index: 0;
             }
-    </style>
+
+            /* ⚡ تأثيرات للعروض الخاصة */
+            .featured-tag {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: var(--secondary-color);
+                color: white;
+                padding: 5px 10px;
+                border-radius: 5px;
+                font-size: 12px;
+                font-weight: bold;
+                animation: pulse 2s infinite;
+                z-index: 2;
+            }
+
+            @@keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+
+            /* 🌟 تأثير التحميل */
+            .loading-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(255,255,255,0.9);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                flex-direction: column;
+            }
+
+            .spinner {
+                width: 50px;
+                height: 50px;
+                border: 5px solid rgba(22, 160, 133, 0.2);
+                border-top: 5px solid var(--primary-color);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+            .loading-text {
+                margin-top: 15px;
+                color: var(--primary-color);
+                font-weight: 600;
+            }
+
+            @@keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            /* 🔄 تأثيرات الحركة */
+            .animate-delay-1 {
+                animation-delay: 0.1s;
+            }
+
+            .animate-delay-2 {
+                animation-delay: 0.2s;
+            }
+
+            /* 🏆 ستايل للعناوين */
+            .page-title {
+                font-weight: 800;
+                color: var(--primary-dark);
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                position: relative;
+                display: inline-block;
+                margin-bottom: 30px;
+                font-size: 2.5rem;
+            }
+
+            .page-title:after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                border-radius: 3px;
+            }
+
+            /* 📱 تصميم متجاوب */
+            @@media (max-width: 768px) {
+                .featured-slide {
+                    height: 250px;
+                }
+
+                .card-img-container {
+                    height: 160px;
+                }
+
+                .product-title {
+                    font-size: 1rem;
+                    min-height: auto;
+                }
+
+                .page-title {
+                    font-size: 1.8rem;
+                }
+
+                .search-container {
+                    border-radius: 0;
+                }
+            }
+
+            /* تأثيرات إضافية */
+            .floating {
+                animation: floating 3s ease-in-out infinite;
+            }
+
+            @@keyframes floating {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+                100% { transform: translateY(0px); }
+            }
+
+            .shake {
+                animation: shake 0.5s ease-in-out;
+            }
+
+            @@keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                20%, 60% { transform: translateX(-5px); }
+                40%, 80% { transform: translateX(5px); }
+            }
+
+            /* تحسينات للشريط الجانبي */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: 250px;
+                background: var(--dark-color);
+                color: white;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1000;
+                padding-top: 70px;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .sidebar-toggle {
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1001;
+                background: var(--primary-color);
+                color: white;
+                border: none;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                font-size: 1.5rem;
+                cursor: pointer;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+                transition: all 0.3s ease;
+            }
+
+            .sidebar-toggle:hover {
+                transform: scale(1.1);
+            }
+
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 999;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+            }
+
+            .overlay.show {
+                opacity: 1;
+                pointer-events: all;
+            }
+        </style>
 }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<!-- 🌟 تأثير التحميل -->
+<div class="loading-overlay animate__animated animate__fadeOut" style="animation-delay: 1s;">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading E-Charge Store...</div>
+</div>
 
-<div class="container mt-5">
-    <h2 class="text-center text-success mb-4">Discover Our Products</h2>
+<!-- 🏠 الشريط الجانبي -->
+<button class="sidebar-toggle animate__animated animate__fadeIn">
+    <i class="fas fa-bars"></i>
+</button>
 
-    <!-- 🔍 البحث والفلاتر -->
-    <form method="get" asp-action="Store" class="row mb-4">
-        <div class="col-md-4 mb-2">
-            <input type="text" name="search" id="searchInput" class="form-control"
-                   placeholder="Search for a product..." value="@searchValue" />
-        </div>
-        <div class="col-md-3 mb-2">
-            <select name="category" class="form-control">
-                <option value="">All Categories</option>
-                @foreach (var cat in categories)
-                {
-                    <option value="@cat" selected="@(cat == selectedCategory)">@cat</option>
-                }
-            </select>
-        </div>
-        <div class="col-md-2 mb-2">
-            <button type="submit" class="btn btn-primary w-100">Search</button>
-        </div>
-        <div class="col-md-1 mb-2">
-            <button type="button" id="voiceSearchBtn" class="btn btn-secondary w-100">
-                <i class="fas fa-microphone"></i>
-            </button>
-        </div>
-    </form>
-
-    <!-- ⭐️ المنتجات المميزة -->
-    @if (Model.Any(p => p.IsFeatured == true))
-    {
-        <div class="row mb-5">
-            <h4 class="text-success mb-3">Featured Products</h4>
-            @foreach (var product in Model.Where(p => p.IsFeatured == true))
+<div class="sidebar">
+    <div class="p-4">
+        <h4 class="text-white mb-4">Categories</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link text-white" href="@Url.Action("Store", "Shop")">All Products</a>
+            </li>
+            @foreach (var cat in categories)
             {
-                <div class="col-md-6 mb-4">
-                    <div class="card border-success">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="@(product.PromotionImageUrl ?? product.ImageUrl)" class="img-fluid" alt="@product.Name" />
-                            </div>
-                            <div class="col-md-8 p-3">
-                                <h5 class="text-success">@product.PromotionText</h5>
-                                <p>@product.Name - @product.Price JOD</p>
-                                <a href="@Url.Action("Details", "Shop", new { id = product.ProductId })"
-                                   class="btn btn-outline-success btn-sm">View Product</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="@Url.Action("Store", "Shop", new { category = cat })">@cat</a>
+                    </li>
             }
-        </div>
-    }
+        </ul>
+    </div>
+</div>
 
-    <!-- 🛒 منتجات المزودين -->
-    <h4 class="text-primary mb-3">Provider Products</h4>
-    <div class="row">
-        @foreach (var product in Model.Where(p => p.IsFeatured != true))
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">@product.Name</h5>
-                        <p class="card-text">@product.Description.Substring(0, Math.Min(80, product.Description.Length))...</p>
+<div class="overlay"></div>
 
-                        @if (product.Discount.HasValue && product.Discount > 0)
-                        {
-                            <p class="text-danger">
-                                <del>@product.Price JOD</del>
-                                <strong class="ms-2">@((product.Price - (product.Price * product.Discount.Value / 100)).ToString("0.00")) JOD</strong>
-                                <span class="badge bg-danger ms-2">-@product.Discount% OFF</span>
-                            </p>
-                        }
-                        else
-                        {
-                            <p><strong>@product.Price JOD</strong></p>
-                        }
+<div class="main-container animate__animated animate__fadeIn">
+    <div class="container-fluid px-4">
+        <h2 class="text-center page-title mt-4">
+            <i class="fas fa-bolt me-2 floating" style="color: var(--secondary-color);"></i> E-Charge Store
+        </h2>
 
-                        <div class="mt-auto">
-                            <form method="post" asp-action="AddToCart" asp-controller="Shop">
-                                <input type="hidden" name="productId" value="@product.ProductId" />
-                                <button type="submit" class="btn btn-success w-100">Add to Cart</button>
-                            </form>
-                            <a href="@Url.Action("Details", "Shop", new { id = product.ProductId })"
-                               class="btn btn-outline-primary w-100 mt-2">View Details</a>
-                        </div>
+        <!-- 🔍 شريط البحث -->
+        <div class="search-container animate__animated animate__fadeIn animate-delay-1">
+            <form method="get" asp-action="Store" class="row g-3 align-items-center">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                        <input type="text" name="search" id="searchInput" class="form-control border-start-0"
+                               placeholder="What are you looking for?" value="@searchValue" />
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        @foreach (var cat in categories)
+                        {
+                                <option value="@cat" selected="@(cat == selectedCategory)">@cat</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn w-100" style="background: var(--primary-color); color: white;">
+                        <i class="fas fa-filter me-1"></i> Filter
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" id="voiceSearchBtn" class="btn voice-btn w-100">
+                        <i class="fas fa-microphone me-1"></i> Voice
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 🎪 سلايدر العروض المميزة -->
+        @if (Model.Any(p => p.IsFeatured == true))
+        {
+                <h3 class="section-title animate__animated animate__fadeIn animate-delay-1">Featured Offers</h3>
+
+                <div id="featuredCarousel" class="carousel slide featured-slider animate__animated animate__fadeIn animate-delay-2" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                    @{
+                        var featuredProducts = Model.Where(p => p.IsFeatured == true).ToList();
+                        for (int i = 0; i < featuredProducts.Count; i++)
+                        {
+                            var product = featuredProducts[i];
+                                        <div class="carousel-item @(i == 0 ? "active" : "")" data-product-id="@product.ProductId">
+                                <div class="featured-slide"
+                                     style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+                url('@(product.PromotionImageUrl ?? product.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/default.jpg")')">
+                                    <span class="slide-badge animate__animated animate__pulse animate__infinite">HOT DEAL</span>
+                                                <div class="slide-overlay">
+                                                    <h3 class="text-white">@product.PromotionText</h3>
+                                                    <h5 class="text-white mb-3">@product.Name - @product.Price JOD</h5>
+                                                    <a href="@Url.Action("Details", "Shop", new { id = product.ProductId })" 
+                                                       class="btn btn-lg" style="background: var(--secondary-color); color: white; border-radius: 10px;">
+                                                        Shop Now <i class="fas fa-arrow-right ms-2"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                        }
+                    }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+        }
+
+
+        <!-- 🏷️ منتجات الموقع الرسمي -->
+        @if (siteProducts != null && siteProducts.Any())
+        {
+            <h3 class="section-title animate__animated animate__fadeIn">Official E-Charge Products</h3>
+            <div class="row">
+                @foreach (var product in siteProducts)
+                {
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div class="card product-card h-100 animate__animated animate__fadeInUp">
+                            <div class="card-img-container">
+                                <img src="@(product.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/default.jpg")"
+                                     onerror="this.onerror=null; this.src='/images/default.jpg';"
+                                     class="product-img"
+                                     alt="@product.Name" />
+                                <span class="featured-tag">OFFICIAL</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="product-title">@product.Name</h5>
+                                <p class="product-description">@product.Description.Substring(0, Math.Min(80, product.Description.Length))...</p>
+
+                                <div class="price-container">
+                                    <span class="current-price">@product.Price JOD</span>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <form method="post" asp-action="AddToCart" asp-controller="Shop">
+                                        <input type="hidden" name="productId" value="@product.ProductId" />
+                                        <button type="submit" class="btn btn-add-to-cart">
+                                            <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                                        </button>
+                                    </form>
+                                    <a href="@Url.Action("Details", "Shop", new { id = product.ProductId })"
+                                       class="btn btn-details">
+                                        <i class="fas fa-info-circle me-2"></i> Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         }
     </div>
-
-    <!-- 🏷️ منتجات الموقع الرسمي -->
-    @if (siteProducts != null && siteProducts.Any())
-    {
-        <h4 class="text-dark mt-5 mb-3">Official E-Charge Products</h4>
+</div>
+        <!-- 🛒 منتجات المزودين -->
+        <h3 class="section-title animate__animated animate__fadeIn">Provider Products</h3>
         <div class="row">
-            @foreach (var product in siteProducts)
+            @foreach (var product in Model.Where(p => p.IsFeatured != true))
             {
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 border border-primary shadow">
-                        <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">@product.Name</h5>
-                            <p class="card-text">@product.Description.Substring(0, Math.Min(80, product.Description.Length))...</p>
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div class="card product-card h-100 animate__animated animate__fadeInUp">
+                            <div class="card-img-container">
+                            <img src="@(product.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/default.jpg")" class="product-img" alt="@product.Name" />
+                            @if (product.Discount.HasValue && product.Discount > 0)
+                            {
+                                        <span class="discount-badge product-badge">-@product.Discount% OFF</span>
+                            }
+                            </div>
+                            <div class="card-body">
+                                <h5 class="product-title">@product.Name</h5>
+                                <p class="product-description">@product.Description.Substring(0, Math.Min(80, product.Description.Length))...</p>
 
-                            <p><strong>@product.Price JOD</strong></p>
+                                <div class="price-container">
+                                @if (product.Discount.HasValue && product.Discount > 0)
+                                {
+                                            <span class="current-price">@((product.Price - (product.Price * product.Discount.Value / 100)).ToString("0.00")) JOD</span>
+                                            <span class="original-price">@product.Price JOD</span>
+                                }
+                                else
+                                {
+                                            <span class="current-price">@product.Price JOD</span>
+                                }
+                                </div>
 
-                            <div class="mt-auto">
-                                <form method="post" asp-action="AddToCart" asp-controller="Shop">
-                                    <input type="hidden" name="productId" value="@product.ProductId" />
-                                    <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
-                                </form>
-                                <a href="@Url.Action("Details", "Shop", new { id = product.ProductId })"
-                                   class="btn btn-outline-dark w-100 mt-2">View Details</a>
+                                <div class="d-grid gap-2">
+                                    <form method="post" asp-action="AddToCart" asp-controller="Shop">
+                                        <input type="hidden" name="productId" value="@product.ProductId" />
+                                        <button type="submit" class="btn btn-add-to-cart">
+                                            <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                                        </button>
+                                    </form>
+                                    <a href="@Url.Action("Details", "Shop", new { id = product.ProductId })" 
+                                       class="btn btn-details">
+                                        <i class="fas fa-info-circle me-2"></i> Details
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
             }
         </div>
-    }
-</div>
+
+       
 
 @section Scripts {
-    <script>
-        document.getElementById('voiceSearchBtn').addEventListener('click', function () {
-            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.lang = 'en-US';
-            recognition.start();
+        <script>
+            // البحث الصوتي
+            document.getElementById('voiceSearchBtn').addEventListener('click', function () {
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    alert("Voice search is not supported in your browser. Try Chrome or Edge.");
+                    return;
+                }
 
-            recognition.onresult = function (event) {
-                const result = event.results[0][0].transcript;
-                document.getElementById('searchInput').value = result;
-                document.forms[0].submit();
-            };
+                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
 
-            recognition.onerror = function () {
-                alert("Could not recognize your voice. Try again.");
-            };
-        });
-    </script>
+                // تغيير لون الزر أثناء الاستماع
+                this.classList.add('listening');
+                this.innerHTML = '<i class="fas fa-microphone-slash me-1"></i> Listening...';
+
+                recognition.start();
+
+                recognition.onresult = function (event) {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('searchInput').value = transcript;
+
+                    // إرسال النموذج تلقائيًا
+                    document.querySelector('form').submit();
+
+                    // إعادة الزر إلى حالته الأصلية
+                    voiceSearchBtn.classList.remove('listening');
+                    voiceSearchBtn.innerHTML = '<i class="fas fa-microphone me-1"></i> Voice';
+                };
+
+                recognition.onerror = function (event) {
+                    console.error('Speech recognition error', event.error);
+                    voiceSearchBtn.classList.remove('listening');
+                    voiceSearchBtn.innerHTML = '<i class="fas fa-microphone me-1"></i> Voice';
+
+                    if (event.error === 'not-allowed') {
+                        alert('Microphone access is blocked. Please allow microphone access in your browser settings.');
+                    } else {
+                        alert("Could not recognize your voice. Try again.");
+                    }
+                };
+
+                recognition.onend = function() {
+                    voiceSearchBtn.classList.remove('listening');
+                    voiceSearchBtn.innerHTML = '<i class="fas fa-microphone me-1"></i> Voice';
+                };
+            });
+
+            // تأثير التحميل
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    document.querySelector('.loading-overlay').style.display = 'none';
+                }, 1000);
+            });
+
+            // تأثيرات للعروض الخاصة
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.classList.add('animate__pulse');
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.classList.remove('animate__pulse');
+                });
+            });
+
+            // تهيئة سلايدر العروض
+            $(document).ready(function(){
+                $('#featuredCarousel').carousel({
+                    interval: 5000,
+                    pause: "hover"
+                });
+
+                // الانتقال إلى صفحة المنتج عند النقر على السلايد
+                $('.featured-slide').click(function() {
+                    const productId = $(this).closest('.carousel-item').data('product-id');
+                    if (productId) {
+                        window.location.href = '/Shop/Details/' + productId;
+                    }
+                });
+            });
+
+            // التحكم في الشريط الجانبي
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const overlay = document.querySelector('.overlay');
+
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            });
+
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            });
+
+            // تأثير اهتزاز عند حدوث خطأ
+            function showErrorShake(element) {
+                element.classList.add('shake');
+                setTimeout(() => {
+                    element.classList.remove('shake');
+                }, 500);
+            }
+        </script>
 }

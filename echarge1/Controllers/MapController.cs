@@ -358,6 +358,90 @@ namespace echarge1.Controllers
 
             return null;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> NavigateToEmergency(int requestId)
+        {
+            var request = await _context.EmergencyRequests.FindAsync(requestId);
+            if (request == null || string.IsNullOrWhiteSpace(request.Location))
+            {
+                TempData["Error"] = "Location not found.";
+                return RedirectToAction("AdminPanel", "Emergency");
+            }
+
+            return RedirectToAction("Index", new { latlng = request.Location });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetEvSupportUnits()
+        {
+            var units = await _context.EvsupportUnits.ToListAsync();
+
+            var result = units.Select(u =>
+            {
+                try
+                {
+                    var parts = u.Location?.Split(',');
+                    if (parts?.Length >= 2 &&
+                        double.TryParse(parts[0], out double lat) &&
+                        double.TryParse(parts[1], out double lng))
+                    {
+                        return new
+                        {
+                            id = u.Id,
+                            name = u.Name,
+                            type = u.Type,
+                            status = u.Status,
+                            vehicleType = u.VehicleType,
+                            lat,
+                            lng
+                        };
+                    }
+                }
+                catch { }
+
+                return null;
+            }).Where(x => x != null).ToList();
+
+            return Json(result);
+        }
+        [HttpGet]
+        public IActionResult AddSupportUnit()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddSupportUnit(EvsupportUnit unit, string? locationUrl, string? deviceLocation)
+        {
+            if (!string.IsNullOrEmpty(locationUrl))
+            {
+                var location = ExtractCoordinatesFromGoogleMapsUrl(locationUrl);
+                if (location == null)
+                {
+                    ModelState.AddModelError("Location", "Invalid Google Maps link.");
+                    return View(unit);
+                }
+                unit.Location = location;
+            }
+            else if (!string.IsNullOrEmpty(deviceLocation))
+            {
+                unit.Location = deviceLocation;
+            }
+
+            unit.CreatedAt = DateTime.Now;
+            unit.Status = "Available";
+
+            _context.EvsupportUnits.Add(unit);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Support Unit added successfully.";
+            return RedirectToAction("Index");
+        }
+
+
     }
 }
 

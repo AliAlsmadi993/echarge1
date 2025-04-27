@@ -85,9 +85,11 @@
                     <ul class="navbar-nav ms-auto align-items-center">
                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+
                         <li class="nav-item"><a class="nav-link" asp-controller="Map" asp-action="Index">Map</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Shop" asp-action="Store">Shop</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Shop" asp-action="History">History</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Course" asp-action="AllCourses">Courses</a></li>
                         <li class="nav-item cart-hover">
                             <a class="nav-link position-relative cart-icon" href="/Shop/Cart">
                                 <i class="fas fa-shopping-cart fa-lg"></i>
@@ -97,8 +99,7 @@
                                 <p class="text-muted">Loading cart...</p>
                             </div>
                         </li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Course" asp-action="AllCourses">Courses</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                       
                         @if (!string.IsNullOrEmpty(userImage))
                         {
                             <li class="nav-item">

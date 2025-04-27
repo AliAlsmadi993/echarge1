@@ -1,53 +1,55 @@
-﻿/* صفحة التسجيل - تصميم بدون تعارض مع Layout */
-
-/* إعدادات عامة */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Poppins', sans-serif;
-    background: url('/img/H1.jpg') no-repeat center center/cover;
-    min-height: 100vh; /* يسمح بظهور الفوتر */
-    display: flex;
-    flex-direction: column;
-    color: #f5f5f5;
+﻿#bgVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1;
+    object-fit: cover;
+    opacity: 0.8;
 }
 
-/* الحاوية الأساسية */
-.background-container {
-    flex: 1;
+/* خلفية الـ Form */
+.login-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 60px 20px; /* مساحة حول النموذج */
-    backdrop-filter: blur(2px);
+    min-height: 100vh;
+    padding: 20px;
 }
 
-/* الصندوق */
-.login-container {
-    background: rgba(50, 50, 50, 0.95);
+.login-form {
+    background: rgba(0, 0, 0, 0.55); /* خلفية سوداء شفافة */
+    backdrop-filter: blur(10px);
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(26, 188, 156, 0.7);
-    padding: 30px;
+    padding: 40px;
     width: 100%;
     max-width: 450px;
-    text-align: center;
-    animation: fadeIn 1.2s ease-in-out;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
 }
 
-/* العنوان */
-.login-form h1 {
-    font-size: 2.7em;
-    color: #1ABC9C;
-    margin-bottom: 15px;
-}
+    /* نص العنوان */
+    .login-form h1 {
+        color: #27C9AC; /* لون أخضر بحري */
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 2.2rem;
+    }
 
-.login-form p {
-    font-size: 1.1em;
-    color: #f5f6f7;
-    margin-bottom: 25px;
-}
+    /* النص الترحيبي */
+    .login-form p {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #f0f0f0;
+        font-size: 1rem;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+    }
 
-/* عناصر الإدخال */
+/* الحقول */
 .form-group {
     position: relative;
     margin-bottom: 25px;
@@ -56,105 +58,94 @@ body {
     .form-group input,
     .form-group select {
         width: 100%;
-        padding: 15px 10px;
-        font-size: 1.1em;
-        border: 1px solid #555;
-        border-radius: 5px;
-        background: transparent;
-        color: #f5f5f5;
-        transition: border-color 0.3s, box-shadow 0.3s;
+        padding: 15px 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        color: white;
+        font-size: 1rem;
     }
 
         .form-group input:focus,
         .form-group select:focus {
-            border-color: #1ABC9C;
-            box-shadow: 0 0 8px rgba(26, 188, 156, 0.7);
             outline: none;
+            border-color: #27C9AC;
+            box-shadow: 0 0 0 2px rgba(39, 201, 172, 0.4);
+            background: rgba(255, 255, 255, 0.15);
         }
 
-    /* التسمية تطفو عند الكتابة */
+    /* لابل الحقول */
     .form-group label {
         position: absolute;
-        top: 50%;
-        left: 15px;
-        transform: translateY(-50%);
-        font-size: 1em;
-        color: #bbb;
+        top: 15px;
+        left: 20px;
+        color: #f0f0f0;
+        transition: all 0.3s ease;
         pointer-events: none;
-        transition: all 0.3s ease-in-out;
+        font-size: 1rem;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
     }
 
     .form-group input:focus + label,
     .form-group input:not(:placeholder-shown) + label,
     .form-group select:focus + label,
-    .form-group select:not([value=""]) + label {
+    .form-group select:not(:placeholder-shown) + label {
         top: -10px;
-        font-size: 0.85em;
-        color: #1ABC9C;
-        background: rgba(50, 50, 50, 0.95);
+        left: 15px;
+        font-size: 0.8rem;
+        background: rgba(0, 0, 0, 0.6);
         padding: 0 5px;
+        color: #27C9AC;
     }
 
-/* زر التسجيل */
+/* زر الريجستر */
 .login-btn {
-    background: #1ABC9C;
-    color: white;
-    border: none;
-    padding: 15px;
-    border-radius: 5px;
-    font-size: 1.2em;
     width: 100%;
+    padding: 15px;
+    background: #27C9AC;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 10px;
 }
 
     .login-btn:hover {
-        background: #16A085;
-        transform: scale(1.05);
+        background: #27C9AC;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
 
 /* روابط إضافية */
 .extras {
-    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    font-size: 0.9rem;
 }
 
     .extras a {
-        color: #1ABC9C;
+        color: #f0f0f0;
         text-decoration: none;
-        font-size: 1em;
     }
 
         .extras a:hover {
-            color: #16A085;
+            color: #27C9AC;
+            text-decoration: underline;
         }
 
 /* رسائل الخطأ */
 .error-message {
-    color: #ff6b6b;
-    font-size: 0.9em;
-    display: block;
+    color: #ff9aa2;
+    font-size: 0.8rem;
     margin-top: 5px;
+    display: block;
 }
 
-/* استجابة الهاتف */
-@media (max-width: 768px) {
-    .login-container {
-        width: 100%;
-        padding: 20px;
-    }
-
-    .login-form h1 {
-        font-size: 2em;
-    }
-
-    .form-group input,
-    .form-group select {
-        padding: 12px 10px;
-        font-size: 1em;
-    }
-
-    .login-btn {
-        font-size: 1em;
-        padding: 12px 15px;
-    }
+.text-danger {
+    color: #ff9aa2;
+    text-align: center;
+    margin-top: 15px;
 }

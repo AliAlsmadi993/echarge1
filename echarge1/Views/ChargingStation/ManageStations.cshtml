@@ -1,35 +1,289 @@
 ﻿@model IEnumerable<ChargingStation>
 
-<h2>Manage Charging Stations</h2>
+@{
+    ViewData["Title"] = "Manage Charging Stations";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Location</th>
-            <th>Capacity</th>
-            <th>Available</th>
-            <th>Price</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var s in Model)
-        {
-            <tr>
-                <td>@s.Name</td>
-                <td>@s.Location</td>
-                <td>@s.Capacity</td>
-                <td>@s.AvailableSpots</td>
-                <td>@s.PricePerCharge JOD</td>
-                <td>
-                    <a asp-action="EditStation" asp-route-id="@s.StationId" class="btn btn-warning btn-sm">Edit</a>
-                    <form asp-action="DeleteStation" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="@s.StationId" />
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </td>
-            </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/admintestomonialstyle.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+}
+
+<style>
+    :root {
+        --primary-color: #1abc9c;
+        --primary-light: rgba(26, 188, 156, 0.1);
+        --primary-dark: #16a085;
+        --electric-blue: #3498db;
+        --electric-dark: #2980b9;
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .stations-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--primary-light);
+    }
+
+    .stations-title {
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0;
+        font-size: 1.8rem;
+        position: relative;
+    }
+
+        .stations-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--electric-blue);
+            border-radius: 3px;
         }
-    </tbody>
-</table>
+
+    .btn-add-station {
+        background: linear-gradient(135deg, var(--electric-blue), var(--electric-dark));
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: var(--transition);
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-add-station:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-add-station i {
+            margin-right: 8px;
+        }
+
+    .stations-table {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        background-color: white;
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    .table-header {
+        background: linear-gradient(135deg, var(--electric-blue), var(--electric-dark));
+        color: white;
+    }
+
+        .table-header th {
+            border: none;
+            padding: 15px 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+    .table-body tr {
+        transition: var(--transition);
+    }
+
+        .table-body tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+    .table-body td {
+        padding: 15px 20px;
+        vertical-align: middle;
+        border-color: #f1f1f1;
+    }
+
+    .station-name {
+        font-weight: 600;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+    }
+
+        .station-name i {
+            color: var(--electric-blue);
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+    .station-status {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .status-available {
+        background-color: rgba(46, 204, 113, 0.1);
+        color: #2ecc71;
+    }
+
+    .status-full {
+        background-color: rgba(231, 76, 60, 0.1);
+        color: #e74c3c;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-edit {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: var(--transition);
+        box-shadow: 0 3px 10px rgba(26, 188, 156, 0.2);
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-edit:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 188, 156, 0.3);
+        }
+
+        .btn-edit i {
+            margin-right: 8px;
+        }
+
+    .btn-delete {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: var(--transition);
+        box-shadow: 0 3px 10px rgba(231, 76, 60, 0.2);
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-delete i {
+            margin-right: 8px;
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .stations-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stations-table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="stations-header">
+        <h1 class="stations-title">Manage Charging Stations</h1>
+        <a asp-action="CreateStation" class="btn-add-station">
+            <i class="fas fa-plus"></i> Add New Station
+        </a>
+    </div>
+
+    <div class="stations-table">
+        <table class="table">
+            <thead class="table-header">
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Capacity</th>
+                    <th>Available</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-body">
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="station-name">
+                                <i class="fas fa-charging-station"></i>
+                                @s.Name
+                            </div>
+                        </td>
+                        <td>@s.Location</td>
+                        <td>@s.Capacity</td>
+                        <td>
+                            <span class="station-status @(s.AvailableSpots > 0 ? "status-available" : "status-full")">
+                                <i class="fas @(s.AvailableSpots > 0 ? "fa-check-circle" : "fa-times-circle")"></i>
+                                @s.AvailableSpots
+                            </span>
+                        </td>
+                        <td>@s.PricePerCharge JOD</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a asp-action="EditStation" asp-route-id="@s.StationId" class="btn-edit">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <form asp-action="DeleteStation" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@s.StationId" />
+                                    <button type="submit" class="btn-delete">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Add hover effect to action buttons
+        $('.btn-edit, .btn-delete').hover(
+            function() {
+                $(this).css('transform', 'translateY(-3px)');
+            },
+            function() {
+                $(this).css('transform', 'translateY(0)');
+            }
+        );
+
+        // Add animation to table rows
+        $('.table-body tr').each(function(i) {
+            $(this).css('animation-delay', (i * 0.1) + 's');
+        });
+    });
+</script>

@@ -4,63 +4,69 @@
     ViewData["Title"] = "Register";
 }
 
-<link rel="stylesheet" href="~/css/regester.css" asp-append-version="true" />
+<link  rel="stylesheet" href="/css/regester.css"/>
 
-<div class="background-container">
-    <div class="login-container">
-        <div class="login-form">
-            <h1>Register</h1>
-            <p>Create your account</p>
+<!-- فيديو الخلفية -->
+<video autoplay muted loop id="bgVideo">
+    <source src="/lib/about.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
 
-            <form asp-action="Register" asp-controller="Account" method="post">
-                @Html.AntiForgeryToken()
+<!-- صفحة تسجيل الحساب -->
+<div class="login-container">
+    <div class="login-form">
+        <h1>Register</h1>
+        <p>Create your account</p>
 
-                <!-- Full Name -->
-                <div class="form-group">
-                    <input asp-for="FullName" placeholder=" " required />
-                    <label asp-for="FullName">Full Name</label>
-                    <span asp-validation-for="FullName" class="error-message"></span>
-                </div>
+        <form asp-action="Register" asp-controller="Account" method="post">
+            @Html.AntiForgeryToken()
 
-                <!-- Email -->
-                <div class="form-group">
-                    <input asp-for="Email" placeholder=" " required />
-                    <label asp-for="Email">Email</label>
-                    <span asp-validation-for="Email" class="error-message"></span>
-                </div>
-
-                <!-- Password -->
-                <div class="form-group">
-                    <input asp-for="PasswordHash" type="password" placeholder=" " required />
-                    <label asp-for="PasswordHash">Password</label>
-                    <span asp-validation-for="PasswordHash" class="error-message"></span>
-                </div>
-
-                <!-- Confirm Password -->
-                <div class="form-group">
-                    <input name="confirmPassword" id="confirmPassword" type="password" placeholder=" " required />
-                    <label for="confirmPassword">Confirm Password</label>
-                    <span class="error-message">@ViewData["PasswordMatchError"]</span>
-                </div>
-
-                <!-- User Type -->
-                <div class="form-group">
-                    <select asp-for="UserType" class="form-control" required>
-                        <option value="">Select Type</option>
-                        <option value="User">User</option>
-                        <option value="Provider">Provider</option>
-                    </select>
-                    <label asp-for="UserType">Account Type</label>
-                    <span asp-validation-for="UserType" class="error-message"></span>
-                </div>
-
-                <!-- Register Button -->
-                <button type="submit" class="login-btn">Register</button>
-            </form>
-
-            <div class="extras">
-                <a href="/Account/Login">Already have an account? Login</a>
+            <!-- Full Name -->
+            <div class="form-group">
+                <input asp-for="FullName" placeholder=" " required />
+                <label asp-for="FullName">Full Name</label>
+                <span asp-validation-for="FullName" class="error-message"></span>
             </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <input asp-for="Email" placeholder=" " required />
+                <label asp-for="Email">Email</label>
+                <span asp-validation-for="Email" class="error-message"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <input asp-for="PasswordHash" type="password" placeholder=" " required />
+                <label asp-for="PasswordHash">Password</label>
+                <span asp-validation-for="PasswordHash" class="error-message"></span>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+                <input name="confirmPassword" id="confirmPassword" type="password" placeholder=" " required />
+                <label for="confirmPassword">Confirm Password</label>
+                <span class="error-message">@ViewData["PasswordMatchError"]</span>
+            </div>
+
+            <!-- User Type -->
+            <div class="form-group">
+                <select asp-for="UserType" class="form-control" required>
+                    <option value="">Select Type</option>
+                    <option value="User">User</option>
+                    <option value="Provider">Provider</option>
+                </select>
+                <label asp-for="UserType">Account Type</label>
+                <span asp-validation-for="UserType" class="error-message"></span>
+            </div>
+
+            <!-- زر التسجيل -->
+            <button type="submit" class="login-btn">Register</button>
+        </form>
+
+        <!-- روابط إضافية -->
+        <div class="extras">
+            <a href="/Account/Login">Already have an account? Login</a>
         </div>
     </div>
 </div>

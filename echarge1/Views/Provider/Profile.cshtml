@@ -5,89 +5,283 @@
 }
 
 @section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
-        h2 {
-            color: #1abc9c;
-            font-weight: bold;
-            margin-bottom: 30px;
+        :root {
+            --primary-color: #1abc9c;
+            --primary-light: rgba(26, 188, 156, 0.1);
+            --primary-dark: #16a085;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        .form-group label {
+        .profile-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .profile-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .profile-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .profile-sidebar {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid rgba(255,255,255,0.2);
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .profile-info {
+            padding: 2rem;
+        }
+
+        .info-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+            .info-item:last-child {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+
+        .info-label {
             font-weight: 600;
             color: #2c3e50;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-value {
+            color: #34495e;
+            font-size: 1.1rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            display: block;
         }
 
         .form-control {
-            border-radius: 12px;
-            border: 1px solid #ccc;
-            padding: 10px 14px;
-            transition: border 0.3s, box-shadow 0.3s;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            padding: 0.75rem 1rem;
+            transition: var(--transition);
         }
 
             .form-control:focus {
-                border-color: #1abc9c;
-                box-shadow: 0 0 10px rgba(26, 188, 156, 0.3);
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
             }
 
-        .btn-primary {
-            background-color: #1abc9c;
+        .btn-save {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
             border: none;
-            padding: 10px 20px;
-            font-weight: bold;
+            padding: 0.75rem 1.5rem;
             border-radius: 10px;
-            transition: background-color 0.3s ease-in-out;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(26, 188, 156, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-            .btn-primary:hover {
-                background-color: #16a085;
+            .btn-save:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(26, 188, 156, 0.4);
             }
 
-        .img-thumbnail {
-            border: 3px solid #1abc9c;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        .alert-success {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid #2ecc71;
+            color: #27ae60;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .status-active {
+            color: #2ecc71;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .status-suspended {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .profile-sidebar {
+                padding: 1.5rem;
+            }
+
+            .profile-info {
+                padding: 1.5rem;
+            }
+
+            .profile-avatar {
+                width: 120px;
+                height: 120px;
+            }
         }
     </style>
 }
 
-<div class="container mt-4">
-    <h2 class="mb-4">👤 My Profile</h2>
+<div class="profile-container">
+    <div class="profile-header">
+        <h1 class="profile-title">
+            <i class="fas fa-user-circle"></i> My Profile
+        </h1>
+    </div>
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success">@TempData["Success"]</div>
+        <div class="alert-success">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+        </div>
     }
 
-    <div class="row">
-        <div class="col-md-4 text-center">
-            @* <img src="@Model.ProfileImage" alt="Profile Image" class="img-thumbnail rounded-circle mb-3" style="width: 150px; height: 150px;" /> *@
-            <p><strong>User Type:</strong> @Model.UserType</p>
-            <p><strong>Status:</strong> @Model.Status</p>
-            <p><strong>Joined:</strong> @Model.CreatedAt?.ToString("yyyy-MM-dd")</p>
-            <p><strong>Last Login:</strong> @Model.LastLogin?.ToString("yyyy-MM-dd HH:mm")</p>
-            <p><strong>Warnings:</strong> @Model.WarningCount</p>
-        </div>
+    <div class="profile-card">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <div class="profile-sidebar">
+                    <div class="position-relative">
+                        <img src="@(string.IsNullOrEmpty(Model.ProfileImage) ? "/images/default-avatar.png" : Model.ProfileImage)"
+                             alt="Profile Image"
+                             class="profile-avatar" />
+                        <label for="avatar-upload" class="btn btn-light btn-sm position-absolute"
+                               style="bottom: 20px; right: 20px; border-radius: 50%; width: 40px; height: 40px; padding: 0;">
+                            <i class="fas fa-camera"></i>
+                        </label>
+                        <input type="file" id="avatar-upload" accept="image/*" style="display: none;" />
+                    </div>
 
-        <div class="col-md-8">
-            <form asp-action="EditProfile" method="post">
-                <input type="hidden" asp-for="UserId" />
+                    <h4 class="mt-3 mb-1">@Model.FullName</h4>
+                    <p class="text-white-50 mb-3">@Model.UserType</p>
 
-                <div class="form-group mb-3">
-                    <label>Full Name</label>
-                    <input asp-for="FullName" class="form-control" />
+                    <div class="d-flex flex-column gap-2 text-left">
+                        <div>
+                            <small class="text-white-50">Status:</small>
+                            <p class="mb-0 @(Model.Status == "Active" ? "status-active" : Model.Status == "Pending" ? "status-pending" : "status-suspended")">
+                                @Model.Status
+                            </p>
+                        </div>
+                        <div>
+                            <small class="text-white-50">Member Since:</small>
+                            <p class="mb-0">@Model.CreatedAt?.ToString("MMMM yyyy")</p>
+                        </div>
+                        <div>
+                            <small class="text-white-50">Last Login:</small>
+                            <p class="mb-0">@Model.LastLogin?.ToString("g")</p>
+                        </div>
+                        <div>
+                            <small class="text-white-50">Warnings:</small>
+                            <p class="mb-0">@Model.WarningCount</p>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <div class="col-md-8">
+                <div class="profile-info">
+                    <form asp-action="EditProfile" method="post">
+                        <input type="hidden" asp-for="UserId" />
 
-                <div class="form-group mb-3">
-                    <label>Email</label>
-                    <input asp-for="Email" class="form-control" />
+                        <div class="info-item">
+                            <h5 class="info-label">
+                                <i class="fas fa-id-card"></i> Basic Information
+                            </h5>
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input asp-for="FullName" class="form-control" placeholder="Enter your full name" required />
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <h5 class="info-label">
+                                <i class="fas fa-envelope"></i> Contact Information
+                            </h5>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input asp-for="Email" type="email" class="form-control" placeholder="Enter your email" required />
+                            </div>
+                            <div class="form-group mt-3">
+                                <label class="form-label">Phone Number</label>
+                                <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your phone number" required />
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn-save">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="form-group mb-3">
-                    <label>Phone Number</label>
-                    <input asp-for="PhoneNumber" class="form-control" />
-                </div>
-
-                <button type="submit" class="btn btn-primary">💾 Save Changes</button>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        // Handle avatar upload
+        $('#avatar-upload').change(function() {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('.profile-avatar').attr('src', e.target.result);
+                    // Here you would typically upload the image via AJAX
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        // Add animation to form elements
+        $('.form-group').each(function(i) {
+            $(this).css('animation-delay', (i * 0.1) + 's');
+        });
+    });
+</script>

@@ -186,7 +186,6 @@ public async Task<IActionResult> UpdateOrderStatus(int OrderId, string Status)
         {
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> AddProduct(Product product, List<IFormFile> Images)
         {
@@ -256,17 +255,20 @@ public async Task<IActionResult> UpdateOrderStatus(int OrderId, string Status)
             if (existing == null)
                 return NotFound();
 
+            // تحديث البيانات الأساسية
             existing.Name = product.Name;
             existing.Description = product.Description;
             existing.Price = product.Price;
             existing.StockQuantity = product.StockQuantity;
             existing.Category = product.Category;
 
+            // مسار الحفظ
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/products");
+            Directory.CreateDirectory(uploadPath); // تأكد من أن المجلد موجود
+
+            // حفظ الصور الجديدة إن وجدت
             if (Images != null && Images.Any())
             {
-                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/products");
-                Directory.CreateDirectory(uploadPath);
-
                 foreach (var file in Images)
                 {
                     if (file.Length > 0)
@@ -294,7 +296,7 @@ public async Task<IActionResult> UpdateOrderStatus(int OrderId, string Status)
             await _context.SaveChangesAsync();
 
             TempData["Success"] = "Product updated successfully.";
-            return RedirectToAction("MyProducts");
+            return RedirectToAction("EditProduct", new { id = existing.ProductId });
         }
 
         [HttpPost]

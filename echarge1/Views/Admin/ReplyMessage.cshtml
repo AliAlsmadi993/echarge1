@@ -1,35 +1,173 @@
 ﻿@model echarge1.Models.ContactMessage
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/admintestomonialstyle.css" asp-append-version="true" />
-}
 @{
+    ViewData["Title"] = "Reply Message";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Reply Message</title>
-</head>
-<body>
-    <h1>Reply to Message</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/admintestomonialstyle.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+}
+
+<style>
+    :root {
+        --primary-color: #1abc9c;
+        --primary-light: rgba(26, 188, 156, 0.1);
+        --primary-dark: #16a085;
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .reply-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    .reply-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--primary-light);
+    }
+
+    .reply-title {
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0;
+        font-size: 1.8rem;
+        position: relative;
+    }
+
+        .reply-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .form-input, .form-textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+
+        .form-input:focus, .form-textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
+            outline: none;
+        }
+
+    .form-textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .readonly-field {
+        background-color: #f9f9f9;
+        color: #555;
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: var(--transition);
+        box-shadow: 0 4px 15px rgba(26, 188, 156, 0.3);
+        cursor: pointer;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(26, 188, 156, 0.4);
+        }
+
+        .btn-submit i {
+            margin-right: 8px;
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .reply-container {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+    }
+</style>
+
+<div class="reply-container">
+    <div class="reply-header">
+        <h1 class="reply-title">Reply to Message</h1>
+    </div>
+
     <form method="post">
-        <div>
-            <label>Subject:</label>
-            <input type="text" value="@Model.Subject" readonly />
+        <div class="form-group">
+            <label class="form-label">Subject:</label>
+            <input type="text" class="form-input readonly-field" value="@Model.Subject" readonly />
         </div>
-        <div>
-            <label>Message:</label>
-            <textarea readonly>@Model.Message</textarea>
+
+        <div class="form-group">
+            <label class="form-label">Original Message:</label>
+            <textarea class="form-textarea readonly-field" readonly>@Model.Message</textarea>
         </div>
-        <div>
-            <label>Your Reply:</label>
-            <textarea name="replyContent"></textarea>
+
+        <div class="form-group">
+            <label class="form-label">Your Reply:</label>
+            <textarea name="replyContent" class="form-textarea" required></textarea>
         </div>
-        <div>
-            <button type="submit">Send Reply</button>
+
+        <div class="form-group">
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Send Reply
+            </button>
         </div>
     </form>
-</body>
-</html>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Add animation to form elements
+        $('.form-group').each(function(i) {
+            $(this).css('animation-delay', (i * 0.1) + 's');
+        });
+
+        // Add hover effect to submit button
+        $('.btn-submit').hover(
+            function() {
+                $(this).css('transform', 'translateY(-3px)');
+            },
+            function() {
+                $(this).css('transform', 'translateY(0)');
+            }
+        );
+    });
+</script>

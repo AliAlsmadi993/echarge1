@@ -1,129 +1,163 @@
-﻿  <link rel="stylesheet" href="~/css/About.css" />
+﻿@section Styles {
+<link rel="stylesheet" href="~/css/About.css" asp-append-version="true" />
+}
 
 
-<script>
-        fetch('./nav.html')
-         .then(response => response.text())
-         .then(data => {
-             document.getElementById('navbar').innerHTML = data;
-
-             // إعادة تفعيل زر الـ Burger Menu
-             const menuToggle = document.querySelector('.menu-toggle');
-             const menu = document.querySelector('.menu');
-             if (menuToggle) {
-                 menuToggle.addEventListener('click', () => {
-                     menu.classList.toggle('active');
-                 });
-             }
-         });
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECHARGR - About Us | The Future of EV Charging</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   
+</head>
+<body>
 
 
+    <section class="container">
+        <div class="about-section fade-in">
+            <div class="about-text">
+                <h2>Our Mission</h2>
+                <p>At <strong >ECHARGR</strong>, we provide comprehensive solutions to support the electric vehicle community. We offer <strong>specialized field services</strong> for EV owners, alongside <strong>advanced training courses</strong> to empower individuals and technical teams.</p>
+                <p>We also enable <strong>charging station and retail store owners</strong> with smart services that help them stand out in the world of electric mobility. With <strong>ECHARGR</strong>, we strive to create a <strong>sustainable, smart, and accessible future</strong> for everyone.</p>
+                <a href="#" class="btn btn-outline mt-30">Learn About Our Services</a>
 
-         </script>
+            </div>
+            <div class="about-img">
+                <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+                    <source src="~/lib/about.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
 
+        </div>
+    </section>
 
-    <!-- Navbar -->
-    <div id="navbar"></div>
+    <!-- Why Choose Us Section -->
+    <section class="container">
+        <h2 class="text-center fade-in">Why Choose <span  style="color:#1ABC9C">ECHARGR</span>?</h2>
+        <p class="text-center mb-30 fade-in delay-1">We combine innovation, reliability, and sustainability to deliver exceptional EV charging solutions.</p>
 
-    <!-- About Us Section with Animated Background -->
-    <section class="about-section">
-        <div class="background-slider">
-            <div class="slide active" style="background-image: url('/img/111.jpg');">
-                <div class="text-overlay">
+        <div class="features">
+            <div class="feature-card fade-in delay-1">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Cutting-Edge EV Products</h3>
+                <p>Smart filtering helps you find the perfect charger for your needs with advanced specifications comparison.</p>
+            </div>
 
+            <div class="feature-card fade-in delay-2">
+                <div class="feature-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Professional Training</h3>
+                <p>Comprehensive courses on EV maintenance, charging technology, and sustainable mobility solutions.</p>
+            </div>
+
+            <div class="feature-card fade-in delay-3">
+                <div class="feature-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3>Seamless Shopping</h3>
+                <p>Intuitive cart and checkout system designed for fast, secure transactions with multiple payment options.</p>
+            </div>
+
+            <div class="feature-card fade-in delay-1">
+                <div class="feature-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <h3>Transparent Orders</h3>
+                <p>Real-time order tracking with notifications at every stage from purchase to delivery and installation.</p>
+            </div>
+
+            <div class="feature-card fade-in delay-2">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>24/7 Support</h3>
+                <p>Our EV experts are always available via chat, email, or phone to answer your questions.</p>
+            </div>
+
+            <div class="feature-card fade-in delay-3">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Mobile-First Design</h3>
+                <p>Fully responsive interface that works perfectly on any device, from smartphones to desktops.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Future Goals Section -->
+    <section class="container">
+        <div class="goals fade-in">
+            <h2>Our Future Goals</h2>
+            <p>We're not just building charging stations—we're <strong>shaping the future of mobility</strong>.</p>
+
+            <div class="goal-item fade-in delay-1">
+                <div class="goal-icon">
+                    <i class="fas fa-globe-americas"></i>
+                </div>
+                <div>
+                    <h3>Global Expansion</h3>
+                    <p>Bringing fast, reliable charging infrastructure to every corner of the world within the next 5 years.</p>
                 </div>
             </div>
-            <div class="slide" style="background-image: url('/img/12221.webp');">
-                <div class="text-overlay">
 
+            <div class="goal-item fade-in delay-2">
+                <div class="goal-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <div>
+                    <h3>Advanced Training</h3>
+                    <p>Developing next-generation educational programs to create a skilled workforce for the EV revolution.</p>
+                </div>
+            </div>
+
+            <div class="goal-item fade-in delay-3">
+                <div class="goal-icon">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <div>
+                    <h3>Next-Gen EV Tech</h3>
+                    <p>Investing in R&D for ultra-fast charging, wireless solutions, and smart grid integration.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- About Us -->
-    <section class="about-content">
-        <div class="container">
-            <h1>About Us</h1>
-            <p>At <strong>E-Charge</strong>, we are dedicated to enhancing the charging experience for electric vehicle owners and station operators by minimizing waiting times through our advanced booking system.</p>
+    <!-- CTA Section -->
+    <section class="container">
+        <div class="cta fade-in">
+            <h2>Join the Revolution</h2>
+            <p>The road to sustainability starts here. Whether you're a driver, business, or EV enthusiast, ECHARGR is your trusted partner in the electric revolution.</p>
+            <a asp-controller="Shop" asp-action="Store" class="btn">Explore Our Store</a>
 
-            <div class="about-item" data-aos="fade-right">
-                <img src="/img/imgab1.png" alt="Efficient Booking" class="about-image">
-                <div class="about-text">
-                    <h2>Our Mission</h2>
-                    <p>To revolutionize the electric vehicle charging experience by introducing an easy-to-use booking system that saves time and eliminates unnecessary waiting at stations.</p>
-                </div>
-            </div>
+            <a asp-controller="Map" asp-action="Index" class="btn btn-outline">Find a Charger</a>
 
-            <div class="about-item" data-aos="fade-left">
-                <img src="/img/imgab2.webp" alt="User Convenience" class="about-image">
-                <div class="about-text">
-                    <h2>Our Vision</h2>
-                    <p>To create a seamless, user-focused charging experience by integrating cutting-edge technology and real-time data analytics for electric vehicle owners and station operators.</p>
-                </div>
-            </div>
-
-            <div class="about-item" data-aos="fade-right">
-                <img src="/img/imgab3.webp" alt="Our Technology" class="about-image">
-                <div class="about-text">
-                    <h2>Our Technology</h2>
-                    <p>Our platform leverages real-time tracking, smart scheduling, and AI-driven predictions to optimize charging station usage and reduce waiting times.</p>
-                </div>
-            </div>
         </div>
     </section>
 
-    <!-- Future Goals -->
-    <section class="future-section" data-aos="fade-up">
-        <div class="container">
-            <h2>Our Goals for the Future</h2>
-            <p>As we continue to grow, we aim to:</p>
-            <ul>
-                <li>Expand our platform to cover more locations globally.</li>
-                <li>Introduce advanced features like predictive analytics and dynamic pricing.</li>
-                <li>Collaborate with station operators to create a unified charging network.</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- Community Section -->
-    <section class="community-section" data-aos="fade-up">
-        <div class="container">
-            <h2>Our Community</h2>
-            <p>We are building a network of EV owners and station operators who are committed to sustainability and efficiency.</p>
-            <ul>
-                <li>Workshops for EV owners on maximizing battery life.</li>
-                <li>Collaboration with operators to improve station performance.</li>
-                <li>Feedback-driven improvements to our platform.</li>
-            </ul>
-            <img src="/img/aboutend.webp" alt="Community Engagement" class="community-image">
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <div id="footer"></div>
+    
 
     <script>
-        fetch('footer.html')
-            .then(response => response.text())
-            .then(data => document.getElementById('footer').innerHTML = data);
-    </script>
+        // Simple animation trigger
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
 
-    <!-- AOS Animation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 1200,
-            easing: 'ease-in-out',
-            once: true,
+            const fadeObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            fadeElements.forEach(el => {
+                el.style.opacity = 0;
+                fadeObserver.observe(el);
+            });
         });
-
-        // Background Image Slider Animation
-        let slides = document.querySelectorAll('.slide');
-        let index = 0;
-        setInterval(() => {
-            slides[index].classList.remove('active');
-            index = (index + 1) % slides.length;
-            slides[index].classList.add('active');
-        }, 5000);
     </script>
+</body>
+</html>

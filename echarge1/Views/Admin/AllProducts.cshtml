@@ -1,31 +1,222 @@
 ﻿@{
-    var providerProducts = ViewBag.ProviderProducts as List<Product>;
+    var providerProducts = ViewBag.ProviderProducts as List<echarge1.Models.Product>;
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Provider Products";
 }
 
-<h3 class="text-success mb-4">🛒 Provider Products</h3>
-
-@if (providerProducts != null && providerProducts.Any())
-{
-    <div class="row">
-        @foreach (var product in providerProducts)
-        {
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
-                    <div class="card-body">
-                        <h5 class="card-title">@product.Name</h5>
-                        <p class="card-text"><strong>@product.Price</strong> JOD</p>
-                        <p class="text-muted"><small>By: @product.Provider?.FullName</small></p>
-                    </div>
-                </div>
-            </div>
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #1abc9c;
+            --primary-light: rgba(26, 188, 156, 0.1);
+            --primary-dark: #16a085;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-    </div>
+
+        .products-container {
+            padding: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 0;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+        }
+
+            .table-header th {
+                padding: 15px 20px;
+                text-align: left;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 0.85rem;
+            }
+
+        .table-body tr {
+            transition: var(--transition);
+        }
+
+            .table-body tr:hover {
+                background-color: var(--primary-light);
+            }
+
+            .table-body tr:not(:last-child) td {
+                border-bottom: 1px solid #f1f1f1;
+            }
+
+            .table-body td {
+                padding: 15px 20px;
+                vertical-align: middle;
+            }
+
+        .product-image-cell {
+            width: 80px;
+        }
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .product-price {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .product-provider {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-view {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+            .btn-view:hover {
+                background-color: var(--primary-dark);
+                transform: translateY(-2px);
+            }
+
+        .no-products {
+            background: #f8f9fa;
+            border-left: 5px solid var(--primary-color);
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        @@media (max-width: 768px) {
+            .products-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
 }
-else
-{
-    <div class="alert alert-info text-center">
-        No provider products available.
+
+<div class="products-container">
+    <div class="section-header">
+        <h1 class="section-title">
+            <i class="fas fa-store-alt"></i> Provider Products
+        </h1>
     </div>
-}
+
+    @if (providerProducts != null && providerProducts.Any())
+    {
+        <table class="products-table">
+            <thead class="table-header">
+                <tr>
+                    <th>Product</th>
+                    <th>Provider</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody class="table-body">
+                @foreach (var product in providerProducts)
+                {
+                    var mainImage = product.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/default-product.png";
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div class="product-image-cell">
+                                    <img src="@Url.Content(mainImage)" class="product-image" alt="@product.Name" />
+                                </div>
+                                <div>
+                                    <div class="product-name">@product.Name</div>
+                                    <div class="product-provider">
+                                        <i class="fas fa-box"></i> SKU: @product.ProductId
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="product-provider">
+                                <i class="fas fa-user-tie"></i> @product.Provider?.FullName
+                            </div>
+                        </td>
+                        <td class="product-price">@product.Price.ToString("0.00") JOD</td>
+                        <td>
+                           
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="no-products">
+            <i class="fas fa-box-open" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+            <h4>No Provider Products Available</h4>
+            <p class="text-muted">Currently there are no products from providers in the system.</p>
+        </div>
+    }
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Add hover effect to table rows
+        $('.table-body tr').hover(
+            function() {
+                $(this).css('transform', 'translateX(5px)');
+            },
+            function() {
+                $(this).css('transform', 'translateX(0)');
+            }
+        );
+    });
+</script>

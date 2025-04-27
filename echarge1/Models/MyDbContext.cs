@@ -35,6 +35,12 @@ public partial class MyDbContext : DbContext
 
     public virtual DbSet<DataTransaction> DataTransactions { get; set; }
 
+    public virtual DbSet<EmergencyMessage> EmergencyMessages { get; set; }
+
+    public virtual DbSet<EmergencyRequest> EmergencyRequests { get; set; }
+
+    public virtual DbSet<EvsupportUnit> EvsupportUnits { get; set; }
+
     public virtual DbSet<HomeContent> HomeContents { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
@@ -135,7 +141,6 @@ public partial class MyDbContext : DbContext
 
             entity.HasOne(d => d.Product).WithMany(p => p.CartItems)
                 .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CartItems_Product");
 
             entity.HasOne(d => d.User).WithMany(p => p.CartItems)
@@ -259,6 +264,61 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.DataId).HasColumnName("DataID");
             entity.Property(e => e.DateOfTransaction).HasColumnType("datetime");
             entity.Property(e => e.SellerId).HasColumnName("SellerID");
+        });
+
+        modelBuilder.Entity<EmergencyMessage>(entity =>
+        {
+            entity.HasKey(e => e.EmergencyMessageId).HasName("PK__Emergenc__E4861CC3D7AB1E58");
+
+            entity.Property(e => e.SentAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.EmergencyRequest).WithMany(p => p.EmergencyMessages)
+                .HasForeignKey(d => d.EmergencyRequestId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_EmergencyMessages_Requests");
+
+            entity.HasOne(d => d.Sender).WithMany(p => p.EmergencyMessages)
+                .HasForeignKey(d => d.SenderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_EmergencyMessages_Sender");
+        });
+
+        modelBuilder.Entity<EmergencyRequest>(entity =>
+        {
+            entity.HasKey(e => e.EmergencyRequestId).HasName("PK__Emergenc__F9F67734FDDEDD8D");
+
+            entity.Property(e => e.Location).HasMaxLength(255);
+            entity.Property(e => e.RequestTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.RequestType).HasMaxLength(50);
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasDefaultValue("Pending");
+
+            entity.HasOne(d => d.User).WithMany(p => p.EmergencyRequests)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_EmergencyRequests_Users");
+        });
+
+        modelBuilder.Entity<EvsupportUnit>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__EVSuppor__3214EC0787D34041");
+
+            entity.ToTable("EVSupportUnits");
+
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Location).HasMaxLength(255);
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .HasDefaultValue("Active");
+            entity.Property(e => e.Type).HasMaxLength(50);
+            entity.Property(e => e.VehicleType).HasMaxLength(50);
         });
 
         modelBuilder.Entity<HomeContent>(entity =>

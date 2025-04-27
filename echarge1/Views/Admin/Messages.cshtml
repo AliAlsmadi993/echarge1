@@ -1,43 +1,232 @@
 ﻿@model IEnumerable<echarge1.Models.ContactMessage>
 
 @{
+    ViewData["Title"] = "Messages";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-
 @section Styles {
     <link rel="stylesheet" href="~/css/admintestomonialstyle.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Messages</title>
-</head>
-<body>
-    <h1>Messages</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Subject</th>
-                <th>Message</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var message in Model)
-            {
+<style>
+    :root {
+        --primary-color: #1abc9c;
+        --primary-light: rgba(26, 188, 156, 0.1);
+        --primary-dark: #16a085;
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .messages-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--primary-light);
+    }
+
+    .messages-title {
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0;
+        font-size: 1.8rem;
+        position: relative;
+    }
+
+        .messages-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+
+    .messages-table {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        background-color: white;
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    .table-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+    }
+
+        .table-header th {
+            border: none;
+            padding: 15px 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+    .table-body tr {
+        transition: var(--transition);
+    }
+
+        .table-body tr:hover {
+            background-color: var(--primary-light);
+        }
+
+    .table-body td {
+        padding: 15px 20px;
+        vertical-align: middle;
+        border-color: #f1f1f1;
+    }
+
+    .message-subject {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .message-content {
+        color: #7f8c8d;
+        max-width: 300px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-reply {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: var(--transition);
+        box-shadow: 0 3px 10px rgba(26, 188, 156, 0.2);
+    }
+
+        .btn-reply:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 188, 156, 0.3);
+        }
+
+    .btn-delete {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: var(--transition);
+        box-shadow: 0 3px 10px rgba(231, 76, 60, 0.2);
+    }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+    .btn-transfer {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: var(--transition);
+        box-shadow: 0 3px 10px rgba(52, 152, 219, 0.2);
+    }
+
+        .btn-transfer:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .messages-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .messages-table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="messages-header">
+        <h1 class="messages-title">Contact Messages</h1>
+    </div>
+
+    <div class="messages-table">
+        <table class="table">
+            <thead class="table-header">
                 <tr>
-                    <td>@message.Subject</td>
-                    <td>@message.Message</td>
-                    <td>
-                        <a href="/Admin/ReplyMessage/@message.MessageId">Reply</a> |
-                        <a href="/Admin/DeleteMessage/@message.MessageId">Delete</a> |
-                        <a href="/Admin/TransferToTestimonials/@message.MessageId">Transfer to Testimonials</a>
-                    </td>
+                    <th>Subject</th>
+                    <th>Message</th>
+                    <th>Actions</th>
                 </tr>
+            </thead>
+            <tbody class="table-body">
+                @foreach (var message in Model)
+                {
+                    <tr>
+                        <td class="message-subject">@message.Subject</td>
+                        <td class="message-content">@message.Message</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="/Admin/ReplyMessage/@message.MessageId" class="btn-reply">
+                                    <i class="fas fa-reply"></i> Reply
+                                </a>
+                                <a href="/Admin/DeleteMessage/@message.MessageId" class="btn-delete">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
+                                <a href="/Admin/TransferToTestimonials/@message.MessageId" class="btn-transfer">
+                                    <i class="fas fa-share"></i> Transfer
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Add hover effect to action buttons
+        $('.btn-reply, .btn-delete, .btn-transfer').hover(
+            function() {
+                $(this).css('transform', 'translateY(-3px)');
+            },
+            function() {
+                $(this).css('transform', 'translateY(0)');
             }
-        </tbody>
-    </table>
-</body>
-</html>
+        );
+
+        // Add animation to table rows
+        $('.table-body tr').each(function(i) {
+            $(this).css('animation-delay', (i * 0.1) + 's');
+        });
+    });
+</script>

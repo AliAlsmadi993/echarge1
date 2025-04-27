@@ -1,43 +1,199 @@
 ﻿@model echarge1.Models.AppUser
+
 @{
     ViewData["Title"] = "Login";
 }
 
-<link rel="stylesheet" href="~/css/login.css" />
+<style>
+    #bgVideo {
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        z-index: -1;
+        object-fit: cover;
+        opacity: 0.8;
+    }
 
-<div class="background-container">
-    <div class="login-container">
-        <div class="login-form">
-            <h1>Login</h1>
-            <p>Access your account</p>
+    :root {
+        --primary-color: #27C9AC;
+        --primary-color-dark: #20B09B;
+        --accent-color: #27C9AC;
+        --text-color: #f0f0f0;
+        --error-color: #ff9aa2;
+        --button-gradient-start: #20B09B;
+        --button-gradient-end: #20B09B;
+    }
 
-            <form asp-action="Login" asp-controller="Account" method="post">
-                @Html.AntiForgeryToken()
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
 
-                <div class="form-group">
-                    <input asp-for="Email" placeholder=" " required />
-                    <label asp-for="Email">Email</label>
-                    <span asp-validation-for="Email" class="error-message"></span>
-                </div>
+    .login-form {
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 40px;
+        width: 100%;
+        max-width: 450px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-color);
+        transition: transform 0.3s ease;
+    }
 
-                <div class="form-group">
-                    <input asp-for="PasswordHash" type="password" placeholder=" " required />
-                    <label asp-for="PasswordHash">Password</label>
-                    <span asp-validation-for="PasswordHash" class="error-message"></span>
-                </div>
+        .login-form:hover {
+            transform: translateY(-5px);
+        }
 
-                <button type="submit" class="login-btn">Login</button>
+        .login-form h1 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
 
-                @if (TempData["Error"] != null)
-                {
-                    <div class="text-danger mt-2">@TempData["Error"]</div>
-                }
-            </form>
+        .login-form p {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-color);
+            font-size: 1rem;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+        }
 
-            <div class="extras">
-                <a href="#">Forgot Password?</a>
-                <a href="/Account/Register">Create a New Account</a>
+    .form-group {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-group input:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 2px rgba(39, 201, 172, 0.4);
+                background: rgba(255, 255, 255, 0.15);
+            }
+
+        .form-group label {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            font-size: 1rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group input:focus + label,
+        .form-group input:not(:placeholder-shown) + label {
+            top: -10px;
+            left: 15px;
+            font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 0 5px;
+            color: var(--accent-color);
+        }
+
+    .login-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, var(--button-gradient-start) 0%, var(--button-gradient-end) 100%);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+    }
+
+        .login-btn:hover {
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    .extras {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 25px;
+        font-size: 0.9rem;
+    }
+
+        .extras a {
+            color: var(--text-color);
+            text-decoration: none;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+            .extras a:hover {
+                color: var(--accent-color);
+                text-decoration: underline;
+            }
+
+    .error-message,
+    .text-danger {
+        color: var(--error-color);
+    }
+</style>
+
+<!-- Background Video -->
+<video autoplay muted loop id="bgVideo">
+    <source src="/lib/about.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+<!-- Login Form -->
+<div class="login-container">
+    <div class="login-form">
+        <h1>Welcome Back</h1>
+        <p>Please login to access your account</p>
+
+        <form asp-action="Login" asp-controller="Account" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <input asp-for="Email" placeholder=" " required />
+                <label asp-for="Email">Email Address</label>
+                <span asp-validation-for="Email" class="error-message"></span>
             </div>
+
+            <div class="form-group">
+                <input asp-for="PasswordHash" type="password" placeholder=" " required />
+                <label asp-for="PasswordHash">Password</label>
+                <span asp-validation-for="PasswordHash" class="error-message"></span>
+            </div>
+
+            <button type="submit" class="login-btn">Sign In</button>
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="text-danger mt-2">@TempData["Error"]</div>
+            }
+        </form>
+
+        <div class="extras">
+            <a href="#">Forgot Password?</a>
+            <a href="/Account/Register">Create Account</a>
         </div>
     </div>
 </div>

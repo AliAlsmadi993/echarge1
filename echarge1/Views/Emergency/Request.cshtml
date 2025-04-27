@@ -1,0 +1,108 @@
+﻿@{
+    ViewData["Title"] = "Emergency Request";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        body {
+            background: linear-gradient(to right, #fdfbfb, #ebedee);
+        }
+
+        .card {
+            border-radius: 20px;
+            border: none;
+            background-color: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.7s ease-in-out;
+        }
+
+        h2 {
+            font-weight: bold;
+            font-size: 28px;
+            color: #e74c3c;
+        }
+
+        p {
+            font-size: 18px;
+        }
+
+        .btn-lg {
+            padding: 14px 30px;
+            font-size: 20px;
+            font-weight: 600;
+            transition: transform 0.2s ease-in-out, box-shadow 0.3s;
+        }
+
+            .btn-lg:hover {
+                transform: scale(1.05);
+                box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            }
+
+        #status {
+            font-size: 18px;
+            transition: all 0.4s ease;
+        }
+
+     
+    </style>
+}
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center text-danger mb-4">🚨 Emergency Request</h2>
+
+        <p class="text-muted mb-4 text-center">
+            If your electric car needs mobile charging or towing, request help now and we’ll connect you with our emergency team.
+        </p>
+
+        <div class="d-flex justify-content-around flex-wrap">
+            <button onclick="sendEmergency('charge')" class="btn btn-success btn-lg mb-3">
+                🔋 Request Mobile Charging
+            </button>
+
+            <button onclick="sendEmergency('tow')" class="btn btn-dark btn-lg mb-3">
+                🚛 Request Tow Truck
+            </button>
+        </div>
+
+        <div id="status" class="text-center mt-4 text-info fw-bold"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function sendEmergency(type) {
+            if (!navigator.geolocation) {
+                alert("Geolocation not supported by your browser.");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(position => {
+                const location = `${position.coords.latitude},${position.coords.longitude}`;
+                fetch(`/Emergency/Request?type=${type}&location=${location}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const status = document.getElementById("status");
+                        if (data.success) {
+                            status.innerText = "✅ Request sent successfully.";
+                            status.classList.remove("text-danger");
+                            status.classList.add("text-success");
+                        } else {
+                            status.innerText = "❌ Failed to send request.";
+                            status.classList.remove("text-success");
+                            status.classList.add("text-danger");
+                        }
+                    })
+                    .catch(() => {
+                        const status = document.getElementById("status");
+                        status.innerText = "❌ Something went wrong.";
+                        status.classList.remove("text-success");
+                        status.classList.add("text-danger");
+                    });
+            }, () => {
+                alert("Location permission denied.");
+            });
+        }
+    </script>
+}

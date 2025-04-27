@@ -3,42 +3,222 @@
     Layout = "~/Views/Shared/_ProviderLayout.cshtml";
 }
 
-<h2 class="mb-4"><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h2>
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #1abc9c;
+            --primary-light: rgba(26, 188, 156, 0.1);
+            --primary-dark: #16a085;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
 
-<div class="row">
-    <div class="col-md-3">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-box"></i> Total Products</h5>
-                <p class="card-text display-6">@ViewBag.TotalProducts</p>
-            </div>
-        </div>
+        .dashboard-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+            .stats-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            }
+
+            .stats-card::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                right: -50%;
+                width: 200%;
+                height: 200%;
+                background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+                transform: rotate(45deg);
+                z-index: -1;
+            }
+
+        .card-products {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .card-orders {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+        }
+
+        .card-revenue {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+        }
+
+        .card-stations {
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0;
+        }
+
+        .card-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 2.5rem;
+            opacity: 0.2;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .stats-card:hover .card-icon {
+            transform: scale(1.1);
+            opacity: 0.3;
+        }
+
+        .currency-symbol {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .col-md-3 {
+                margin-bottom: 1.5rem;
+            }
+
+            .card-value {
+                font-size: 1.5rem;
+            }
+
+            .dashboard-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+}
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">
+            <i class="fas fa-tachometer-alt"></i> Dashboard Overview
+        </h1>
     </div>
 
-    <div class="col-md-3">
-        <div class="card text-white bg-success mb-3">
-            <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-shopping-cart"></i> Total Orders</h5>
-                <p class="card-text display-6">@ViewBag.TotalOrders</p>
+    <div class="row">
+        <!-- Products Card -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card card-products">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-box"></i> Total Products
+                    </h5>
+                    <p class="card-value">@ViewBag.TotalProducts</p>
+                    <i class="fas fa-boxes card-icon"></i>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card text-white bg-warning mb-3">
-            <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-dollar-sign"></i> Total Revenue</h5>
-                <p class="card-text display-6">$@ViewBag.TotalRevenue</p>
+        <!-- Orders Card -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card card-orders">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-shopping-cart"></i> Total Orders
+                    </h5>
+                    <p class="card-value">@ViewBag.TotalOrders</p>
+                    <i class="fas fa-receipt card-icon"></i>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card text-white bg-info mb-3">
-            <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-charging-station"></i> Charging Stations</h5>
-                <p class="card-text display-6">@ViewBag.TotalStations</p>
+        <!-- Revenue Card -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card card-revenue">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-dollar-sign"></i> Total Revenue
+                    </h5>
+                    <p class="card-value">
+                        @ViewBag.TotalRevenue
+                        <span class="currency-symbol">JOD</span>
+                    </p>
+                    <i class="fas fa-coins card-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stations Card -->
+        <div class="col-md-3 col-sm-6">
+            <div class="stats-card card-stations">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-charging-station"></i> Charging Stations
+                    </h5>
+                    <p class="card-value">@ViewBag.TotalStations</p>
+                    <i class="fas fa-plug card-icon"></i>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        // Add animation to cards
+        $('.stats-card').each(function(i) {
+            $(this).css('animation-delay', (i * 0.1) + 's');
+        });
+
+        // Add hover effect
+        $('.stats-card').hover(
+            function() {
+                $(this).css('transform', 'translateY(-8px)');
+            },
+            function() {
+                $(this).css('transform', 'translateY(0)');
+            }
+        );
+    });
+</script>

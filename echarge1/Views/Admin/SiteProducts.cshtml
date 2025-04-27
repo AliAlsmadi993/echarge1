@@ -3,38 +3,223 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="text-success">Products Owned by Site</h2>
-    <a class="btn btn-success" asp-controller="Admin" asp-action="AddSiteProduct">
-        <i class="fas fa-plus"></i> Add New Product
-    </a>
+<style>
+    :root {
+        --primary-color: #1abc9c;
+        --primary-light: rgba(26, 188, 156, 0.1);
+        --primary-dark: #16a085;
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .products-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--primary-light);
+    }
+
+    .products-title {
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0;
+        font-size: 1.8rem;
+        position: relative;
+    }
+
+        .products-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+
+    .btn-add {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: var(--transition);
+        box-shadow: 0 4px 15px rgba(26, 188, 156, 0.3);
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-add:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(26, 188, 156, 0.4);
+        }
+
+        .btn-add i {
+            margin-right: 8px;
+        }
+
+    .products-table {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        background-color: white;
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    .table-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+    }
+
+        .table-header th {
+            border: none;
+            padding: 15px 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+    .table-body tr {
+        transition: var(--transition);
+    }
+
+        .table-body tr:hover {
+            background-color: var(--primary-light);
+        }
+
+    .table-body td {
+        padding: 15px 20px;
+        vertical-align: middle;
+        border-color: #f1f1f1;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-edit {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: var(--transition);
+        box-shadow: 0 3px 10px rgba(26, 188, 156, 0.2);
+    }
+
+        .btn-edit:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 188, 156, 0.3);
+        }
+
+    .btn-delete {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: var(--transition);
+        box-shadow: 0 3px 10px rgba(231, 76, 60, 0.2);
+    }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+   
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .products-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .products-table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="products-header">
+        <h1 class="products-title">Products Owned by Site</h1>
+        <a asp-controller="Admin" asp-action="AddSiteProduct" class="btn-add">
+            <i class="fas fa-plus"></i> Add New Product
+        </a>
+    </div>
+
+    <div class="products-table">
+        <table class="table">
+            <thead class="table-header">
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-body">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Price JOD</td>
+                        <td>@item.StockQuantity</td>
+                        <td>@item.CreatedAt?.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="@Url.Action("EditSiteProduct", "Admin", new { id = item.ProductId })" class="btn-edit">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <form method="post" asp-action="DeleteSiteProduct" asp-route-id="@item.ProductId" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                    <button type="submit" class="btn-delete">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<table class="table table-bordered mt-3">
-    <thead class="table-success">
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Created At</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.Price JOD</td>
-                <td>@item.StockQuantity</td>
-                <td>@item.CreatedAt?.ToString("yyyy-MM-dd")</td>
-                <td>
-                    <a href="@Url.Action("EditSiteProduct", "Admin", new { id = item.ProductId })" class="btn btn-primary btn-sm">Edit</a>
-                    <form method="post" asp-action="DeleteSiteProduct" asp-route-id="@item.ProductId" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this product?');">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<script>
+    $(document).ready(function() {
+        // Add hover effect to action buttons
+        $('.btn-edit, .btn-delete').hover(
+            function() {
+                $(this).css('transform', 'translateY(-3px)');
+            },
+            function() {
+                $(this).css('transform', 'translateY(0)');
+            }
+        );
+
+        // Add animation to table rows
+        $('.table-body tr').each(function(i) {
+            $(this).css('animation-delay', (i * 0.1) + 's');
+        });
+    });
+</script>

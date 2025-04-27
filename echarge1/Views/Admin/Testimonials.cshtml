@@ -1,41 +1,209 @@
 ﻿@model IEnumerable<echarge1.Models.Testimonial>
 
 @{
+    ViewData["Title"] = "Testimonials Management";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/admintestomonialstyle.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 }
 
+<style>
+    :root {
+        --primary-color: #1abc9c;
+        --primary-light: rgba(26, 188, 156, 0.1);
+        --primary-dark: #16a085;
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        --gold-color: #f39c12;
+    }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Testimonials</title>
-</head>
-<body>
-    <h1>Testimonials</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Subject</th>
-                <th>Message</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var testimonial in Model)
-            {
+    .testimonials-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--primary-light);
+    }
+
+    .testimonials-title {
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0;
+        font-size: 1.8rem;
+        position: relative;
+    }
+
+        .testimonials-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--gold-color);
+            border-radius: 3px;
+        }
+
+    .testimonials-table {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        background-color: white;
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    .table-header {
+        background: linear-gradient(135deg, var(--gold-color), #e67e22);
+        color: white;
+    }
+
+        .table-header th {
+            border: none;
+            padding: 15px 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+    .table-body tr {
+        transition: var(--transition);
+    }
+
+        .table-body tr:hover {
+            background-color: rgba(243, 156, 18, 0.05);
+        }
+
+    .table-body td {
+        padding: 15px 20px;
+        vertical-align: middle;
+        border-color: #f1f1f1;
+    }
+
+    .testimonial-subject {
+        font-weight: 600;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+    }
+
+        .testimonial-subject i {
+            color: var(--gold-color);
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+    .testimonial-content {
+        color: #7f8c8d;
+        line-height: 1.6;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-delete {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: var(--transition);
+        box-shadow: 0 3px 10px rgba(231, 76, 60, 0.2);
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-delete i {
+            margin-right: 8px;
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .testimonials-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .testimonials-table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="testimonials-header">
+        <h1 class="testimonials-title">Customer Testimonials</h1>
+    </div>
+
+    <div class="testimonials-table">
+        <table class="table">
+            <thead class="table-header">
                 <tr>
-                    <td>@testimonial.Subject</td>
-                    <td>@testimonial.Message</td>
-                    <td>
-                        <a href="/Admin/DeleteTestimonial/@testimonial.TestimonialId">Delete</a>
-                    </td>
+                    <th>Subject</th>
+                    <th>Message</th>
+                    <th>Actions</th>
                 </tr>
+            </thead>
+            <tbody class="table-body">
+                @foreach (var testimonial in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="testimonial-subject">
+                                <i class="fas fa-quote-left"></i>
+                                @testimonial.Subject
+                            </div>
+                        </td>
+                        <td class="testimonial-content">@testimonial.Message</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="/Admin/DeleteTestimonial/@testimonial.TestimonialId" class="btn-delete">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Add hover effect to action buttons
+        $('.btn-delete').hover(
+            function() {
+                $(this).css('transform', 'translateY(-3px)');
+            },
+            function() {
+                $(this).css('transform', 'translateY(0)');
             }
-        </tbody>
-    </table>
-</body>
-</html>
+        );
+
+        // Add animation to table rows
+        $('.table-body tr').each(function(i) {
+            $(this).css('animation-delay', (i * 0.1) + 's');
+        });
+    });
+</script>

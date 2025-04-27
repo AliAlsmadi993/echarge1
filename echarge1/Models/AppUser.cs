@@ -39,6 +39,10 @@ public partial class AppUser
 
     public virtual ICollection<CourseEnrollment> CourseEnrollments { get; set; } = new List<CourseEnrollment>();
 
+    public virtual ICollection<EmergencyMessage> EmergencyMessages { get; set; } = new List<EmergencyMessage>();
+
+    public virtual ICollection<EmergencyRequest> EmergencyRequests { get; set; } = new List<EmergencyRequest>();
+
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

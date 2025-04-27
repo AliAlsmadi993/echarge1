@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Emergency Request";
+    var type = ViewBag.Type?.ToString();
+}
+
+<h2 class="text-danger mb-4">🚨 Emergency Request - @type</h2>
+
+<div class="alert alert-info">You can either allow access to your location or enter it manually.</div>
+
+<form method="get" asp-controller="Emergency" asp-action="Request">
+    <input type="hidden" name="type" value="@type" />
+
+    <div class="form-group">
+        <label for="location">📍 Location</label>
+        <input type="text" id="locationInput" name="location" class="form-control" placeholder="e.g. 31.9515, 35.9239" required />
+    </div>
+
+    <button type="button" class="btn btn-secondary mt-2" onclick="getLocation()">Use My Current Location</button>
+    <button type="submit" class="btn btn-danger mt-2 float-end">Submit Request</button>
+</form>
+
+@section Scripts {
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const coords = `${position.coords.latitude},${position.coords.longitude}`;
+                    document.getElementById("locationInput").value = coords;
+                }, function (error) {
+                    alert("Could not get your location. Please enter it manually.");
+                });
+            } else {
+                alert("Geolocation is not supported by your browser.");
+            }
+        }
+    </script>
+}

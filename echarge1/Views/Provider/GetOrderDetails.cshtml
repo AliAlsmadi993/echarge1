@@ -1,48 +1,345 @@
 ﻿@model echarge1.Models.Order
+@{
+    Layout = "~/Views/Shared/_ProviderLayout.cshtml";
+    ViewData["Title"] = "Order Details";
+}
 
-<div>
-    <h5>Order Information</h5>
-    <p><strong>Order ID:</strong> @Model.OrderId</p>
-    <p><strong>Date:</strong> @Model.OrderDate?.ToString("yyyy-MM-dd HH:mm")</p>
-    <p><strong>Status:</strong> @Model.Status</p>
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #1abc9c;
+            --primary-light: rgba(26, 188, 156, 0.1);
+            --primary-dark: #16a085;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
 
-    <h5>User Information</h5>
-    <p><strong>User Name:</strong> @Model.User.FullName</p>
-    <p><strong>User Email:</strong> @Model.User.Email</p>
+        .order-details-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            animation: fadeIn 0.6s ease-out;
+        }
 
-    <h5>Shipping Address</h5>
-    <p>@Model.ShippingAddress</p>
+        .order-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
 
-    <h5>Order Items</h5>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.OrderItems)
-            {
-                <tr>
-                    <td>@item.Product.Name</td>
-                    <td>@item.Quantity</td>
-                    <td>@item.Product.Price</td>
-                    <td>@item.SubTotal</td>
-                </tr>
+        .order-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            color: #34495e;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .status-pending {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-processing {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .status-completed {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-cancelled {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+            .order-table th {
+                background-color: #f8f9fa;
+                padding: 0.75rem 1rem;
+                text-align: left;
+                font-weight: 600;
+                color: #2c3e50;
+                border-bottom: 2px solid var(--primary-light);
             }
-        </tbody>
-    </table>
 
-    <h5>Receipt Image</h5>
-    @if (!string.IsNullOrEmpty(Model.ReceiptImageUrl))
-    {
-        <img src="@Model.ReceiptImageUrl" alt="Receipt Image" class="img-fluid" />
-    }
-    else
-    {
-        <p>No receipt uploaded yet.</p>
-    }
+            .order-table td {
+                padding: 1rem;
+                border-bottom: 1px solid #eee;
+                vertical-align: middle;
+            }
+
+            .order-table tr:last-child td {
+                border-bottom: none;
+            }
+
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .receipt-container {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .receipt-image {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+
+        .no-receipt {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            color: #7f8c8d;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-back {
+            background: white;
+            color: #7f8c8d;
+            border: 1px solid #ddd;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .btn-back:hover {
+                background: #f8f9fa;
+                transform: translateY(-2px);
+            }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .order-card {
+                padding: 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-cell {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+    </style>
+}
+
+<div class="order-details-container">
+    <div class="order-header">
+        <h1 class="order-title">
+            <i class="fas fa-receipt"></i> Order Details
+        </h1>
+    </div>
+
+    <div class="order-card">
+        <div class="info-grid">
+            <div>
+                <h5 class="section-title">
+                    <i class="fas fa-info-circle"></i> Order Information
+                </h5>
+                <div class="info-item">
+                    <div class="info-label">Order ID</div>
+                    <div class="info-value">#@Model.OrderId</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Date</div>
+                    <div class="info-value">@Model.OrderDate?.ToString("yyyy-MM-dd HH:mm")</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="status-badge status-@Model.Status.ToLower()">@Model.Status</div>
+                </div>
+            </div>
+
+            <div>
+                <h5 class="section-title">
+                    <i class="fas fa-user"></i> Customer Information
+                </h5>
+                <div class="info-item">
+                    <div class="info-label">Customer Name</div>
+                    <div class="info-value">@Model.User.FullName</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">@Model.User.Email</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Phone</div>
+                    <div class="info-value">@(Model.User.PhoneNumber ?? "Not provided")</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h5 class="section-title">
+                <i class="fas fa-truck"></i> Shipping Information
+            </h5>
+            <div class="info-item">
+                <div class="info-label">Shipping Address</div>
+                <div class="info-value">@Model.ShippingAddress</div>
+            </div>
+        </div>
+
+        <h5 class="section-title">
+            <i class="fas fa-shopping-basket"></i> Order Items
+        </h5>
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderItems)
+                {
+                    <tr>
+                        <td>
+                            <div class="product-cell">
+                                <img src="@(item.Product.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/default-product.png")"
+                                     class="product-image"
+                                     alt="@item.Product.Name" />
+                                <div>@item.Product.Name</div>
+                            </div>
+                        </td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Product.Price.ToString("0.00") JOD</td>
+                        <td>@item.SubTotal.ToString("0.00") JOD</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="receipt-container">
+            <h5 class="section-title">
+                <i class="fas fa-file-invoice"></i> Payment Receipt
+            </h5>
+            @if (!string.IsNullOrEmpty(Model.ReceiptImageUrl))
+            {
+                <img src="@Model.ReceiptImageUrl"
+                     alt="Receipt Image"
+                     class="receipt-image"
+                     onclick="window.open('@Model.ReceiptImageUrl', '_blank')"
+                     style="cursor: pointer;" />
+                <p class="text-muted mt-2">Click on receipt to view full size</p>
+            }
+            else
+            {
+                <div class="no-receipt">
+                    <i class="fas fa-file-invoice-dollar" style="font-size: 2rem;"></i>
+                    <p class="mt-2">No receipt uploaded for this order</p>
+                </div>
+            }
+        </div>
+
+        <div class="action-buttons">
+            <a href="@Url.Action("MyOrders", "Provider")" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Orders
+            </a>
+        </div>
+    </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        // Add hover effect to table rows
+        $('.order-table tbody tr').hover(
+            function() {
+                $(this).css('background-color', 'rgba(26, 188, 156, 0.05)');
+            },
+            function() {
+                $(this).css('background-color', '');
+            }
+        );
+    });
+</script>

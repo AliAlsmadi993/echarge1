@@ -1,251 +1,393 @@
-﻿/* استيراد AOS */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css');
+﻿/* Global Styles */
+:root {
+    --primary: #1ABC9C;
+    --primary-dark: #16A085;
+    --dark: #2C3E50;
+    --light: #ECF0F1;
+    --gray: #95A5A6;
+}
 
-/* تنسيق عام */
-body {
-    font-family: 'Arial', sans-serif;
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
     background-color: #f9f9f9;
     color: #333;
+    line-height: 1.6;
 }
 
-/* تحسين السلايدر (تمت إعادته) */
-.background-slider {
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+section {
+    padding: 80px 0;
+}
+
+h1, h2, h3 {
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--dark);
+}
+
+h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+}
+
+h2 {
+    font-size: 2.5rem;
     position: relative;
-    width: 100%;
-    height: 500px;
-    overflow: hidden;
+    display: inline-block;
 }
 
-.slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 1.5s ease-in-out;
-}
-
-    .slide.active {
-        opacity: 1;
+    h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 70px;
+        height: 4px;
+        background: var(--primary);
+        border-radius: 2px;
     }
 
-/* تحسين النص داخل السلايدر */
-.text-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.6);
+p {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: var(--primary);
     color: white;
-    padding: 30px 50px;
-    border-radius: 12px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(26, 188, 156, 0.3);
+}
+
+    .btn:hover {
+        background: var(--primary-dark);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(26, 188, 156, 0.4);
+    }
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+    .btn-outline:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+.text-primary {
+    color: var(--primary);
+}
+
+.text-center {
     text-align: center;
-    max-width: 650px;
 }
 
-/* ✅ تحسين "About Us" بدون نظام الكاردات */
-.about-content {
+.mb-30 {
+    margin-bottom: 30px;
+}
+
+/* Header */
+
+
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, rgba(26, 188, 156, 0.1) 0%, rgba(26, 188, 156, 0.05) 100%);
+    padding: 180px 0 100px;
     text-align: center;
-    padding: 80px 20px;
-    background-color: #eef5ff;
 }
 
-    .about-content h1 {
-        font-size: 42px;
-        color: #0073e6;
-        margin-bottom: 30px;
-        font-weight: bold;
-    }
-
-/* ✅ جعل النص والصورة متناوبين بدون كاردات */
-.about-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 60px auto;
-    max-width: 1200px;
-    padding: 40px;
-}
-
-    /* التناوب بين الصورة والنص */
-    .about-item:nth-child(odd) {
-        flex-direction: row;
-    }
-
-    .about-item:nth-child(even) {
-        flex-direction: row-reverse;
-    }
-
-/* ✅ تحسين النص */
-.about-text {
-    flex: 1;
-    padding: 20px;
-    text-align: left;
-    font-size: 20px;
-    color: #333;
-}
-
-/* ✅ تحسين الصور */
-.about-image {
-    width: 45%;
-    max-width: 500px;
-    border-radius: 15px;
-    transition: transform 0.3s ease-in-out;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-}
-
-    .about-image:hover {
-        transform: scale(1.05);
-    }
-
-/* ✅ تحسين Future Goals */
-.future-section {
-    background: linear-gradient(to bottom right, #0073e6, #00c6ff);
-    color: white;
-    padding: 100px 20px;
-    text-align: center;
-    border-radius: 30px;
-    box-shadow: 0 12px 30px rgba(0, 115, 230, 0.5);
-    margin: 80px auto;
-    max-width: 1200px;
-}
-
-    .future-section:hover {
-        transform: scale(1.03);
-    }
-
-    .future-section h2 {
-        font-size: 42px;
-        margin-bottom: 30px;
-        font-weight: bold;
-    }
-
-    .future-section p {
-        font-size: 22px;
-        margin-bottom: 40px;
-    }
-
-    /* ✅ تحسين عرض قائمة الأهداف */
-    .future-section ul {
-        list-style: none;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 30px;
-    }
-
-        .future-section ul li {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 25px 35px;
-            border-radius: 15px;
-            font-size: 20px;
-            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease-in-out;
-        }
-
-            .future-section ul li:hover {
-                background: rgba(255, 255, 255, 0.5);
-                transform: scale(1.1);
-            }
-
-/* ✅ تحسين Community Section */
-.community-section {
-    background: linear-gradient(to right, #ff7e5f, #feb47b);
-    color: white;
-    padding: 100px 20px;
-    text-align: center;
-    border-radius: 30px;
-    box-shadow: 0 12px 30px rgba(255, 126, 95, 0.5);
-    margin: 80px auto;
-    max-width: 1200px;
-}
-
-    .community-section:hover {
-        transform: scale(1.03);
-    }
-
-    .community-section h2 {
-        font-size: 42px;
-        margin-bottom: 30px;
-        font-weight: bold;
-    }
-
-    .community-section p {
-        font-size: 22px;
-        margin-bottom: 40px;
-    }
-
-    /* ✅ تحسين عرض القائمة */
-    .community-section ul {
-        list-style: none;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 30px;
-    }
-
-        .community-section ul li {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 25px 35px;
-            border-radius: 15px;
-            font-size: 20px;
-            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease-in-out;
-        }
-
-            .community-section ul li:hover {
-                background: rgba(255, 255, 255, 0.5);
-                transform: scale(1.1);
-            }
-
-/* ✅ تحسين صورة المجتمع */
-.community-image {
-    display: block;
-    margin: 50px auto;
-    width: 90%;
-    max-width: 800px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.4);
-    transition: transform 0.3s ease-in-out;
-}
-
-    .community-image:hover {
-        transform: scale(1.08);
-    }
-
-/* ✅ تحسين الأنيميشن */
-[data-aos="fade-up"] {
-    opacity: 0;
-    transform: translateY(80px);
-    transition: opacity 1.2s ease-out, transform 1.2s ease-out;
-}
-
-[data-aos].aos-animate {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* ✅ تحسين التصميم على الشاشات الصغيرة */
-@media (max-width: 768px) {
-    .about-item {
-        flex-direction: column !important;
-        text-align: center;
-        padding: 20px;
-    }
-
-    .about-image {
-        width: 100%;
+    .hero h1 {
+        font-size: 3.5rem;
         margin-bottom: 20px;
     }
 
-    .future-section ul,
-    .community-section ul {
+    .hero p {
+        font-size: 1.3rem;
+        max-width: 800px;
+        margin: 0 auto 40px;
+        color: var(--gray);
+    }
+
+/* About Sections */
+.about-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.about-text {
+    flex: 1;
+    padding-right: 40px;
+}
+
+.about-img {
+    flex: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s;
+}
+
+    .about-img:hover {
+        transform: scale(1.03);
+    }
+
+    .about-img img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+/* Features Grid */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(26, 188, 156, 0.15);
+    }
+
+.feature-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+}
+
+/* Goals Section */
+.goals {
+    background: linear-gradient(135deg, rgba(26, 188, 156, 0.1) 0%, rgba(26, 188, 156, 0.05) 100%);
+    border-radius: 20px;
+    padding: 60px;
+    margin-top: 60px;
+}
+
+.goal-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.goal-icon {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-right: 20px;
+    min-width: 50px;
+}
+
+/* CTA Section */
+.cta {
+    background: var(--primary);
+    color: white;
+    text-align: center;
+    padding: 80px 0;
+    border-radius: 20px;
+    margin-top: 60px;
+}
+
+    .cta h2 {
+        color: white;
+    }
+
+        .cta h2::after {
+            background: white;
+        }
+
+    .cta p {
+        max-width: 700px;
+        margin: 0 auto 40px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .cta .btn {
+        background: white;
+        color: var(--primary);
+        margin: 0 10px;
+    }
+
+        .cta .btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+/* Footer */
+footer {
+    background: var(--dark);
+    color: white;
+    padding: 60px 0 20px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 30px;
+    padding: 0 20px;
+}
+
+    .footer-column h3 {
+        color: white;
+        margin-bottom: 25px;
+        font-size: 1.3rem;
+    }
+
+    .footer-column ul {
+        list-style: none;
+    }
+
+        .footer-column ul li {
+            margin-bottom: 15px;
+        }
+
+            .footer-column ul li a {
+                color: var(--gray);
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+
+                .footer-column ul li a:hover {
+                    color: var(--primary);
+                }
+
+.social-links a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    color: white;
+    margin-right: 10px;
+    transition: all 0.3s;
+}
+
+    .social-links a:hover {
+        background: var(--primary);
+        transform: translateY(-3px);
+    }
+
+.copyright {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease forwards;
+}
+
+.delay-1 {
+    animation-delay: 0.2s;
+}
+
+.delay-2 {
+    animation-delay: 0.4s;
+}
+
+.delay-3 {
+    animation-delay: 0.6s;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .about-section {
         flex-direction: column;
-        align-items: center;
+    }
+
+    .about-text {
+        padding-right: 0;
+        margin-bottom: 40px;
+    }
+
+    .hero h1 {
+        font-size: 2.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    section {
+        padding: 60px 0;
+    }
+
+    .goals, .cta {
+        padding: 40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .cta .btn {
+        display: block;
+        margin: 10px auto;
+        max-width: 200px;
     }
 }

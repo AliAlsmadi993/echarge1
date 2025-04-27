@@ -21,5 +21,7 @@ public partial class Course
 
     public DateTime? CreatedAt { get; set; }
 
+    public string? InstructorDescription { get; set; }
+
     public virtual ICollection<CourseEnrollment> CourseEnrollments { get; set; } = new List<CourseEnrollment>();
 }

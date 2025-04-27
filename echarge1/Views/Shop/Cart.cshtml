@@ -79,7 +79,9 @@
                 @foreach (var item in Model)
                 {
                     <tr class="cart-card">
-                        <td><img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="cart-img" /></td>
+                        <td>
+                            <img src="@(item.Product.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/default.png")" alt="@item.Product.Name" class="cart-img" />
+                        </td>
                         <td>@item.Product.Name</td>
                         <td>@item.Product.Price $</td>
                         <td>

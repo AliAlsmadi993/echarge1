@@ -1,3 +1,11 @@
 ﻿@{
-    Layout = "_Layout";
+    var userType = Context.Session.GetString("UserType");
+
+    Layout = userType switch
+    {
+        "Admin" => "~/Views/Shared/_AdminLayout.cshtml",
+        "Provider" => "~/Views/Shared/_ProviderLayout.cshtml",
+        "User" => "~/Views/Shared/_Layout.cshtml",
+        _ => "~/Views/Shared/_Layout.cshtml"
+    };
 }

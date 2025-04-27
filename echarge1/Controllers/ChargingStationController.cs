@@ -78,7 +78,14 @@ public class ChargingStationController : Controller
         await _context.SaveChangesAsync();
 
         TempData["Success"] = "Station added successfully.";
-        return RedirectToAction("ManageStations");
+        var userType = HttpContext.Session.GetString("UserType");
+
+        if (userType == "Admin")
+            return RedirectToAction("ManageStations", "ChargingStation");
+        else if (userType == "Provider")
+            return RedirectToAction("MyStations", "Map");
+
+        return RedirectToAction("Index", "Home");
     }
 
     // ✅ GET: Edit Station Page

@@ -31,6 +31,12 @@
             <input asp-for="Instructor" class="form-control" />
             <span asp-validation-for="Instructor" class="text-danger"></span>
         </div>
+        <div class="mb-3">
+            <label asp-for="InstructorDescription" class="form-label"></label>
+            <textarea asp-for="InstructorDescription" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="InstructorDescription" class="text-danger"></span>
+        </div>
+
 
         <div class="mb-3">
             <label asp-for="StartDate" class="form-label">Start Date</label>

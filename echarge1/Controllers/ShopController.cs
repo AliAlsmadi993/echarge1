@@ -145,32 +145,34 @@ namespace echarge1.Controllers
 
             return View("Store", featuredProducts);
         }
-        public async Task<IActionResult> Cart()
+ public async Task<IActionResult> Cart()
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
             List<CartItem> cartItems;
 
             if (userId != null)
             {
-                // إذا كان المستخدم مسجل دخول، استعرض السلة من قاعدة البيانات
+                // إذا كان المستخدم مسجل دخول
                 cartItems = await _context.CartItems
                     .Where(c => c.UserId == userId && !c.IsCheckedOut)
                     .Include(c => c.Product)
+                        .ThenInclude(p => p.ProductImages) // ✅ جلب صور المنتج
                     .ToListAsync();
             }
             else
             {
-                // إذا لم يكن مسجل دخول، استعرض السلة من الكوكيز
+                // إذا كان الزائر مش مسجل دخول
                 var cartCookie = Request.Cookies["Cart_Pending_Product"];
                 var productIds = cartCookie != null ? cartCookie.Split(',').Select(int.Parse).ToList() : new List<int>();
 
                 cartItems = await _context.Products
                     .Where(p => productIds.Contains(p.ProductId))
+                    .Include(p => p.ProductImages) // ✅ جلب صور المنتج للزائر
                     .Select(p => new CartItem
                     {
                         ProductId = p.ProductId,
                         Product = p,
-                        Quantity = 1, // القيم الافتراضية لأن البيانات غير موجودة في الكوكيز
+                        Quantity = 1, // الزائر افتراضي الكمية 1
                     })
                     .ToListAsync();
             }

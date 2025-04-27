@@ -1,0 +1,62 @@
+﻿@model echarge1.Models.EvsupportUnit
+
+@{
+    ViewData["Title"] = "Add EV Support Unit";
+}
+
+<h2 class="mb-4">➕ Add Support Unit</h2>
+
+<form asp-action="AddSupportUnit" method="post">
+    <div class="form-group mb-3">
+        <label>Name:</label>
+        <input asp-for="Name" class="form-control" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Type:</label>
+        <select asp-for="Type" class="form-control" required>
+            <option value="">-- Select Type --</option>
+            <option value="EVCharger">EV Charger (Portable) 🔋</option>
+            <option value="EVTowTruck">EV Tow Truck 🚛</option>
+        </select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Vehicle Type:</label>
+        <input asp-for="VehicleType" class="form-control" placeholder="Optional" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>📍 Google Maps Link:</label>
+        <input type="text" name="locationUrl" class="form-control" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>OR Get My Location:</label>
+        <input type="text" name="deviceLocation" id="deviceLocation" class="form-control" readonly />
+        <button type="button" onclick="getLocation()" class="btn btn-outline-primary mt-2">📍 Use Current Location</button>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Notes:</label>
+        <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Optional notes..."></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-2">✅ Add Unit</button>
+</form>
+
+@section Scripts {
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    document.getElementById("deviceLocation").value = `${pos.coords.latitude},${pos.coords.longitude}`;
+                });
+            } else {
+                alert("Geolocation not supported.");
+            }
+        }
+    </script>
+}

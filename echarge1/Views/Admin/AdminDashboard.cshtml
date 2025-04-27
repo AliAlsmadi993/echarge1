@@ -3,60 +3,265 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<h2 class="mb-4">📊 Admin Dashboard</h2>
+@section Styles {
+    <style>
+        :root {
+            --primary-color: #1abc9c;
+            --primary-light: rgba(26, 188, 156, 0.1);
+            --primary-dark: #16a085;
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
 
-<div class="row g-4">
-    <div class="col-md-4">
-        <div class="card text-white bg-primary h-100">
+        .dashboard-title {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+            padding-left: 1.5rem;
+        }
+
+            .dashboard-title i {
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--primary-color);
+            }
+
+            .dashboard-title::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 1.5rem;
+                width: 50px;
+                height: 3px;
+                background: var(--primary-color);
+                border-radius: 3px;
+            }
+
+        .stat-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+            height: 100%;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+                z-index: -1;
+                opacity: 0;
+                transition: var(--transition);
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            }
+
+                .stat-card:hover::before {
+                    opacity: 1;
+                }
+
+            .stat-card .card-body {
+                padding: 1.5rem;
+                position: relative;
+                z-index: 2;
+            }
+
+            .stat-card .card-title {
+                font-size: 1rem;
+                font-weight: 500;
+                margin-bottom: 0.5rem;
+                opacity: 0.9;
+            }
+
+            .stat-card .card-text {
+                font-size: 2.2rem;
+                font-weight: 700;
+                margin-bottom: 0;
+            }
+
+            .stat-card .card-icon {
+                position: absolute;
+                right: 1.5rem;
+                top: 1.5rem;
+                font-size: 2.5rem;
+                opacity: 0.2;
+                transition: var(--transition);
+            }
+
+            .stat-card:hover .card-icon {
+                transform: scale(1.1) translateY(-5px);
+                opacity: 0.3;
+            }
+
+        /* Card Colors */
+        .bg-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .bg-success {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+
+        .bg-info {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+        }
+
+        .bg-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .bg-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .bg-secondary {
+            background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+        }
+
+        /* Grid Animation */
+        .dashboard-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        @@media (min-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .stat-card {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Delay animations for each card */
+        .stat-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .stat-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .stat-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .stat-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .stat-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .stat-card:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+    </style>
+}
+
+<div class="container-fluid py-4">
+    <h2 class="dashboard-title">
+        <i class="fas fa-chart-line"></i> Admin Dashboard
+    </h2>
+
+    <div class="dashboard-grid">
+        <div class="stat-card text-white bg-primary">
             <div class="card-body">
+                <i class="fas fa-users card-icon"></i>
                 <h5 class="card-title">Total Users</h5>
-                <p class="card-text display-5">@ViewBag.TotalUsers</p>
+                <p class="card-text">@ViewBag.TotalUsers</p>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-4">
-        <div class="card text-white bg-success h-100">
+        <div class="stat-card text-white bg-success">
             <div class="card-body">
+                <i class="fas fa-user-tie card-icon"></i>
                 <h5 class="card-title">Total Providers</h5>
-                <p class="card-text display-5">@ViewBag.TotalProviders</p>
+                <p class="card-text">@ViewBag.TotalProviders</p>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-4">
-        <div class="card text-white bg-info h-100">
+        <div class="stat-card text-white bg-info">
             <div class="card-body">
+                <i class="fas fa-box-open card-icon"></i>
                 <h5 class="card-title">Total Products</h5>
-                <p class="card-text display-5">@ViewBag.TotalProducts</p>
+                <p class="card-text">@ViewBag.TotalProducts</p>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-4">
-        <div class="card text-white bg-warning h-100">
+        <div class="stat-card text-white bg-warning">
             <div class="card-body">
+                <i class="fas fa-shopping-cart card-icon"></i>
                 <h5 class="card-title">Total Orders</h5>
-                <p class="card-text display-5">@ViewBag.TotalOrders</p>
+                <p class="card-text">@ViewBag.TotalOrders</p>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-4">
-        <div class="card text-white bg-danger h-100">
+        <div class="stat-card text-white bg-danger">
             <div class="card-body">
+                <i class="fas fa-calendar-check card-icon"></i>
                 <h5 class="card-title">Total Bookings</h5>
-                <p class="card-text display-5">@ViewBag.TotalBookings</p>
+                <p class="card-text">@ViewBag.TotalBookings</p>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-4">
-        <div class="card text-white bg-secondary h-100">
+        <div class="stat-card text-white bg-secondary">
             <div class="card-body">
+                <i class="fas fa-graduation-cap card-icon"></i>
                 <h5 class="card-title">Total Courses</h5>
-                <p class="card-text display-5">@ViewBag.TotalCourses</p>
+                <p class="card-text">@ViewBag.TotalCourses</p>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Add hover effect to cards
+            $('.stat-card').hover(
+                function() {
+                    $(this).find('.card-icon').css({
+                        'transform': 'scale(1.2) translateY(-5px)',
+                        'opacity': '0.4'
+                    });
+                },
+                function() {
+                    $(this).find('.card-icon').css({
+                        'transform': 'scale(1.1) translateY(-5px)',
+                        'opacity': '0.3'
+                    });
+                }
+            );
+        });
+    </script>
+}

@@ -1,0 +1,77 @@
+﻿@model List<echarge1.Models.EmergencyRequest>
+@{
+    ViewData["Title"] = "My Emergency Requests";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        .request-card {
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+            .request-card:hover {
+                transform: scale(1.01);
+            }
+
+            .request-card h5 {
+                color: #1abc9c;
+                font-weight: bold;
+            }
+
+        .status {
+            font-weight: bold;
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+            .status.Pending {
+                background-color: #f39c12;
+                color: white;
+            }
+
+            .status.Resolved {
+                background-color: #27ae60;
+                color: white;
+            }
+
+            .status.Cancelled {
+                background-color: #e74c3c;
+                color: white;
+            }
+    </style>
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">📄 My Emergency Requests</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">You have not submitted any emergency requests yet.</div>
+    }
+    else
+    {
+        foreach (var request in Model)
+        {
+            <div class="request-card">
+                <h5>Type: @request.RequestType.ToUpper()</h5>
+                <p><strong>Time:</strong> @request.RequestTime?.ToString("yyyy-MM-dd HH:mm")</p>
+                <p><strong>Status:</strong> <span class="status @request.Status">@request.Status</span></p>
+                <p><strong>Location:</strong> @request.Location</p>
+
+                @if (!string.IsNullOrEmpty(request.Notes))
+                {
+                    <p><strong>Notes:</strong> @request.Notes</p>
+                }
+
+                <a href="@Url.Action("Chat", "Emergency", new { requestId = request.EmergencyRequestId })"
+                   class="btn btn-outline-primary">💬 View Chat</a>
+            </div>
+        }
+    }
+</div>

@@ -1,0 +1,99 @@
+﻿@model List<echarge1.Models.EmergencyRequest>
+@{
+    ViewData["Title"] = "Emergency Admin Panel";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Styles {
+    <style>
+        h2 {
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 30px;
+        }
+
+        table {
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        thead {
+            background-color: #1abc9c;
+            color: white;
+        }
+
+        .btn-chat {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+            .btn-chat:hover {
+                background-color: #34495e;
+            }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: white;
+        }
+
+        .status-Pending {
+            background-color: #f39c12;
+        }
+
+        .status-Completed {
+            background-color: #2ecc71;
+        }
+
+        .status-Cancelled {
+            background-color: #e74c3c;
+        }
+    </style>
+}
+
+<div class="container mt-5">
+    <h2>🚨 Emergency Requests</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">No emergency requests found.</div>
+    }
+    else
+    {
+        <table class="table table-hover shadow">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                    <th>Chat</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td>@r.User.FullName</td>
+                        <td>@(r.RequestType == "charge" ? "Charging" : "Tow Truck")</td>
+                        <td>@r.Location</td>
+                        <td><span class="status-badge status-@r.Status">@r.Status</span></td>
+                        <td>@r.RequestTime?.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>
+                            <a class="btn btn-chat" href="@Url.Action("Chat", "Emergency", new { requestId = r.EmergencyRequestId })">
+                                💬 Open Chat
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
