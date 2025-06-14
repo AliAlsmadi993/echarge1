@@ -59,9 +59,9 @@
             z-index: 1050;
         }
 
-        .cart-hover:hover .cart-preview {
-            display: block;
-        }
+        /* .cart-hover:hover .cart-preview { */
+        /*     display: block; */
+        /* } */
 
         .navbar-toggler-icon {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255, 0.8)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
@@ -181,13 +181,16 @@
                         items.forEach(item => {
                             const row = document.createElement("div");
                             row.classList.add("d-flex", "align-items-center", "mb-2");
-                            row.innerHTML = `
-                                <img src="${item.imageUrl}" style="width:40px;height:40px;object-fit:cover;margin-right:10px;">
-                                <div>
-                                    <strong>${item.name}</strong><br>
-                                    <small>${item.quantity} x $${item.price}</small>
-                                </div>
-                            `;
+                         row.innerHTML = `
+            <img src="/images/products/${item.imageUrl}"
+                 alt="${item.name}"
+                 style="width:40px;height:40px;object-fit:cover;margin-right:10px;">
+            <div>
+                <strong>${item.name}</strong><br>
+                <small>${item.quantity} x $${item.price}</small>
+            </div>
+        `;
+
                             container.appendChild(row);
                         });
                     }

@@ -4,67 +4,501 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/Apply.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 }
 
-@if (ViewBag.SelectedCourse != null)
-{
-    <h2 style="color:#1ABC9C">Applying for: @ViewBag.SelectedCourse.Title</h2>
-}
+<div class="apply-container">
+    @if (ViewBag.SelectedCourse != null)
+    {
+        <h2 class="course-title">
+            <i class="fas fa-graduation-cap"></i> Applying for: @ViewBag.SelectedCourse.Title
+        </h2>
+    }
 
-@if (TempData["Success"] != null)
-{
-    <div style="color: green;">@TempData["Success"]</div>
-}
-@if (TempData["Error"] != null)
-{
-    <div style="color: red;">@TempData["Error"]</div>
-}
+    @if (TempData["Success"] != null)
+    {
+        <div id="successPopup" class="popup-container success">
+            <div class="popup-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="popup-content">
+                <h3>Application Submitted!</h3>
+                <p>@TempData["Success"]</p>
+            </div>
+            <button class="popup-close" onclick="closePopup()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="progress-bar"></div>
+        </div>
 
-<form asp-action="Apply" asp-controller="Course" method="post" enctype="multipart/form-data">
-    @Html.AntiForgeryToken()
+        <script>
+            function closePopup() {
+                const popup = document.getElementById("successPopup");
+                popup.classList.add("fade-out");
+                setTimeout(() => {
+                    popup.style.display = "none";
+                }, 300);
+            }
 
-    <input type="hidden" name="CourseId" value="@ViewBag.SelectedCourse.CourseId" />
-    <input type="hidden" name="UserId" id="userIdField" />
+            document.addEventListener("DOMContentLoaded", function() {
+                const popup = document.getElementById("successPopup");
+                if (popup) {
+                    setTimeout(() => {
+                        popup.classList.add("fade-out");
+                        setTimeout(() => {
+                            popup.style.display = "none";
+                        }, 300);
+                    }, 4000);
 
-    <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" name="FullName" required />
-    </div>
+                    // Animate progress bar
+                    const progressBar = popup.querySelector(".progress-bar");
+                    progressBar.style.animation = "progress 4s linear forwards";
+                }
+            });
+        </script>
+    }
 
-    <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="Email" required />
-    </div>
+    @if (TempData["Error"] != null)
+    {
+        <div class="popup-container error">
+            <div class="popup-icon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div class="popup-content">
+                <h3>Error Occurred</h3>
+                <p>@TempData["Error"]</p>
+            </div>
+            <button class="popup-close" onclick="this.parentElement.style.display='none'">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    }
 
-    <div class="form-group">
-        <label>Phone</label>
-        <input type="text" name="Phone" required />
-    </div>
+    <form asp-action="Apply" asp-controller="Course" method="post" enctype="multipart/form-data" class="application-form">
+        @Html.AntiForgeryToken()
 
-    <div class="form-group">
-        <label>Upload Front Side of ID</label>
-        <input type="file" name="CvUpload" accept=".pdf,.doc,.docx" required />
-    </div>
+        <input type="hidden" name="CourseId" value="@ViewBag.SelectedCourse.CourseId" />
+        <input type="hidden" name="UserId" id="userIdField" />
 
-    <div class="form-group">
-        <label>Upload Back Side of ID</label>
-        <input type="file" name="IdUpload" accept=".jpg,.png,.pdf" required />
-    </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="FullName">
+                    <i class="fas fa-user"></i> Full Name
+                </label>
+                <input type="text" id="FullName" name="FullName" required placeholder="Enter your full name" />
+            </div>
 
-    <div class="form-group">
-        <label>Additional Info</label>
-        <textarea name="AdditionalInfo"></textarea>
-    </div>
+            <div class="form-group">
+                <label for="Email">
+                    <i class="fas fa-envelope"></i> Email
+                </label>
+                <input type="email" id="Email" name="Email" required placeholder="Enter your email address" />
+            </div>
 
-    <button type="submit" class="btn btn-success">Submit Application</button>
-</form>
+            <div class="form-group">
+                <label for="Phone">
+                    <i class="fas fa-phone"></i> Phone Number
+                </label>
+                <input type="tel" id="Phone" name="Phone" required placeholder="Enter your phone number" />
+            </div>
+
+            <div class="form-group file-upload">
+                <label for="CvUpload">
+                    <i class="fas fa-file-pdf"></i> Front Side of ID (PDF/DOC)
+                </label>
+                <div class="upload-area">
+                    <input type="file" id="CvUpload" name="CvUpload" accept=".jpg,.png,.pdf,.pdf,.doc,.docx" required />
+                    <div class="upload-text">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop files or click to browse</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group file-upload">
+                <label for="IdUpload">
+                    <i class="fas fa-id-card"></i> Back Side of ID (Image/PDF)
+                </label>
+                <div class="upload-area">
+                    <input type="file" id="IdUpload" name="IdUpload" accept=".jpg,.png,.pdf" required />
+                    <div class="upload-text">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop files or click to browse</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="AdditionalInfo">
+                    <i class="fas fa-info-circle"></i> Additional Information
+                </label>
+                <textarea id="AdditionalInfo" name="AdditionalInfo" placeholder="Any additional information you'd like to share..."></textarea>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-paper-plane"></i> Submit Application
+            </button>
+        </div>
+    </form>
+</div>
 
 <script>
-    // جلب UserId من sessionStorage
+    // Set userId from sessionStorage
     document.addEventListener("DOMContentLoaded", function () {
         const userId = sessionStorage.getItem("userId");
         if (userId) {
             document.getElementById("userIdField").value = userId;
         }
+
+        // Enhance file upload UI
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        fileInputs.forEach(input => {
+            const uploadArea = input.closest('.upload-area');
+            const uploadText = uploadArea.querySelector('.upload-text');
+
+            input.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    uploadText.innerHTML = `<i class="fas fa-check-circle"></i> ${this.files[0].name}`;
+                    uploadArea.classList.add('has-file');
+                } else {
+                    uploadText.innerHTML = `<i class="fas fa-cloud-upload-alt"></i> <p>Drag & drop files or click to browse</p>`;
+                    uploadArea.classList.remove('has-file');
+                }
+            });
+
+            // Drag and drop functionality
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                input.files = e.dataTransfer.files;
+                const event = new Event('change');
+                input.dispatchEvent(event);
+            });
+        });
     });
 </script>
+
+<style>
+    /* Main Container */
+    .apply-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Course Title */
+    .course-title {
+        color: #1ABC9C;
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Form Grid */
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .full-width {
+        grid-column: span 2;
+    }
+
+    /* Form Groups */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #1ABC9C;
+            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
+            outline: none;
+        }
+
+        /* Textarea */
+        .form-group textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+            .form-group textarea:focus {
+                border-color: #1ABC9C;
+                box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
+                outline: none;
+            }
+
+    /* File Upload */
+    .file-upload .upload-area {
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .file-upload .upload-area:hover {
+            border-color: #1ABC9C;
+            background: rgba(26, 188, 156, 0.05);
+        }
+
+        .file-upload .upload-area.dragover {
+            border-color: #1ABC9C;
+            background: rgba(26, 188, 156, 0.1);
+        }
+
+        .file-upload .upload-area.has-file {
+            border-color: #2ecc71;
+            background: rgba(46, 204, 113, 0.05);
+        }
+
+    .file-upload .upload-text {
+        color: #777;
+    }
+
+        .file-upload .upload-text i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #1ABC9C;
+        }
+
+    .file-upload input[type="file"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* Submit Button */
+    .form-actions {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .submit-btn {
+        background: linear-gradient(135deg, #1ABC9C, #16A085);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 15px rgba(26, 188, 156, 0.3);
+    }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #16A085, #1ABC9C);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 188, 156, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+    /* Popup Styles */
+    .popup-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #e9fdf7;
+        border-left: 6px solid #1ABC9C;
+        padding: 16px 20px;
+        border-radius: 10px;
+        color: #087f6e;
+        max-width: 600px;
+        width: 90%;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        font-family: 'Segoe UI', sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        animation: slideFadeIn 0.5s ease;
+        z-index: 9999;
+    }
+
+    .success {
+        background: linear-gradient(135deg, #f0fff8, #e6f9f0);
+        border-left: 5px solid #2ecc71;
+    }
+
+    .error {
+        background: linear-gradient(135deg, #fff0f0, #f9e6e6);
+        border-left: 5px solid #e74c3c;
+    }
+
+    .popup-icon {
+        font-size: 24px;
+        margin-top: 2px;
+    }
+
+    .success .popup-icon {
+        color: #2ecc71;
+    }
+
+    .error .popup-icon {
+        color: #e74c3c;
+    }
+
+    .popup-content {
+        flex: 1;
+    }
+
+        .popup-content h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.1rem;
+        }
+
+    .success .popup-content h3 {
+        color: #27ae60;
+    }
+
+    .error .popup-content h3 {
+        color: #c0392b;
+    }
+
+    .popup-content p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .popup-close {
+        background: none;
+        border: none;
+        color: #999;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: color 0.2s;
+        padding: 0;
+        margin-left: 5px;
+    }
+
+        .popup-close:hover {
+            color: #666;
+        }
+
+    .progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        width: 100%;
+        background: rgba(46, 204, 113, 0.2);
+    }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background: #2ecc71;
+        }
+
+    .fade-out {
+        animation: fadeOut 0.3s forwards !important;
+    }
+
+    /* Animations */
+    @@keyframes slideIn {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes fadeOut {
+        to {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+    }
+
+    @@keyframes progress {
+        to {
+            width: 100%;
+        }
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .full-width {
+            grid-column: span 1;
+        }
+
+        .apply-container {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+
+        .popup-container {
+            width: calc(100% - 40px);
+            right: 10px;
+            left: 10px;
+        }
+    }
+</style>

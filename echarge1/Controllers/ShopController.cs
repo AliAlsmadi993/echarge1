@@ -145,7 +145,7 @@ namespace echarge1.Controllers
 
             return View("Store", featuredProducts);
         }
- public async Task<IActionResult> Cart()
+        public async Task<IActionResult> Cart()
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
             List<CartItem> cartItems;

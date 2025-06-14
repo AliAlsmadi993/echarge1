@@ -11,10 +11,10 @@ namespace echarge1.Controllers
         private readonly IWebHostEnvironment _env;
 
         public CourseController(MyDbContext context, IWebHostEnvironment env) // ✅ مرره هنا
-    {
-        _context = context;
-        _env = env;
-    }
+        {
+            _context = context;
+            _env = env;
+        }
 
         // عرض كل الكورسات
         public async Task<IActionResult> AllCourses()
@@ -32,12 +32,19 @@ namespace echarge1.Controllers
             ViewBag.SelectedCourse = course;
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Apply(int CourseId, int? UserId, IFormFile CvUpload, IFormFile IdUpload,
-            string FullName, string Email, string Phone, string AdditionalInfo)
+        public async Task<IActionResult> Apply(int CourseId, IFormFile CvUpload, IFormFile IdUpload,
+    string FullName, string Email, string Phone, string AdditionalInfo)
         {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                TempData["Error"] = "You must be logged in to apply.";
+                return RedirectToAction("Login", "Account");
+            }
+
             if (CvUpload == null || IdUpload == null)
             {
                 TempData["Error"] = "CV and ID are required.";
@@ -45,9 +52,8 @@ namespace echarge1.Controllers
             }
 
             string uploadFolder = Path.Combine(_env.WebRootPath, "uploads");
-            Directory.CreateDirectory(uploadFolder); // Ensure folder exists
+            Directory.CreateDirectory(uploadFolder);
 
-            // حفظ الملفات
             string cvFileName = Guid.NewGuid() + Path.GetExtension(CvUpload.FileName);
             string idFileName = Guid.NewGuid() + Path.GetExtension(IdUpload.FileName);
 
@@ -63,11 +69,10 @@ namespace echarge1.Controllers
                 await IdUpload.CopyToAsync(stream);
             }
 
-            // حفظ بيانات التقديم
             var enrollment = new CourseEnrollment
             {
                 CourseId = CourseId,
-                UserId = UserId,
+                UserId = userId.Value, // ✅ هون التعديل
                 FullName = FullName,
                 Email = Email,
                 Phone = Phone,
@@ -83,6 +88,48 @@ namespace echarge1.Controllers
 
             TempData["Success"] = "Your application has been submitted successfully!";
             return RedirectToAction("Apply", new { id = CourseId });
+        }
+
+        public async Task<IActionResult> MyApplications()
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                TempData["Error"] = "Please log in to view your applications.";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var applications = await _context.CourseEnrollments
+                .Include(e => e.Course)
+                .Where(e => e.UserId == userId.Value)
+                .ToListAsync();
+
+            return View(applications);
+        }
+        public async Task<IActionResult> CancelApplication(int id)
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
+                TempData["Error"] = "You must be logged in to cancel an application.";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var enrollment = await _context.CourseEnrollments
+                .FirstOrDefaultAsync(e => e.EnrollmentId == id && e.UserId == userId.Value);
+
+            if (enrollment == null)
+            {
+                return NotFound();
+            }
+
+            enrollment.Status = "Cancelled";
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Your application has been successfully cancelled.";
+            return RedirectToAction("MyApplications");
         }
 
     }

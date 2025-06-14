@@ -2,22 +2,314 @@
 @{
     ViewData["Title"] = "Order History";
 }
-<link rel="stylesheet" href="~/css/history.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary: #1ABC9C;
+        --primary-light: #d1f2eb;
+        --secondary: #2c3e50;
+        --light: #f5f9fb;
+        --dark: #34495e;
+        --white: #ffffff;
+        --gray: #95a5a6;
+        --success: #27ae60;
+        --warning: #f39c12;
+        --danger: #e74c3c;
+        --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s ease;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: var(--dark);
+    }
+
+    .profile-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 30px;
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 20px 0;
+        height: fit-content;
+    }
+
+    .list-group {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .list-group-item {
+        border: none;
+        padding: 15px 25px;
+        font-weight: 500;
+        color: var(--dark);
+        border-left: 4px solid transparent;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .list-group-item i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .list-group-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .list-group-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+    /* Main Content Styles */
+    .content {
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 30px;
+    }
+
+    .page-title {
+        color: var(--primary);
+        font-size: 28px;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--primary-light);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .page-title::before {
+            content: '\f07a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 24px;
+        }
+
+    /* Order Table Styles */
+    .order-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 20px;
+    }
+
+        .order-table thead th {
+            background: var(--primary);
+            color: var(--white);
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+        }
+
+        .order-table th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+
+        .order-table th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+
+        .order-table tbody tr {
+            transition: var(--transition);
+        }
+
+            .order-table tbody tr:hover {
+                background: var(--primary-light);
+            }
+
+        .order-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            vertical-align: middle;
+        }
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-transform: capitalize;
+    }
+
+        .status-badge[data-status="Pending"] {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+
+        .status-badge[data-status="Processing"] {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .status-badge[data-status="Shipped"] {
+            background-color: rgba(155, 89, 182, 0.1);
+            color: #9b59b6;
+        }
+
+        .status-badge[data-status="Delivered"] {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge[data-status="Cancelled"] {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+    /* Action Buttons */
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-view {
+        background: var(--secondary);
+        color: var(--white);
+        margin-right: 8px;
+    }
+
+    .btn-rate {
+        background: var(--primary);
+        color: var(--white);
+    }
+
+    .btn-view:hover {
+        background: #1a252f;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3);
+    }
+
+    .btn-rate:hover {
+        background: #16a085;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(26, 188, 156, 0.3);
+    }
+
+    /* No Orders Message */
+    .no-orders {
+        text-align: center;
+        padding: 50px;
+        color: var(--gray);
+        font-size: 18px;
+        background: var(--light);
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+        .no-orders i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+    /* Responsive Design */
+    @@media (max-width: 992px) {
+        .profile-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            margin-bottom: 30px;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .content {
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .order-table {
+            min-width: 700px;
+        }
+
+        .page-title {
+            font-size: 24px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .profile-layout {
+            padding: 0 15px;
+        }
+
+        .list-group-item {
+            padding: 12px 20px;
+        }
+
+        .page-title {
+            font-size: 22px;
+        }
+
+        .action-btn {
+            display: block;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+    }
+</style>
 
 <div class="profile-layout">
-    <!-- Sidebar -->
+    <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="list-group">
-            <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action">My Profile</a>
-            <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">Edit Profile</a>
-            <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action active">My Orders</a>
-            <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action">My Bookings</a>
+            <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action">
+                <i class="fas fa-user"></i> My Profile
+            </a>
+            <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">
+                <i class="fas fa-edit"></i> Edit Profile
+            </a>
+            <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action active">
+                <i class="fas fa-shopping-bag"></i> My Orders
+            </a>
+            <a href="@Url.Action("MyApplications", "Course")" class="list-group-item list-group-item-action">
+                <i class="fas fa-shopping-bag"></i> My Course Applications
+            </a>
+            <a href="@Url.Action("ChangePassword", "Account")" class="list-group-item list-group-item-action">
+                <i class="fas fa-lock"></i> Change Password
+            </a>
+            <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action">
+                <i class="fas fa-calendar-check"></i> My Bookings
+            </a>
         </div>
     </div>
 
-    <!-- Content -->
+    <!-- Main Content Area -->
     <div class="content">
-        <h2 class="page-title">🧾 Your Order History</h2>
+        <h2 class="page-title">Your Order History</h2>
 
         @if (Model.Any())
         {
@@ -29,7 +321,7 @@
                         <th>Quantity</th>
                         <th>Subtotal</th>
                         <th>Status</th>
-                        <th>Action</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,17 +330,22 @@
                         foreach (var orderItem in order.OrderItems)
                         {
                             <tr>
-                                <td>@order.OrderDate?.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                                <td>@orderItem.Product.Name</td>
+                                <td>@order.OrderDate?.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@orderItem.Product?.Name</td>
                                 <td>@orderItem.Quantity</td>
                                 <td>@orderItem.SubTotal.ToString("C")</td>
                                 <td>
-                                    <span class="status-badge">@order.Status</span>
+                                    <span class="status-badge" data-status="@order.Status">@order.Status</span>
                                 </td>
                                 <td>
+                                    <a href="@Url.Action("OrderDetails", "Shop", new { id = order.OrderId })" class="action-btn btn-view">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
                                     @if (order.Status == "Delivered")
                                     {
-                                        <a href="@Url.Action("RateProduct", "Shop", new { orderId = order.OrderId, productId = orderItem.ProductId })" class="btn-rate">Rate Product</a>
+                                        <a href="@Url.Action("RateProduct", "Shop", new { orderId = order.OrderId, productId = orderItem.ProductId })" class="action-btn btn-rate">
+                                            <i class="fas fa-star"></i> Rate
+                                        </a>
                                     }
                                 </td>
                             </tr>
@@ -59,7 +356,27 @@
         }
         else
         {
-            <div class="no-orders">No orders found.</div>
+            <div class="no-orders">
+                <i class="fas fa-box-open"></i>
+                <p>You haven't placed any orders yet.</p>
+            </div>
         }
     </div>
 </div>
+
+<script>
+    // Add animation to table rows
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('.order-table tbody tr');
+        rows.forEach((row, index) => {
+            row.style.opacity = '0';
+            row.style.transform = 'translateY(20px)';
+            row.style.transition = `all 0.4s ease ${index * 0.05}s`;
+
+            setTimeout(() => {
+                row.style.opacity = '1';
+                row.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    });
+</script>

@@ -26,19 +26,28 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(AppUser user, string confirmPassword)
     {
+        // ✅ التحقق من أن كلمة المرور غير فارغة وطولها لا يقل عن 8
+        if (string.IsNullOrEmpty(user.PasswordHash) || user.PasswordHash.Length < 8)
+        {
+            ModelState.AddModelError("PasswordHash", "Password must be at least 8 characters.");
+            return View(user);
+        }
+
+        // ✅ التحقق من تطابق كلمتي المرور
         if (user.PasswordHash != confirmPassword)
         {
-            ModelState.AddModelError("PasswordHash", "Passwords do not match");
+            ModelState.AddModelError("PasswordHash", "Passwords do not match.");
             return View(user);
         }
 
+        // ✅ التحقق من عدم وجود إيميل مكرر
         if (await _context.AppUsers.AnyAsync(u => u.Email == user.Email))
         {
-            ModelState.AddModelError("Email", "Email already in use");
+            ModelState.AddModelError("Email", "Email already in use.");
             return View(user);
         }
 
-        // ✅ تشفير كلمة المرور وتخزين البيانات
+        // ✅ تشفير كلمة المرور وتخزين المستخدم
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
         user.CreatedAt = DateTime.Now;
         user.Status = "Active";
@@ -263,4 +272,61 @@ public class AccountController : Controller
         TempData["Success"] = "Admin registered successfully.";
         return RedirectToAction("Login", "Account");
     }
+
+    [HttpGet]
+    public IActionResult ChangePassword()
+    {
+        if (HttpContext.Session.GetInt32("UserId") == null)
+        {
+            TempData["Error"] = "Please log in first.";
+            return RedirectToAction("Login");
+        }
+
+        return View();
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmPassword)
+    {
+        int? userId = HttpContext.Session.GetInt32("UserId");
+        if (userId == null)
+        {
+            TempData["Error"] = "Session expired. Please log in.";
+            return RedirectToAction("Login");
+        }
+
+        var user = await _context.AppUsers.FindAsync(userId);
+        if (user == null)
+        {
+            TempData["Error"] = "User not found.";
+            return RedirectToAction("Login");
+        }
+
+        // تحقق من كلمة السر القديمة
+        if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.PasswordHash))
+        {
+            TempData["Error"] = "Current password is incorrect.";
+            return View();
+        }
+
+        // تحقق من تطابق الجديدة والتأكيد
+        if (newPassword != confirmPassword)
+        {
+            TempData["Error"] = "New passwords do not match.";
+            return View();
+        }
+
+        if (newPassword.Length < 8)
+        {
+            TempData["Error"] = "New password must be at least 8 characters.";
+            return View();
+        }
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        await _context.SaveChangesAsync();
+
+        TempData["Success"] = "Password changed successfully.";
+        return RedirectToAction("Profile");
+    }
+
 }

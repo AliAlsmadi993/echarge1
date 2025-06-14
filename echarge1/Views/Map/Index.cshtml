@@ -330,14 +330,60 @@
         box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
+    @@media (max-width: 768px) {
+        #controls {
+            flex-direction: column;
+            align-items: stretch;
+            top: 10px;
+            width: 95%;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        #destination-input {
+            width: 100%;
+            font-size: 14px;
+        }
+
+        #start-navigation,
+        #stop-navigation,
+        #locate-me {
+            width: 100%;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        #suggestions {
+            top: 130px;
+            width: 95%;
+        }
+
+        #emergency-btn {
+            top: auto;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        #emergency-popup {
+            top: auto;
+            bottom: 80px;
+            right: 20px;
+            width: 90%;
+        }
+
+        .custom-tooltip {
+            font-size: 11px;
+            padding: 4px 8px;
+        }
+    }
 
 
+   
 </style>
 
 <!-- UI -->
 <div id="controls">
     <input type="text" id="destination-input" placeholder="Search for a destination or charging station..." />
-    <button id="start-navigation">Start</button>
     <button id="stop-navigation">Stop</button>
     <button id="locate-me">📍 My Location</button>
 </div>
@@ -388,6 +434,26 @@
             .then((response) => response.json())
             .then((stations) => {
                 stations.forEach((station) => {
+                            if (userLocation) {
+            const from = L.latLng(userLocation[0], userLocation[1]);
+            const to = L.latLng(station.lat, station.lng);
+
+
+
+            const distance = from.distanceTo(to); // بالمتر
+            const speedMetersPerMin = 1000; // (60 كم/س)
+            const estimatedTime = Math.round(distance / speedMetersPerMin); // بالدقائق
+
+            station.distance = distance < 1000
+                ? `${Math.round(distance)} m`
+                : `${(distance / 1000).toFixed(1)} km`;
+
+            station.time = `${estimatedTime} mins`;
+        } else {
+            station.distance = "Unknown";
+            station.time = "Unknown";
+        }
+
                     let marker = L.marker([station.lat, station.lng], {
                         icon: L.icon({
                             iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
@@ -645,10 +711,7 @@
                 });
         });
     
-        document.getElementById("emergency-btn").addEventListener("click", function () {
-            const popup = document.getElementById("emergency-popup");
-            popup.style.display = popup.style.display === "block" ? "none" : "block";
-        });
+        
 
 
         function requestEmergencyService(type) {
@@ -707,8 +770,30 @@
             offset: [0, -50], // 🔼 ارفع التولتيب فوق الأيقونة بزيادة
             className: "custom-tooltip"
         });
-
+             
 
     </script>
+    @@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const btn = document.getElementById("emergency-btn");
+            const popup = document.getElementById("emergency-popup");
+
+            if (btn && popup) {
+                btn.addEventListener("click", function () {
+                    // Toggle visibility
+                    if (popup.style.display === "block") {
+                        popup.style.display = "none";
+                    } else {
+                        popup.style.display = "block";
+                    }
+                });
+            } else {
+                console.warn("❌ الزر أو البوب أب مش موجودين بـ DOM");
+            }
+        });
+    </script>
+}
+
 
 }

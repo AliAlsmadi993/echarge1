@@ -1,50 +1,403 @@
 ﻿@model echarge1.Models.AppUser
-<link rel="stylesheet" href="~/css/Edit-profile-style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary: #1ABC9C;
+        --primary-light: #d1f2eb;
+        --secondary: #2c3e50;
+        --light: #f5f9fb;
+        --dark: #34495e;
+        --white: #ffffff;
+        --gray: #95a5a6;
+        --danger: #e74c3c;
+        --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s ease;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: var(--dark);
+    }
+
+    .profile-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 30px;
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 20px 0;
+        height: fit-content;
+    }
+
+    .list-group {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .list-group-item {
+        border: none;
+        padding: 15px 25px;
+        font-weight: 500;
+        color: var(--dark);
+        border-left: 4px solid transparent;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .list-group-item i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .list-group-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .list-group-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+    /* Main Content Styles */
+    .content {
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 30px;
+    }
+
+        .content h2 {
+            color: var(--primary);
+            font-size: 28px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .content h2::before {
+                content: '\f304';
+                font-family: 'Font Awesome 6 Free';
+                font-weight: 900;
+                font-size: 24px;
+            }
+
+    /* Alert Styles */
+    .alert {
+        border-radius: 10px;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+        border-left: 4px solid;
+    }
+
+    .alert-danger {
+        background-color: rgba(231, 76, 60, 0.1);
+        border-color: var(--danger);
+        color: var(--danger);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Form Styles */
+    .edit-form {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--secondary);
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: var(--transition);
+        background-color: var(--light);
+    }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
+            outline: none;
+            background-color: var(--white);
+        }
+
+    /* File Upload Styles */
+    .file-upload-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .file-upload-label {
+        display: inline-block;
+        padding: 10px 15px;
+        background: var(--primary-light);
+        color: var(--primary);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+
+        .file-upload-label:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+    .file-upload-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .image-preview {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .current-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--primary-light);
+        box-shadow: var(--shadow);
+    }
+
+    .no-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 30px;
+    }
+
+    /* Submit Button */
+    .submit-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 14px 30px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 15px rgba(26, 188, 156, 0.3);
+    }
+
+        .submit-btn:hover {
+            background: #16a085;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 188, 156, 0.4);
+        }
+
+        .submit-btn i {
+            font-size: 18px;
+        }
+
+    @@media (max-width: 768px) {
+        .profile-layout {
+            grid-template-columns: 1fr;
+            padding: 10px;
+        }
+
+        .sidebar {
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+            .content h2 {
+                font-size: 22px;
+            }
+
+        .edit-form {
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .form-control {
+            font-size: 15px;
+        }
+
+        .file-upload-label {
+            font-size: 14px;
+            padding: 8px 12px;
+        }
+
+        .image-preview {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+            .image-preview span {
+                margin-top: 10px;
+                font-size: 14px;
+            }
+
+        .submit-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 0;
+        }
+    }
+
+</style>
 
 <div class="profile-layout">
-    <!-- Sidebar -->
+    <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="list-group">
-            <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action active">My Profile</a>
-            <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">Edit Profile</a>
-            <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action">My Orders</a>
-            <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action">My Bookings</a>
+            <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action">
+                <i class="fas fa-user"></i> My Profile
+            </a>
+            <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action active">
+                <i class="fas fa-edit"></i> Edit Profile
+            </a>
+            <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action">
+                <i class="fas fa-shopping-bag"></i> My Orders
+            </a>
+            <a href="@Url.Action("MyApplications", "Course")" class="list-group-item list-group-item-action">
+                <i class="fas fa-shopping-bag"></i> My Course Applications
+            </a>
+            <a href="@Url.Action("ChangePassword", "Account")" class="list-group-item list-group-item-action">
+                <i class="fas fa-lock"></i> Change Password
+            </a>
+            <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action">
+                <i class="fas fa-calendar-check"></i> My Bookings
+            </a>
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <div class="content">
         <h2>Edit Profile</h2>
 
         @if (TempData["Error"] != null)
         {
             <div class="alert alert-danger">
-                @TempData["Error"]
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
             </div>
         }
 
-        <form asp-action="Update" method="post" enctype="multipart/form-data">
+        <form asp-action="Update" method="post" enctype="multipart/form-data" class="edit-form">
             <div class="form-group">
                 <label for="FullName">Full Name</label>
                 <input type="text" class="form-control" id="FullName" name="FullName" value="@Model.FullName" required />
             </div>
+
             <div class="form-group">
-                <label for="Email">Email</label>
+                <label for="Email">Email Address</label>
                 <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
             </div>
+
             <div class="form-group">
                 <label for="PhoneNumber">Phone Number</label>
-                <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@Model.PhoneNumber" />
+                <input type="tel" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@Model.PhoneNumber" />
             </div>
+
             <div class="form-group">
-                <label for="ProfileImage">Profile Image</label>
-                <input type="file" class="form-control" id="ProfileImage" name="ProfileImage" />
-                @if (!string.IsNullOrEmpty(Model.ProfileImage))
-                {
-                    <img src="@Model.ProfileImage" alt="Profile Image" width="150" />
-                }
+                <label>Profile Image</label>
+                <div class="file-upload-wrapper">
+                    <label for="ProfileImage" class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt"></i> Choose New Image
+                    </label>
+                    <input type="file" class="file-upload-input" id="ProfileImage" name="ProfileImage" accept="image/*" />
+                </div>
+
+                <div class="image-preview">
+                    @if (!string.IsNullOrEmpty(Model.ProfileImage))
+                    {
+                        <img src="@Model.ProfileImage" alt="Current Profile Image" class="current-image" />
+                        <span>Current Profile Image</span>
+                    }
+                    else
+                    {
+                        <div class="no-image">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span>No profile image set</span>
+                    }
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
         </form>
     </div>
 </div>
+
+<script>
+    // Update file input display
+    document.getElementById('ProfileImage').addEventListener('change', function(e) {
+        const fileName = e.target.files[0]?.name || 'No file chosen';
+        document.querySelector('.file-upload-label').innerHTML =
+            `<i class="fas fa-cloud-upload-alt"></i> ${fileName}`;
+
+        // Show preview of selected image
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const preview = document.createElement('img');
+                preview.src = event.target.result;
+                preview.className = 'current-image';
+                preview.alt = 'New Profile Image Preview';
+
+                const previewContainer = document.querySelector('.image-preview');
+                previewContainer.innerHTML = '';
+                previewContainer.appendChild(preview);
+                previewContainer.appendChild(document.createTextNode('New Profile Image'));
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+</script>

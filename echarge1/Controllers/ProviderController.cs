@@ -112,26 +112,26 @@ namespace echarge1.Controllers
         }
 
 
-       [HttpPost]
-public async Task<IActionResult> UpdateOrderStatus(int OrderId, string Status)
-{
-    var order = await _context.Orders.FindAsync(OrderId);
+        [HttpPost]
+        public async Task<IActionResult> UpdateOrderStatus(int OrderId, string Status)
+        {
+            var order = await _context.Orders.FindAsync(OrderId);
 
-    if (order == null)
-    {
-        return NotFound();
-    }
+            if (order == null)
+            {
+                return NotFound();
+            }
 
-    // تحديث حالة الطلب بناءً على الزر الذي ضغط عليه الأدمن
-    order.Status = Status;
+            // تحديث حالة الطلب بناءً على الزر الذي ضغط عليه الأدمن
+            order.Status = Status;
 
-    // حفظ التغييرات في قاعدة البيانات
-    await _context.SaveChangesAsync();
+            // حفظ التغييرات في قاعدة البيانات
+            await _context.SaveChangesAsync();
 
-    TempData["Success"] = "Order status updated successfully.";
+            TempData["Success"] = "Order status updated successfully.";
 
-    return RedirectToAction("MyOrders");
-}
+            return RedirectToAction("MyOrders");
+        }
 
 
         [HttpPost]

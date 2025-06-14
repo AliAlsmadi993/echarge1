@@ -1,24 +1,371 @@
 ﻿@model List<ChargingBooking>
-<link rel="stylesheet" href="~/css/mybooking.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary: #1ABC9C;
+        --primary-light: #d1f2eb;
+        --secondary: #2c3e50;
+        --light: #f5f9fb;
+        --dark: #1ABC9C;
+        --white: #ffffff;
+        --gray: #95a5a6;
+        --success: #27ae60;
+        --warning: #f39c12;
+        --danger: #e74c3c;
+        --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s ease;
+    }
+
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: var(--dark);
+    }
+
+    .profile-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 30px;
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 20px 0;
+        height: fit-content;
+    }
+
+    .list-group {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .list-group-item {
+        border: none;
+        padding: 15px 25px;
+        font-weight: 500;
+        color: var(--dark);
+        border-left: 4px solid transparent;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .list-group-item i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .list-group-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .list-group-item.active {
+            background: var(--primary-light);
+            color: var(--electric);
+            border-left-color: var(--electric);
+            font-weight: 600;
+        }
+
+    /* Main Content Styles */
+    .content {
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 30px;
+    }
+
+    .page-title {
+        color: var(--electric);
+        font-size: 28px;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid rgba(155, 89, 182, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .page-title::before {
+            content: '\f0e7';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 24px;
+        }
+
+    /* Alert Styles */
+    .alert {
+        border-radius: 10px;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+        border-left: 4px solid;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .alert-success {
+        background-color: rgba(39, 174, 96, 0.1);
+        border-color: var(--success);
+        color: var(--success);
+    }
+
+    /* Booking Table Styles */
+    .order-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 20px;
+    }
+
+        .order-table thead th {
+            background: var(--electric);
+            color: var(--white);
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .order-table th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+
+        .order-table th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+
+        .order-table tbody tr {
+            transition: var(--transition);
+        }
+
+            .order-table tbody tr:hover {
+                background: rgba(155, 89, 182, 0.05);
+            }
+
+        .order-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            vertical-align: middle;
+        }
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-transform: capitalize;
+    }
+
+        .status-badge[data-status="Pending"] {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+
+        .status-badge[data-status="Confirmed"] {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge[data-status="Cancelled"] {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        .status-badge[data-status="Completed"] {
+            background-color: rgba(155, 89, 182, 0.1);
+            color: var(--electric);
+        }
+
+    /* Action Buttons */
+    .btn-edit, .btn-delete {
+        display: inline-block;
+        padding: 8px 15px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background: var(--primary);
+        color: var(--white);
+        margin-right: 8px;
+    }
+
+        .btn-edit:hover {
+            background: #16a085;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(26, 188, 156, 0.3);
+        }
+
+    .btn-delete {
+        background: var(--danger);
+        color: var(--white);
+    }
+
+        .btn-delete:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+        }
+
+    /* No Bookings Message */
+    .no-orders {
+        text-align: center;
+        padding: 50px;
+        color: var(--gray);
+        font-size: 18px;
+        background: var(--light);
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+        .no-orders i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--electric);
+        }
+
+    @@media (max-width: 992px) {
+        .profile-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            border-radius: 10px;
+        }
+
+        .order-table thead {
+            display: none;
+        }
+
+        .order-table, .order-table tbody, .order-table tr, .order-table td {
+            display: block;
+            width: 100%;
+        }
+
+            .order-table tr {
+                margin-bottom: 1rem;
+                background: var(--light);
+                border-radius: 8px;
+                box-shadow: var(--shadow);
+                overflow: hidden;
+            }
+
+            .order-table td {
+                padding: 12px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid #eee;
+                position: relative;
+            }
+
+                .order-table td::before {
+                    content: attr(data-label);
+                    font-weight: 600;
+                    color: var(--gray);
+                }
+
+        .btn-edit, .btn-delete {
+            width: 48%;
+            margin-top: 10px;
+        }
+
+        .status-badge {
+            width: 100%;
+            text-align: center;
+        }
+
+        .order-table td {
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            background-color: #f9f9f9;
+        }
+
+            .order-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--secondary);
+                flex: 1;
+                min-width: 100px;
+            }
+
+            .order-table td span.status-badge {
+                font-size: 14px;
+                padding: 6px 14px;
+                display: inline-block;
+                border-radius: 20px;
+                text-align: center;
+                width: fit-content;
+            }
+
+        .btn-edit,
+        .btn-delete {
+            padding: 8px 12px;
+            font-size: 13px;
+            white-space: nowrap;
+            width: 48%;
+            text-align: center;
+        }
+    }
+
+
+</style>
 
 <div class="profile-layout">
-    <!-- Sidebar -->
+    <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="list-group">
-            <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action">My Profile</a>
-            <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">Edit Profile</a>
-            <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action">My Orders</a>
-            <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action active">My Bookings</a>
+            <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action">
+                <i class="fas fa-user"></i> My Profile
+            </a>
+            <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">
+                <i class="fas fa-edit"></i> Edit Profile
+            </a>
+            <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action">
+                <i class="fas fa-shopping-bag"></i> My Orders
+            </a>
+              <a href="@Url.Action("MyApplications", "Course")" class="list-group-item list-group-item-action">
+                <i class="fas fa-shopping-bag"></i> My Course Applications
+            </a>
+            <a href="@Url.Action("ChangePassword", "Account")" class="list-group-item list-group-item-action">
+                <i class="fas fa-lock"></i> Change Password
+            </a>
+            <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action active">
+                <i class="fas fa-charging-station"></i> My Bookings
+            </a>
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <div class="content">
-        <h2 class="page-title">🔌 My Charging Bookings</h2>
+        <h2 class="page-title">My Charging Bookings</h2>
 
         @if (TempData["Success"] != null)
         {
-            <div class="alert alert-success">@TempData["Success"]</div>
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> @TempData["Success"]
+            </div>
         }
 
         @if (Model.Any())
@@ -27,7 +374,7 @@
                 <thead>
                     <tr>
                         <th>Station</th>
-                        <th>Date</th>
+                        <th>Date & Time</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -36,23 +383,50 @@
                     @foreach (var booking in Model)
                     {
                         <tr>
-                            <td>@booking.Station?.Name</td>
-                            <td>@booking.BookingDate.ToString("yyyy-MM-dd HH:mm")</td>
-                            <td><span class="status-badge">@booking.Status</span></td>
-                            <td>
-                                <a asp-action="EditBooking" asp-route-id="@booking.BookingId" class="btn-edit">Edit</a>
+                            <td data-label="Station">@booking.Station?.Name</td>
+                            <td data-label="Date & Time">@booking.BookingDate.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td data-label="Status">
+                                <span class="status-badge" data-status="@booking.Status">@booking.Status</span>
+                            </td>
+                            <td data-label="Actions">
+                                <a asp-action="EditBooking" asp-route-id="@booking.BookingId" class="btn-edit">
+                                    <i class="fas fa-pencil-alt"></i> Edit
+                                </a>
                                 <form asp-action="DeleteBooking" asp-route-id="@booking.BookingId" method="post" style="display:inline;">
-                                    <button type="submit" class="btn-delete">Delete</button>
+                                    <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this booking?')">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
                                 </form>
                             </td>
                         </tr>
+
                     }
                 </tbody>
             </table>
         }
         else
         {
-            <div class="no-orders">You currently have no bookings.</div>
+            <div class="no-orders">
+                <i class="fas fa-charging-station"></i>
+                <p>You currently have no charging bookings.</p>
+            </div>
         }
     </div>
 </div>
+
+<script>
+    // Add animation to table rows
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('.order-table tbody tr');
+        rows.forEach((row, index) => {
+            row.style.opacity = '0';
+            row.style.transform = 'translateY(20px)';
+            row.style.transition = `all 0.4s ease ${index * 0.05}s`;
+
+            setTimeout(() => {
+                row.style.opacity = '1';
+                row.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    });
+</script>

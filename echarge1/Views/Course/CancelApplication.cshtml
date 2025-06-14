@@ -1,0 +1,125 @@
+﻿@model IEnumerable<echarge1.Models.CourseEnrollment>
+
+@{
+    ViewData["Title"] = "طلبات الانضمام";
+}
+
+<h2 class="mb-4">طلبات الانضمام</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">ليس لديك طلبات انضمام بعد.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>الكورس</th>
+                <th>التاريخ</th>
+                <th>الحالة</th>
+                <th>الإجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var app in Model)
+            {
+                <tr>
+                    <td>@app.Course?.Title</td>
+                    <td>@app.EnrollmentDate?.ToString("yyyy-MM-dd")</td>
+                    <td>@app.Status</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#detailsModal"
+                                data-fullname="@app.FullName"
+                                data-email="@app.Email"
+                                data-phone="@app.Phone"
+                                data-info="@app.AdditionalInfo"
+                                data-cv="@app.CvPath"
+                                data-id="@app.IdPath">
+                            التفاصيل
+                        </button>
+
+                        <a asp-action="CancelApplication" asp-route-id="@app.EnrollmentId"
+                           class="btn btn-sm btn-danger confirm-cancel">
+                            إلغاء
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel">تفاصيل الطلب</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row">
+                    <dt class="col-sm-3">الاسم:</dt>
+                    <dd class="col-sm-9" id="modal-fullname"></dd>
+
+                    <dt class="col-sm-3">البريد الإلكتروني:</dt>
+                    <dd class="col-sm-9" id="modal-email"></dd>
+
+                    <dt class="col-sm-3">رقم الهاتف:</dt>
+                    <dd class="col-sm-9" id="modal-phone"></dd>
+
+                    <dt class="col-sm-3">معلومات إضافية:</dt>
+                    <dd class="col-sm-9" id="modal-info"></dd>
+
+                    <dt class="col-sm-3">CV:</dt>
+                    <dd class="col-sm-9">
+                        <a id="modal-cv" target="_blank" href="#">تنزيل الملف</a>
+                    </dd>
+
+                    <dt class="col-sm-3">صورة الهوية:</dt>
+                    <dd class="col-sm-9">
+                        <a id="modal-id" target="_blank" href="#">تنزيل الملف</a>
+                    </dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // ملء بيانات المودال بالتفاصل
+        document.addEventListener('DOMContentLoaded', function () {
+            var detailsModal = document.getElementById('detailsModal');
+            detailsModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var fullname = button.getAttribute('data-fullname');
+                var email = button.getAttribute('data-email');
+                var phone = button.getAttribute('data-phone');
+                var info = button.getAttribute('data-info');
+                var cv = button.getAttribute('data-cv');
+                var idPath = button.getAttribute('data-id');
+
+                document.getElementById('modal-fullname').textContent = fullname;
+                document.getElementById('modal-email').textContent = email;
+                document.getElementById('modal-phone').textContent = phone;
+                document.getElementById('modal-info').textContent = info || 'لا يوجد';
+                document.getElementById('modal-cv').href = cv;
+                document.getElementById('modal-id').href = idPath;
+            });
+        });
+
+        // تأكيد الإلغاء
+        document.querySelectorAll('.confirm-cancel').forEach(link => {
+            link.addEventListener('click', function (e) {
+                if (!confirm('هل أنت متأكد أنك تريد إلغاء هذا الطلب؟')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}

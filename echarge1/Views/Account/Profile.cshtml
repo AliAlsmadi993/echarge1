@@ -1,43 +1,278 @@
-﻿<link rel="stylesheet" href="~/css/profile-style.css" />
+﻿<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary: #1ABC9C;
+        --primary-light: #d1f2eb;
+        --secondary: #2c3e50;
+        --light: #f5f9fb;
+        --dark: #34495e;
+        --white: #ffffff;
+        --gray: #95a5a6;
+        --danger: #e74c3c;
+        --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s ease;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: var(--dark);
+    }
+
+    .profile-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 30px;
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 20px 0;
+        height: fit-content;
+    }
+
+    .list-group {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .list-group-item {
+        border: none;
+        padding: 15px 25px;
+        font-weight: 500;
+        color: var(--dark);
+        border-left: 4px solid transparent;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .list-group-item i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .list-group-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .list-group-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+    /* Main Content Styles */
+    .content {
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 30px;
+    }
+
+        .content h2 {
+            color: var(--primary);
+            font-size: 28px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .content h2::before {
+                content: '\f2bb';
+                font-family: 'Font Awesome 6 Free';
+                font-weight: 900;
+                font-size: 24px;
+            }
+
+    /* Alert Styles */
+    .alert {
+        border-radius: 10px;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+        border-left: 4px solid;
+    }
+
+    .alert-danger {
+        background-color: rgba(231, 76, 60, 0.1);
+        border-color: var(--danger);
+        color: var(--danger);
+    }
+
+    /* Profile Card Styles */
+    .profile-card {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 30px;
+    }
+
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .profile-card h4 {
+        font-size: 16px;
+        color: var(--gray);
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+
+    .profile-card p {
+        font-size: 18px;
+        color: var(--dark);
+        font-weight: 500;
+        margin-bottom: 20px;
+    }
+
+    .profile-img-container {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 5px solid var(--primary-light);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+        .profile-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .no-image {
+        width: 100%;
+        height: 100%;
+        background: var(--primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 50px;
+    }
+
+    @@media (max-width: 768px) {
+        .profile-layout {
+            grid-template-columns: 1fr;
+            padding: 10px;
+        }
+
+        .sidebar {
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .content h2 {
+            font-size: 22px;
+        }
+
+        .profile-card {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        .profile-img-container {
+            margin: 0 auto;
+        }
+
+        .profile-info {
+            gap: 10px;
+        }
+
+            .profile-info h4 {
+                font-size: 14px;
+            }
+
+            .profile-info p {
+                font-size: 16px;
+            }
+    }
+
+</style>
 
 <div class="profile-layout">
-    <!-- Sidebar -->
+    <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="list-group">
-            <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action active">My Profile</a>
-            <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">Edit Profile</a>
-            <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action">My Orders</a>
-            <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action">My Bookings</a>
+            <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action active">
+                <i class="fas fa-user"></i> My Profile
+            </a>
+            <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">
+                <i class="fas fa-edit"></i> Edit Profile
+            </a>
+            <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action">
+                <i class="fas fa-shopping-bag"></i> My Orders
+            </a>
+            <a href="@Url.Action("MyApplications", "Course")" class="list-group-item list-group-item-action">
+                <i class="fas fa-shopping-bag"></i> My Course Applications
+            </a>
+            <a href="@Url.Action("ChangePassword", "Account")" class="list-group-item list-group-item-action">
+                <i class="fas fa-lock"></i> Change Password
+            </a>
+
+            <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action">
+                <i class="fas fa-calendar-check"></i> My Bookings
+            </a>
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <div class="content">
         <h2>Your Profile</h2>
+
         @if (TempData["Error"] != null)
         {
-            <div class="alert alert-danger">@TempData["Error"]</div>
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            </div>
         }
 
         <div class="profile-card">
-            <h4>Full Name:</h4>
-            <p>@Model.FullName</p>
+            <div class="profile-img-container">
+                @if (!string.IsNullOrEmpty(Model.ProfileImage))
+                {
+                    <img src="@Model.ProfileImage" alt="Profile Image" />
+                }
+                else
+                {
+                    <div class="no-image">
+                        <i class="fas fa-user"></i>
+                    </div>
+                }
+            </div>
 
-            <h4>Email:</h4>
-            <p>@Model.Email</p>
+            <div class="profile-info">
+                <div>
+                    <h4>Full Name</h4>
+                    <p>@Model.FullName</p>
+                </div>
 
-            <h4>Phone:</h4>
-            <p>@Model.PhoneNumber</p>
+                <div>
+                    <h4>Email Address</h4>
+                    <p>@Model.Email</p>
+                </div>
 
-            <h4>Profile Image:</h4>
-            @if (!string.IsNullOrEmpty(Model.ProfileImage))
-            {
-                <img src="@Model.ProfileImage" alt="Profile Image" width="150" />
-            }
-            else
-            {
-                <p>No profile image available.</p>
-            }
+                <div>
+                    <h4>Phone Number</h4>
+                    <p>@Model.PhoneNumber</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

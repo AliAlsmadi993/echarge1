@@ -5,179 +5,492 @@
 }
 
 @section Styles {
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #1ABC9C;
+            --primary-light: #d1f2eb;
+            --secondary: #2c3e50;
+            --light: #f5f9fb;
+            --dark: #34495e;
+            --white: #ffffff;
+            --gray: #95a5a6;
+            --success: #27ae60;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background: #f5f9fb;
-            padding: 30px;
+            background: var(--light);
+            color: var(--dark);
+            padding: 2rem;
         }
 
-        h2 {
-            color: #1ABC9C;
+        .order-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .order-header {
             text-align: center;
-            margin-bottom: 40px;
-            animation: fadeInDown 0.6s ease;
+            margin-bottom: 3rem;
+            position: relative;
         }
 
-        .order-info, .user-info, .products-table {
-            background: #fff;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            margin-bottom: 30px;
-            animation: fadeInUp 0.6s ease;
-        }
-
-            .order-info h4, .user-info h4 {
-                color: #1ABC9C;
-                margin-bottom: 20px;
-                font-weight: bold;
+            .order-header h2 {
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: var(--primary);
+                margin-bottom: 1rem;
+                position: relative;
+                display: inline-block;
             }
 
-            .order-info p, .user-info li {
-                font-size: 16px;
-                color: #444;
-                line-height: 1.7;
+                .order-header h2::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -10px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 80px;
+                    height: 4px;
+                    background: var(--primary);
+                    border-radius: 2px;
+                }
+
+            .order-header p {
+                color: var(--gray);
+                font-size: 1.1rem;
+                max-width: 700px;
+                margin: 0 auto;
             }
 
-        ul {
-            padding-left: 0;
-            list-style: none;
+        /* Card Styles */
+        .order-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2.5rem;
+            transition: var(--transition);
+            border-left: 5px solid var(--primary);
         }
 
-            ul li {
-                margin-bottom: 10px;
+            .order-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
             }
 
-        .table th {
-            background-color: #1ABC9C;
-            color: white;
-            font-size: 15px;
-            text-align: center;
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .table td {
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .receipt-img {
-            max-width: 100%;
-            border-radius: 14px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-            margin-top: 15px;
-        }
-
-        .btn-secondary {
-            background-color: #2c3e50;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            transition: all 0.3s ease-in-out;
-        }
-
-            .btn-secondary:hover {
-                background-color: #1a252f;
-                transform: translateY(-2px);
+            .card-title i {
+                font-size: 1.8rem;
             }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            margin-bottom: 1rem;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: var(--secondary);
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: var(--dark);
+            font-weight: 400;
+        }
+
+        /* Receipt Preview */
+        .receipt-container {
+            margin-top: 2rem;
+        }
+
+        .receipt-label {
+            font-weight: 500;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            display: block;
+        }
 
         .receipt-preview-wrapper {
             width: 100%;
-            max-width: 300px;
-            max-height: 400px;
-            overflow: hidden;
+            max-width: 350px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            position: relative;
         }
+
+            .receipt-preview-wrapper:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
 
         .receipt-preview {
             width: 100%;
             height: auto;
-            border-radius: 12px;
-            object-fit: contain;
             display: block;
-            transition: transform 0.3s ease;
+            transition: var(--transition);
         }
 
-            .receipt-preview:hover {
-                transform: scale(1.03);
+        .receipt-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 188, 156, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .receipt-preview-wrapper:hover .receipt-overlay {
+            opacity: 1;
+        }
+
+        .receipt-overlay i {
+            color: white;
+            font-size: 2.5rem;
+        }
+
+        /* Products Table */
+        .products-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1.5rem;
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+            .products-table thead th {
+                background: var(--primary);
+                color: var(--white);
+                padding: 1.2rem;
+                font-weight: 500;
+                text-align: center;
             }
 
+            .products-table tbody tr {
+                transition: var(--transition);
+            }
+
+                .products-table tbody tr:hover {
+                    background: var(--primary-light);
+                }
+
+            .products-table td {
+                padding: 1.2rem;
+                text-align: center;
+                vertical-align: middle;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+        .product-name {
+            font-weight: 500;
+            color: var(--secondary);
+        }
+
+        .total-row {
+            background: var(--primary-light);
+            font-weight: 600;
+        }
+
+            .total-row td {
+                padding: 1.5rem;
+                text-align: right;
+                font-size: 1.2rem;
+                color: var(--secondary);
+            }
+
+        .total-amount {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--secondary);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            margin-top: 2rem;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.2);
+        }
+
+            .back-btn:hover {
+                background: var(--dark);
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(44, 62, 80, 0.3);
+                color: var(--white);
+            }
+
+        /* Alert Styles */
+        .alert {
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border-left: 5px solid;
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        /* Animations */
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .order-card {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+            .order-card:nth-child(1) {
+                animation-delay: 0.1s;
+            }
+
+            .order-card:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+
+            .order-card:nth-child(3) {
+                animation-delay: 0.3s;
+            }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .order-header h2 {
+                font-size: 2rem;
+            }
+
+            .order-card {
+                padding: 1.8rem;
+            }
+
+            .products-table thead th,
+            .products-table td {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .order-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .card-title {
+                font-size: 1.3rem;
+            }
+
+            .back-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 }
 
-<h2>Order Details</h2>
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["Success"]
+<div class="order-container">
+    <div class="order-header">
+        <h2>Order Details</h2>
+        <p>Review all details of your order</p>
     </div>
-}
 
-<div class="order-info">
-    <h4>🧾 Order #@Model.OrderId</h4>
-    <p><strong>Date:</strong> @Model.OrderDate?.ToString("yyyy-MM-dd HH:mm")</p>
-    <p><strong>Status:</strong> @Model.Status</p>
-    <p><strong>Total:</strong> @Model.TotalAmount $</p>
-    <p><strong>Shipping Address:</strong> @Model.ShippingAddress</p>
-
-    @if (!string.IsNullOrEmpty(Model.ReceiptImageUrl))
+    @if (TempData["Success"] != null)
     {
-        <div class="receipt-section mt-4">
-            <strong>Payment Receipt:</strong>
-            <div class="receipt-preview-wrapper">
-                <img src="@Model.ReceiptImageUrl" class="receipt-preview" alt="Receipt Image" />
-            </div>
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
         </div>
     }
-</div>
 
-<div class="user-info">
-    <h4>User Information</h4>
-    @if (Model.User != null)
-    {
-        <ul>
-            <li><strong>Name:</strong> @Model.User.FullName</li>
-            <li><strong>Email:</strong> @Model.User.Email</li>
-            <li><strong>Phone:</strong> @Model.User.PhoneNumber</li>
-            <li><strong>Account Type:</strong> @Model.User.UserType</li>
-        </ul>
-    }
-    else
-    {
-        <p><em>User not found (may be deleted)</em></p>
-    }
-</div>
+    <!-- Order Information Card -->
+    <div class="order-card">
+        <h3 class="card-title"><i class="fas fa-receipt"></i> Order #@Model.OrderId</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Order Date</span>
+                <span class="info-value">@Model.OrderDate?.ToString("yyyy-MM-dd HH:mm")</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Order Status</span>
+                <span class="info-value" style="color: var(--primary); font-weight: 500;">@Model.Status</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Total Amount</span>
+                <span class="info-value" style="font-weight: 600;">@Model.TotalAmount.ToString("0.00") $</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Shipping Address</span>
+                <span class="info-value">@Model.ShippingAddress</span>
+            </div>
+        </div>
 
-<div class="product-list">
-    <h4>Products</h4>
-    <table class="table table-bordered">
-        <thead class="table-success">
-            <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.OrderItems)
-            {
-                <tr>
-                    <td>@item.Product?.Name</td>
-                    <td>@item.Product?.Price $</td>
-                    <td>@item.Quantity</td>
-                    <td>@item.SubTotal $</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <div class="text-right mt-3">
-        <h4>Total: <strong>@Model.TotalAmount $</strong></h4>
+        @if (!string.IsNullOrEmpty(Model.ReceiptImageUrl))
+        {
+            <div class="receipt-container">
+                <span class="receipt-label">Payment Receipt</span>
+                <div class="receipt-preview-wrapper">
+                    <img src="@Model.ReceiptImageUrl" class="receipt-preview" alt="Receipt Image">
+                    <div class="receipt-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
+
+    <!-- User Information Card -->
+    <div class="order-card">
+        <h3 class="card-title"><i class="fas fa-user-circle"></i> Customer Information</h3>
+        @if (Model.User != null)
+        {
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Full Name</span>
+                    <span class="info-value">@Model.User.FullName</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email Address</span>
+                    <span class="info-value">@Model.User.Email</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Phone Number</span>
+                    <span class="info-value">@Model.User.PhoneNumber</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Account Type</span>
+                    <span class="info-value">@Model.User.UserType</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p style="color: var(--gray); font-style: italic;">User information not available</p>
+        }
+    </div>
+
+    <!-- Products Card -->
+    <div class="order-card">
+        <h3 class="card-title"><i class="fas fa-box-open"></i> Order Items</h3>
+        <table class="products-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderItems)
+                {
+                    <tr>
+                        <td class="product-name">@item.Product?.Name</td>
+                        <td>@item.Product?.Price.ToString("0.00") $</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.SubTotal.ToString("0.00") $</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="3">Total Amount</td>
+                    <td class="total-amount">@Model.TotalAmount.ToString("0.00") $</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <a href="@returnUrl" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Previous Page
+    </a>
 </div>
 
-<a href="@returnUrl" class="btn btn-secondary mt-3">← Back</a>
+@section Scripts {
+    <script>
+        // Add click effect to cards
+        document.querySelectorAll('.order-card').forEach(card => {
+            card.addEventListener('mousedown', function() {
+                this.style.transform = 'translateY(2px)';
+            });
+
+            card.addEventListener('mouseup', function() {
+                this.style.transform = '';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+            });
+        });
+
+        // Make receipt preview clickable to view larger
+        const receiptPreview = document.querySelector('.receipt-preview-wrapper');
+        if (receiptPreview) {
+            receiptPreview.addEventListener('click', function() {
+                window.open(this.querySelector('img').src, '_blank');
+            });
+
+            // Add keyboard accessibility
+            receiptPreview.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    window.open(this.querySelector('img').src, '_blank');
+                }
+            });
+
+            receiptPreview.setAttribute('tabindex', '0');
+        }
+    </script>
+}

@@ -1,0 +1,376 @@
+﻿@model IEnumerable<echarge1.Models.CourseEnrollment>
+
+@{
+    ViewData["Title"] = "My Course Applications";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css " />
+
+<style>
+    :root {
+        --primary: #1ABC9C;
+        --primary-light: #d1f2eb;
+        --secondary: #2c3e50;
+        --light: #f5f9fb;
+        --dark: #34495e;
+        --white: #ffffff;
+        --gray: #95a5a6;
+        --danger: #e74c3c;
+        --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s ease;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: var(--dark);
+    }
+
+    .profile-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 30px;
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 20px 0;
+        height: fit-content;
+    }
+
+    .list-group {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .list-group-item {
+        border: none;
+        padding: 15px 25px;
+        font-weight: 500;
+        color: var(--dark);
+        border-left: 4px solid transparent;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .list-group-item i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .list-group-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .list-group-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+    /* Main Content Styles */
+    .content {
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 30px;
+    }
+
+        .content h2 {
+            color: var(--primary);
+            font-size: 28px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .content h2::before {
+                content: '\f2bb';
+                font-family: 'Font Awesome 6 Free';
+                font-weight: 900;
+                font-size: 24px;
+            }
+
+    /* Alert Styles */
+    .alert {
+        border-radius: 10px;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+        border-left: 4px solid;
+    }
+
+    .alert-danger {
+        background-color: rgba(231, 76, 60, 0.1);
+        border-color: var(--danger);
+        color: var(--danger);
+    }
+
+    /* Table Styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        vertical-align: middle;
+        border-bottom: 1px solid #eee;
+    }
+
+    thead {
+        background-color: #f1f1f1;
+        color: var(--dark);
+        font-weight: 600;
+    }
+
+    tbody tr:hover {
+        background-color: var(--primary-light);
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: var(--danger);
+        color: white;
+        border: none;
+    }
+
+    @@media (max-width: 992px) {
+        .profile-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            border-radius: 10px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        table {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+            table thead {
+                display: none;
+            }
+
+            table tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #ddd;
+                border-radius: 10px;
+                padding: 10px;
+            }
+
+            table td {
+                display: flex;
+                justify-content: space-between;
+                padding: 10px;
+                border: none;
+                border-bottom: 1px solid #eee;
+            }
+
+                table td::before {
+                    content: attr(data-label);
+                    font-weight: bold;
+                    color: var(--gray);
+                }
+
+        .btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+    }
+
+</style>
+
+<div class="profile-layout">
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="list-group">
+            <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action">
+                <i class="fas fa-user"></i> My Profile
+            </a>
+            <a href="@Url.Action("Edit", "Account")" class="list-group-item list-group-item-action">
+                <i class="fas fa-edit"></i> Edit Profile
+            </a>
+            <a href="@Url.Action("History", "Shop")" class="list-group-item list-group-item-action">
+                <i class="fas fa-shopping-bag"></i> My Orders
+            </a>
+            <a href="@Url.Action("MyApplications", "Course")" class="list-group-item list-group-item-action active">
+                <i class="fas fa-chalkboard-teacher"></i> My Course Applications
+            </a>
+            <a href="@Url.Action("MyBookings", "Map")" class="list-group-item list-group-item-action">
+                <i class="fas fa-calendar-check"></i> My Bookings
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="content">
+        <h2><i class="fas fa-chalkboard-teacher"></i> My Course Applications</h2>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            </div>
+        }
+
+        @if (!Model.Any())
+        {
+            <p>You have no course applications yet.</p>
+        }
+        else
+        {
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var app in Model)
+                    {
+                        <tr>
+                            <td>@app.Course?.Title</td>
+                            <td>@app.EnrollmentDate?.ToString("yyyy-MM-dd")</td>
+                            <td>@app.Status</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#detailsModal"
+                                        data-fullname="@app.FullName"
+                                        data-email="@app.Email"
+                                        data-phone="@app.Phone"
+                                        data-info="@app.AdditionalInfo"
+                                        data-cv="@app.CvPath"
+                                        data-id="@app.IdPath">
+                                    Details
+                                </button>
+
+                                <a asp-action="CancelApplication"
+                                   asp-route-id="@app.EnrollmentId"
+                                   class="btn btn-danger btn-sm confirm-cancel">
+                                    Cancel
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        <!-- Modal -->
+        <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailsModalLabel">Application Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <dl class="row">
+                            <dt class="col-sm-3">Full Name:</dt>
+                            <dd class="col-sm-9" id="modal-fullname"></dd>
+
+                            <dt class="col-sm-3">Email:</dt>
+                            <dd class="col-sm-9" id="modal-email"></dd>
+
+                            <dt class="col-sm-3">Phone:</dt>
+                            <dd class="col-sm-9" id="modal-phone"></dd>
+
+                            <dt class="col-sm-3">Additional Info:</dt>
+                            <dd class="col-sm-9" id="modal-info"></dd>
+                            <dt class="col-sm-3">Front Side of ID:</dt>
+                            <dd class="col-sm-9">
+                                <img id="modal-cv-preview" src="#" alt="Front ID"
+                                     class="img-fluid rounded shadow-sm"
+                                     style="max-width: 100%; height: auto;" />
+                            </dd>
+
+                            <dt class="col-sm-3">Back Side of ID:</dt>
+                            <dd class="col-sm-9">
+                                <img id="modal-id-preview" src="#" alt="Back ID"
+                                     class="img-fluid rounded shadow-sm"
+                                     style="max-width: 100%; height: auto;" />
+                            </dd>
+
+                        </dl>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Populate modal with data
+        document.addEventListener('DOMContentLoaded', function () {
+            var detailsModal = document.getElementById('detailsModal');
+            detailsModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var fullname = button.getAttribute('data-fullname');
+                var email = button.getAttribute('data-email');
+                var phone = button.getAttribute('data-phone');
+                var info = button.getAttribute('data-info');
+                var cv = button.getAttribute('data-cv');
+                var idPath = button.getAttribute('data-id');
+
+                document.getElementById('modal-fullname').textContent = fullname;
+                document.getElementById('modal-email').textContent = email;
+                document.getElementById('modal-phone').textContent = phone;
+                document.getElementById('modal-info').textContent = info || 'No additional info';
+                document.getElementById('modal-cv').href = cv;
+                document.getElementById('modal-id').href = idPath;
+            });
+        });
+
+        // Confirm cancel action
+        document.querySelectorAll('.confirm-cancel').forEach(link => {
+            link.addEventListener('click', function (e) {
+                if (!confirm('Are you sure you want to cancel this application?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}

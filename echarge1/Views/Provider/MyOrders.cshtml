@@ -263,28 +263,21 @@
                             @foreach (var item in order.OrderItems.Where(x => x.Product.ProviderId == Context.Session.GetInt32("UserId")))
                             {
                                 <tr>
-                                    <td data-label="Product">@item.Product.Name</td>
+                                    <td data-label="Product">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <img src="@Url.Content(item.Product.ImageUrl ?? "/images/default.jpg")"
+                                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;" alt="Product Image" />
+
+                                            <span>@item.Product.Name</span>
+                                        </div>
+                                    </td>
                                     <td data-label="Quantity">@item.Quantity</td>
                                     <td data-label="Price">@item.Product.Price.ToString("0.00") JOD</td>
                                     <td data-label="Total">@item.SubTotal.ToString("0.00") JOD</td>
                                     <td data-label="User">@order.User.FullName</td>
                                     <td data-label="Shipping">@order.ShippingAddress</td>
-                                    <td data-label="Status">
-                                        <form method="post" action="@Url.Action("UpdateOrderStatus", "Provider")" class="d-flex align-items-center">
-                                            <input type="hidden" name="OrderId" value="@order.OrderId" />
-                                            @Html.DropDownList("Status", new List<SelectListItem>
-                                {
-                                new SelectListItem { Text = "Pending", Value = "Pending", Selected = order.Status == "Pending" },
-                                new SelectListItem { Text = "On the Way", Value = "On the Way", Selected = order.Status == "On the Way" },
-                                new SelectListItem { Text = "Not Received", Value = "Not Received", Selected = order.Status == "Not Received" },
-                                new SelectListItem { Text = "Delivered", Value = "Delivered", Selected = order.Status == "Delivered" }
-                                }, new { @class = "form-select" })
+                                    <td data-label="Status"><span class="status-badge">@order.Status</span></td>
 
-                                            <button type="submit" class="btn-save">
-                                                <i class="fas fa-save"></i> Save
-                                            </button>
-                                        </form>
-                                    </td>
                                     <td data-label="Actions">
                                         <a href="@Url.Action("GetOrderDetails", "Provider", new { id = order.OrderId })" class="btn-view">
                                             <i class="fas fa-eye"></i> View
